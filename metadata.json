@@ -1,0 +1,5 @@
+{
+  "name": "AI Startup Builder",
+  "description": "An application that takes a startup idea and generates a business plan, website prototype, voice pitch deck, market research, and a startup scorecard using AI.",
+  "requestFramePermissions": []
+}
