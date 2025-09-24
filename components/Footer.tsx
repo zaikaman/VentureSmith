@@ -6,7 +6,7 @@ export const Footer: React.FC = () => {
             <div className="max-w-7xl mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                     <div className="mb-8 md:mb-0">
-                        <h3 style={{color: `var(--primary-color)`}} className="text-3xl font-bold mb-2">VentureForge</h3>
+                        <h3 style={{color: `var(--primary-color)`}} className="text-3xl font-bold mb-2">VentureSmith</h3>
                         <p style={{color: `var(--text-slate-400)`}}>AI Startup & Technology</p>
                         <p style={{color: `var(--text-slate-500)`}} className="mt-6 text-sm">Step into the forefront of innovation with our AI Startup & Technology solutions.</p>
                     </div>
@@ -49,7 +49,7 @@ export const Footer: React.FC = () => {
                     </div>
                 </div>
                 <div style={{borderColor: `var(--border-slate-700)`, color: `var(--text-slate-500)`}} className="mt-16 pt-8 border-t text-center text-sm">
-                    <p>© By VentureForge Design. All rights reserved.</p>
+                    <p>© By VentureSmith Design. All rights reserved.</p>
                 </div>
             </div>
         </footer>

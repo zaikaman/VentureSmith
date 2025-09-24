@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 
 const QuestionMarkIcon = () => (
@@ -48,8 +49,8 @@ export const Header: React.FC = () => {
                     {/* Left: Logo */}
                     <div className="flex items-center">
                         <a href="#" style={{color: `var(--primary-color)`}} className="flex items-center space-x-3 text-3xl font-bold">
-                            <img src="/logo.png" alt="VentureForge Logo" className="h-8 w-8" />
-                            <span>VentureForge</span>
+                            <img src="/logo.png" alt="VentureSmith Logo" className="h-10 w-10" />
+                            <span>VentureSmith</span>
                         </a>
                     </div>
                     
@@ -79,12 +80,12 @@ export const Header: React.FC = () => {
                              <a href="#" style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)] transition-colors p-1 rounded-full"><MenuIcon /></a>
                         </div>
                         <div className="flex items-center space-x-2">
-                             <a href="#" style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
+                             <Link to="/signin" style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
                                 Sign in
-                            </a>
-                            <a href="#" style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
+                            </Link>
+                            <Link to="/signup" style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
                                 Sign up
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     
@@ -115,12 +116,15 @@ export const Header: React.FC = () => {
                         </a>
                     ))}
                     <div className="flex flex-col items-center space-y-4 mt-4">
-                        <a href="#" style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
+                        <button onClick={toggleTheme} style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)] transition-colors p-1 rounded-full">
+                            {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+                        </button>
+                        <Link to="/signin" style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
                             Sign in
-                        </a>
-                        <a href="#" style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
+                        </Link>
+                        <Link to="/signup" style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
                             Sign up
-                        </a>
+                        </Link>
                     </div>
                 </nav>
             </div>

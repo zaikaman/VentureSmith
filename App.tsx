@@ -1,5 +1,6 @@
 
 import React, { useState, useCallback } from 'react';
+import { Routes, Route, Link, BrowserRouter } from 'react-router-dom';
 import { StartupData } from './types';
 import { generateStartupAssets } from './services/geminiService';
 import { IdeaInputForm } from './components/IdeaInputForm';
@@ -11,6 +12,9 @@ import { ResultsDashboard } from './components/ResultsDashboard';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { useTheme } from './contexts/ThemeContext';
+import { SignIn } from './components/pages/SignIn';
+import { SignUp } from './components/pages/SignUp';
+import { authClient } from './lib/auth-client';
 import './App.css';
 
 const App: React.FC = () => {
@@ -19,6 +23,7 @@ const App: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [results, setResults] = useState<StartupData | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const { data: session, isPending } = authClient.useSession();
 
     const handleGenerate = useCallback(async (submittedIdea: string) => {
         if (!submittedIdea || isLoading) return;
@@ -34,7 +39,8 @@ const App: React.FC = () => {
             setError(err.message || 'An unexpected error occurred.');
         } finally {
             setIsLoading(false);
-        }    }, [isLoading]);
+        }
+    }, [isLoading]);
     
     const handleReset = () => {
         setIdea('');
@@ -44,6 +50,22 @@ const App: React.FC = () => {
     }
 
     const renderContent = () => {
+        if (isPending) {
+            return <LoadingIndicator idea="Checking session..." />;
+        }
+
+        if (!session) {
+            return (
+                <div className="text-center">
+                    <h2 className="text-2xl font-bold mb-4">Welcome to VentureSmith</h2>
+                    <p className="mb-6">Please sign in to generate startup ideas.</p>
+                    <Link to="/signin" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-2 px-6 rounded-lg hover:opacity-90 transition-colors duration-300">
+                        Sign In
+                    </Link>
+                </div>
+            );
+        }
+
         if (isLoading) {
             return <LoadingIndicator idea={idea} />;
         }
@@ -75,15 +97,21 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className={`min-h-screen app-container flex flex-col`}>
-            <Header />
-            <main className="flex-grow flex items-center justify-center p-4">
-                <div className="w-full max-w-7xl mx-auto">
-                    {renderContent()}
-                </div>
-            </main>
-            <Footer />
-        </div>
+        <BrowserRouter>
+            <div className={`min-h-screen app-container flex flex-col`}>
+                <Header />
+                <main className="flex-grow flex items-center justify-center p-4">
+                    <div className="w-full max-w-7xl mx-auto">
+                        <Routes>
+                            <Route path="/" element={renderContent()} />
+                            <Route path="/signin" element={<SignIn />} />
+                            <Route path="/signup" element={<SignUp />} />
+                        </Routes>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        </BrowserRouter>
     );
 };
 
