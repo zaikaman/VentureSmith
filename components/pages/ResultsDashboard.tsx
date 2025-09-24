@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StartupData } from '../types';
+import { StartupData } from '../../types';
 import { Scorecard } from './Scorecard';
 import { BusinessPlan } from './BusinessPlan';
 import { WebsitePrototype } from './WebsitePrototype';
@@ -67,7 +67,7 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ data, onRese
                                 onClick={() => setActiveTab(tab)}
                                 className={`${
                                     activeTab === tab
-                                        ? 'border-[var(--primary-color)] text-[var(--secondary-color)]'
+                                        ? 'border-[var(--primary-color)] text-[var(--primary-color)]'
                                         : 'border-transparent text-[var(--text-slate-400)] hover:text-[var(--text-slate-200)] hover:border-[var(--border-slate-500)]'
                                 } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center transition-colors`}
                             >

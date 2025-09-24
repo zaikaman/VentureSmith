@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify'; // Added
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const QuestionMarkIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -34,7 +34,7 @@ const MoonIcon = () => (
 );
 
 
-import { authClient } from '../lib/auth-client';
+import { authClient } from '../../lib/auth-client';
 
 // ... (keep all the existing icon components)
 

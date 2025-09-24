@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { PitchDeckData } from '../types';
+import { PitchDeckData } from '../../types';
 
 interface PitchDeckProps {
     data: PitchDeckData;
@@ -46,7 +46,7 @@ export const PitchDeck: React.FC<PitchDeckProps> = ({ data }) => {
                 </div>
                 
                 <div className="border-t border-[var(--border-slate-700)] pt-6">
-                    <h4 className="text-lg font-semibold text-[var(--secondary-color)] mb-3">Pitch Script:</h4>
+                    <h4 className="text-lg font-semibold text-[var(--primary-color)] mb-3">Pitch Script:</h4>
                     <p className="text-[var(--text-slate-300)] whitespace-pre-line leading-relaxed italic">{data.script}</p>
                 </div>
             </div>

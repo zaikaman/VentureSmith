@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ScorecardData } from '../types';
+import { ScorecardData } from '../../types';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from 'recharts';
 
 interface ScorecardProps {
@@ -32,7 +32,7 @@ const ScoreInfoCard: React.FC<{ title: string; score: number; justification: str
     <div className="bg-[var(--bg-slate-800)] p-4 rounded-lg border border-[var(--border-slate-700)]">
         <div className="flex justify-between items-baseline mb-2">
             <h3 className="font-semibold text-lg text-[var(--text-color)]">{title}</h3>
-            <span className="font-bold text-xl text-[var(--secondary-color)]">{score}/100</span>
+            <span className="font-bold text-xl text-[var(--primary-color)]">{score}/100</span>
         </div>
         <p className="text-sm text-[var(--text-slate-400)]">{justification}</p>
     </div>

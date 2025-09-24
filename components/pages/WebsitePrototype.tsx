@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { WebsitePrototypeData } from '../types';
+import { WebsitePrototypeData } from '../../types';
 
 interface WebsitePrototypeProps {
     data: WebsitePrototypeData;
