@@ -20,7 +20,7 @@ const ChartCard: React.FC<{ data: ScorecardData }> = ({ data }) => {
                 <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
                     <PolarGrid stroke="#475569" />
                     <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 14 }} />
-                    <Radar name="Score" dataKey="A" stroke="#4f46e5" fill="#4f46e5" fillOpacity={0.6} />
+                    <Radar name="Score" dataKey="A" stroke="#8B5CF6" fill="#8B5CF6" fillOpacity={0.6} />
                     <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', color: '#e2e8f0' }} />
                 </RadarChart>
             </ResponsiveContainer>
@@ -32,7 +32,7 @@ const ScoreInfoCard: React.FC<{ title: string; score: number; justification: str
     <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
         <div className="flex justify-between items-baseline mb-2">
             <h3 className="font-semibold text-lg text-white">{title}</h3>
-            <span className="font-bold text-xl text-indigo-400">{score}/100</span>
+            <span className="font-bold text-xl text-pink-400">{score}/100</span>
         </div>
         <p className="text-sm text-slate-400">{justification}</p>
     </div>
@@ -48,7 +48,7 @@ export const Scorecard: React.FC<ScorecardProps> = ({ data }) => {
                     <svg className="absolute w-full h-full" viewBox="0 0 100 100">
                         <circle className="text-slate-700" strokeWidth="8" stroke="currentColor" fill="transparent" r="45" cx="50" cy="50" />
                         <circle
-                            className="text-indigo-500"
+                            className="text-purple-500"
                             strokeWidth="8"
                             strokeDasharray={2 * Math.PI * 45}
                             strokeDashoffset={2 * Math.PI * 45 * (1 - data.overallScore / 100)}

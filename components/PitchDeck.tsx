@@ -34,7 +34,7 @@ export const PitchDeck: React.FC<PitchDeckProps> = ({ data }) => {
                 <div className="flex items-center space-x-4">
                     <button
                         onClick={togglePlay}
-                        className="w-16 h-16 flex items-center justify-center bg-indigo-600 text-white rounded-full hover:bg-indigo-500 transition-colors shadow-lg"
+                        className="w-16 h-16 flex items-center justify-center bg-purple-600 text-white rounded-full hover:bg-purple-500 transition-colors shadow-lg"
                         aria-label={isPlaying ? 'Pause pitch' : 'Play pitch'}
                     >
                         {isPlaying ? <PauseIcon /> : <PlayIcon />}
@@ -46,7 +46,7 @@ export const PitchDeck: React.FC<PitchDeckProps> = ({ data }) => {
                 </div>
                 
                 <div className="border-t border-slate-700 pt-6">
-                    <h4 className="text-lg font-semibold text-indigo-400 mb-3">Pitch Script:</h4>
+                    <h4 className="text-lg font-semibold text-pink-400 mb-3">Pitch Script:</h4>
                     <p className="text-slate-300 whitespace-pre-line leading-relaxed italic">{data.script}</p>
                 </div>
             </div>

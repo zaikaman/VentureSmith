@@ -55,7 +55,7 @@ const App: React.FC = () => {
                     <p className="text-red-300 mb-6 max-w-2xl mx-auto">{error}</p>
                     <button
                         onClick={handleReset}
-                        className="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-500 transition-colors duration-300"
+                        className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-2 px-6 rounded-lg hover:opacity-90 transition-colors duration-300"
                     >
                         Try Again
                     </button>

@@ -8,7 +8,7 @@ interface BusinessPlanProps {
 
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
     <div className="bg-slate-900/50 p-6 rounded-lg border border-slate-700">
-        <h3 className="text-xl font-bold text-indigo-400 mb-3">{title}</h3>
+        <h3 className="text-xl font-bold text-pink-400 mb-3">{title}</h3>
         <p className="text-slate-300 leading-relaxed">{children}</p>
     </div>
 );
