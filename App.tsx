@@ -1,6 +1,8 @@
 
 import React, { useState, useCallback } from 'react';
 import { Routes, Route, Link, BrowserRouter } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify'; // Added
+import 'react-toastify/dist/ReactToastify.css'; // Added
 import { StartupData } from './types';
 import { generateStartupAssets } from './services/geminiService';
 import { IdeaInputForm } from './components/IdeaInputForm';
@@ -101,11 +103,16 @@ const App: React.FC = () => {
                             <Route path="/signin" element={<SignIn />} />
                             <Route path="/signup" element={<SignUp />} />
                         </Routes>
+                        <button onClick={() => toast("This is a test notification!")}>Toast</button>
                     </div>
                 </main>
                 <Footer />
                 <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
             </div>
+            <ToastContainer
+                theme={theme}
+                className="toast-container"
+            />
         </BrowserRouter>
     );
 };

@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify'; // Added
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
@@ -50,16 +51,18 @@ export const Header: React.FC = () => {
             await authClient.signOut({
                 fetchOptions: {
                     onSuccess: () => {
-                        console.log("Sign out successful, navigating...");
+                        toast.success("Signed out successfully!");
                         navigate('/');
                     },
                     onError: (err) => {
                         console.error("Sign out error:", err);
+                        toast.error("Failed to sign out.");
                     }
                 }
             });
         } catch (error) {
             console.error("Caught sign out error:", error);
+            toast.error("Failed to sign out.");
         }
     };
 

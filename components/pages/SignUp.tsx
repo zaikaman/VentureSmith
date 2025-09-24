@@ -1,4 +1,5 @@
 
+import { toast } from 'react-toastify'; // Added
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authClient } from '../../lib/auth-client';
@@ -21,12 +22,12 @@ export const SignUp: React.FC = () => {
         }, {
             onSuccess: () => {
                 setLoading(false);
-                console.log("Sign up successful");
+                toast.success("Signed up successfully!");
                 navigate('/');
             },
             onError: (err) => {
                 setLoading(false);
-                alert(err.error.message);
+                toast.error(err.error.message);
                 console.error("Sign up error:", err);
             }
         });
