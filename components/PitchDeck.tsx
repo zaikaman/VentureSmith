@@ -29,25 +29,25 @@ export const PitchDeck: React.FC<PitchDeckProps> = ({ data }) => {
 
     return (
         <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold text-white mb-6 text-center">AI Voice Pitch Deck</h2>
-            <div className="bg-slate-900/50 p-8 rounded-lg border border-slate-700 space-y-6">
+            <h2 className="text-3xl font-bold text-[var(--text-color)] mb-6 text-center">AI Voice Pitch Deck</h2>
+            <div className="bg-[var(--bg-slate-900)]/50 p-8 rounded-lg border border-[var(--border-slate-700)] space-y-6">
                 <div className="flex items-center space-x-4">
                     <button
                         onClick={togglePlay}
-                        className="w-16 h-16 flex items-center justify-center bg-purple-600 text-white rounded-full hover:bg-purple-500 transition-colors shadow-lg"
+                        className="w-16 h-16 flex items-center justify-center bg-[var(--primary-color)] text-white rounded-full hover:bg-[var(--primary-color)] transition-colors shadow-lg"
                         aria-label={isPlaying ? 'Pause pitch' : 'Play pitch'}
                     >
                         {isPlaying ? <PauseIcon /> : <PlayIcon />}
                     </button>
                     <div>
-                        <h3 className="text-xl font-bold text-white">AI CEO Pitch</h3>
-                        <p className="text-slate-400">Duration: ~1 minute</p>
+                        <h3 className="text-xl font-bold text-[var(--text-color)]">AI CEO Pitch</h3>
+                        <p className="text-[var(--text-slate-400)]">Duration: ~1 minute</p>
                     </div>
                 </div>
                 
-                <div className="border-t border-slate-700 pt-6">
-                    <h4 className="text-lg font-semibold text-pink-400 mb-3">Pitch Script:</h4>
-                    <p className="text-slate-300 whitespace-pre-line leading-relaxed italic">{data.script}</p>
+                <div className="border-t border-[var(--border-slate-700)] pt-6">
+                    <h4 className="text-lg font-semibold text-[var(--secondary-color)] mb-3">Pitch Script:</h4>
+                    <p className="text-[var(--text-slate-300)] whitespace-pre-line leading-relaxed italic">{data.script}</p>
                 </div>
             </div>
         </div>

@@ -1,12 +1,12 @@
 import React from 'react';
 
 const Card = ({ title, description, icon }: { title: string, description: string, icon: React.ReactNode }) => (
-    <div className="bg-white/10 p-6 rounded-2xl shadow-lg backdrop-blur-xl h-full">
+    <div style={{backgroundColor: `var(--bg-slate-800)`}} className="p-6 rounded-2xl shadow-lg backdrop-blur-xl h-full">
         <div className="flex items-start mb-4">
-            <div className="text-purple-400 mr-4">{icon}</div>
+            <div style={{color: `var(--primary-color)`}} className="mr-4">{icon}</div>
             <div>
                 <h3 className="text-xl font-bold mb-2">{title}</h3>
-                <p className="text-gray-400 text-sm">{description}</p>
+                <p style={{color: `var(--text-slate-400)`}} className="text-sm">{description}</p>
             </div>
         </div>
     </div>
@@ -19,7 +19,7 @@ export const TransformSection: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-16">
                     <div>
                         <h2 className="text-5xl font-bold leading-tight mb-8">Transforming Ambitions into Reality with Advanced AI.</h2>
-                        <button className="bg-purple-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl transform rotate-45">
+                        <button style={{backgroundColor: `var(--primary-color)`}} className="text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl transform rotate-45">
                             →
                         </button>
                     </div>
@@ -30,7 +30,7 @@ export const TransformSection: React.FC = () => {
                                 backgroundImage: `url(/rocket.jpg)`
                             }}
                         >
-                            <div className="absolute inset-0 bg-purple-900 opacity-50 mix-blend-multiply rounded-3xl"></div>
+                            <div style={{backgroundColor: `var(--primary-color)`, mixBlendMode: `var(--blend-mode)`}} className="absolute inset-0 opacity-50 rounded-3xl"></div>
                         </div>
                     </div>
                 </div>
@@ -45,17 +45,17 @@ export const TransformSection: React.FC = () => {
                         title="Join Us in Shaping the Future of Technology." 
                         description="Step into the forefront of innovation with our AI Startup & Technology solutions."
                     />
-                    <div className="bg-white/10 p-6 rounded-2xl shadow-lg backdrop-blur-xl h-full flex flex-col justify-between">
+                    <div style={{backgroundColor: `var(--bg-slate-800)`}} className="p-6 rounded-2xl shadow-lg backdrop-blur-xl h-full flex flex-col justify-between">
                         <div>
-                            <div className="flex items-center text-purple-400 mb-2">
+                            <div style={{color: `var(--primary-color)`}} className="flex items-center mb-2">
                                 <span className="text-3xl font-bold mr-2">10+</span>
                                 <span>Years of Industry Expertise</span>
                             </div>
-                            <div className="w-full bg-gray-700 rounded-full h-2.5">
-                                <div className="bg-purple-600 h-2.5 rounded-full" style={{width: '45%'}}></div>
+                            <div style={{backgroundColor: `var(--bg-slate-700)`}} className="w-full rounded-full h-2.5">
+                                <div style={{backgroundColor: `var(--primary-color)`}} className="h-2.5 rounded-full" style={{width: '45%'}}></div>
                             </div>
                         </div>
-                        <p className="text-gray-400 text-sm mt-4">Step into the forefront of innovation with our AI Startup & Technology solutions.</p>
+                        <p style={{color: `var(--text-slate-400)`}} className="text-sm mt-4">Step into the forefront of innovation with our AI Startup & Technology solutions.</p>
                     </div>
                 </div>
             </div>

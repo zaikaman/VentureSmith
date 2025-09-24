@@ -47,10 +47,10 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ data, onRese
     return (
         <div className="w-full animate-fade-in-up">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-white">Your Venture Blueprint</h1>
+                <h1 className="text-3xl font-bold text-[var(--text-color)]">Your Venture Blueprint</h1>
                 <button
                     onClick={onReset}
-                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 transition-colors duration-300 flex items-center gap-2"
+                    className="bg-gradient-to-r from-[var(--gradient-from)] to-[var(--gradient-to)] text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 transition-colors duration-300 flex items-center gap-2"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
@@ -59,7 +59,7 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ data, onRese
                 </button>
             </div>
              <div className="mb-6">
-                <div className="border-b border-slate-700">
+                <div className="border-b border-[var(--border-slate-700)]">
                     <nav className="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
                          {tabs.map((tab) => (
                             <button
@@ -67,8 +67,8 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ data, onRese
                                 onClick={() => setActiveTab(tab)}
                                 className={`${
                                     activeTab === tab
-                                        ? 'border-purple-500 text-pink-400'
-                                        : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-500'
+                                        ? 'border-[var(--primary-color)] text-[var(--secondary-color)]'
+                                        : 'border-transparent text-[var(--text-slate-400)] hover:text-[var(--text-slate-200)] hover:border-[var(--border-slate-500)]'
                                 } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center transition-colors`}
                             >
                                 {icons[tab]} {tab}
@@ -77,7 +77,7 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ data, onRese
                     </nav>
                 </div>
             </div>
-            <div className="bg-slate-800/50 p-4 sm:p-6 md:p-8 rounded-xl border border-slate-700/50">
+            <div className="bg-[var(--bg-slate-800)]/50 p-4 sm:p-6 md:p-8 rounded-xl border border-[var(--border-slate-700)]/50">
                 {renderTabContent()}
             </div>
         </div>

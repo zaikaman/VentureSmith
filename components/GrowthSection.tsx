@@ -1,12 +1,12 @@
 import React from 'react';
 
 const Card = ({ title, description, className }: { title: string, description: string, className?: string }) => (
-    <div className={`bg-white/10 p-8 rounded-2xl shadow-lg backdrop-blur-xl flex flex-col justify-between h-full ${className}`}>
+    <div style={{backgroundColor: `var(--bg-slate-800)`}} className={`p-8 rounded-2xl shadow-lg backdrop-blur-xl flex flex-col justify-between h-full ${className}`}>
         <div>
-            <h3 className="text-3xl font-bold text-purple-400 mb-4">{title}</h3>
-            <p className="text-gray-400">{description}</p>
+            <h3 style={{color: `var(--primary-color)`}} className="text-3xl font-bold mb-4">{title}</h3>
+            <p style={{color: `var(--text-slate-400)`}}>{description}</p>
         </div>
-        <button className="mt-8 bg-purple-600 text-white w-12 h-12 rounded-full flex items-center justify-center self-end text-2xl">
+        <button style={{backgroundColor: `var(--primary-color)`}} className="mt-8 text-white w-12 h-12 rounded-full flex items-center justify-center self-end text-2xl">
             →
         </button>
     </div>

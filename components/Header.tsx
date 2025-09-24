@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 
 const QuestionMarkIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -18,16 +19,29 @@ const MenuIcon = () => (
     </svg>
 );
 
+const SunIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.909-2.636l1.591-1.591M5.25 12H3m2.636-4.909l1.591 1.591M12 5.25a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5z" />
+    </svg>
+);
+
+const MoonIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+    </svg>
+);
+
 export const Header: React.FC = () => {
+    const { theme, toggleTheme } = useTheme();
     const navLinks = ["Home", "About Us", "Services", "Features", "Contact"];
 
     return (
-        <header className="sticky top-0 z-50 w-full bg-slate-900/80 backdrop-blur-sm border-b border-slate-700/50">
+        <header style={{backgroundColor: `var(--bg-slate-900)`}} className="sticky top-0 z-50 w-full backdrop-blur-sm border-b border-[var(--border-slate-700)]/50">
             <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     {/* Left: Logo */}
                     <div className="flex items-center">
-                        <a href="#" className="flex items-center space-x-3 text-3xl font-bold text-purple-400">
+                        <a href="#" style={{color: `var(--primary-color)`}} className="flex items-center space-x-3 text-3xl font-bold">
                             <img src="/logo.png" alt="VentureForge Logo" className="h-8 w-8" />
                             <span>VentureForge</span>
                         </a>
@@ -35,11 +49,11 @@ export const Header: React.FC = () => {
                     
                     {/* Center: Navigation Links (Desktop) */}
                     <div className="hidden lg:flex flex-grow items-center justify-center">
-                        <nav className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 rounded-full px-3 py-1">
+                        <nav style={{backgroundColor: `var(--bg-slate-800)`}} className="backdrop-blur-sm border border-[var(--border-slate-700)]/50 rounded-full px-3 py-1">
                              <ul className="flex items-center space-x-1">
                                 {navLinks.map(link => (
                                     <li key={link}>
-                                        <a href="#" className="text-slate-300 hover:text-white px-4 py-2 rounded-full text-sm font-medium transition-colors">
+                                        <a href="#" style={{color: `var(--text-slate-300)`}} className="hover:text-[var(--text-color)] px-4 py-2 rounded-full text-sm font-medium transition-colors">
                                             {link}
                                         </a>
                                     </li>
@@ -50,16 +64,19 @@ export const Header: React.FC = () => {
 
                     {/* Right: Icons & Buttons (Desktop) */}
                     <div className="hidden lg:flex items-center space-x-4">
-                        <div className="flex items-center bg-slate-800/60 border border-slate-700/50 rounded-full p-2 space-x-2">
-                             <a href="#" className="text-slate-400 hover:text-white transition-colors p-1 rounded-full"><QuestionMarkIcon /></a>
-                             <a href="#" className="text-slate-400 hover:text-white transition-colors p-1 rounded-full"><SettingsIcon /></a>
-                             <a href="#" className="text-slate-400 hover:text-white transition-colors p-1 rounded-full"><MenuIcon /></a>
+                        <div style={{backgroundColor: `var(--bg-slate-800)`}} className="flex items-center border border-[var(--border-slate-700)]/50 rounded-full p-2 space-x-2">
+                             <a href="#" style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)] transition-colors p-1 rounded-full"><QuestionMarkIcon /></a>
+                             <a href="#" style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)] transition-colors p-1 rounded-full"><SettingsIcon /></a>
+                             <button onClick={toggleTheme} style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)] transition-colors p-1 rounded-full">
+                                 {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+                             </button>
+                             <a href="#" style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)] transition-colors p-1 rounded-full"><MenuIcon /></a>
                         </div>
                         <div className="flex items-center space-x-2">
-                             <a href="#" className="text-slate-200 bg-slate-800 hover:bg-slate-700 transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
+                             <a href="#" style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
                                 Sign in
                             </a>
-                            <a href="#" className="text-white bg-gradient-to-r from-purple-500 to-fuchsia-500 hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
+                            <a href="#" style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
                                 Sign up
                             </a>
                         </div>
@@ -67,7 +84,7 @@ export const Header: React.FC = () => {
                     
                     {/* Mobile Menu Button */}
                     <div className="lg:hidden">
-                        <button className="text-slate-400 hover:text-white" aria-label="Open menu">
+                        <button style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)]" aria-label="Open menu">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                             </svg>

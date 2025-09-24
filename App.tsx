@@ -10,9 +10,11 @@ import { LoadingIndicator } from './components/LoadingIndicator';
 import { ResultsDashboard } from './components/ResultsDashboard';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
+import { useTheme } from './contexts/ThemeContext';
 import './App.css';
 
 const App: React.FC = () => {
+    const { theme } = useTheme();
     const [idea, setIdea] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [results, setResults] = useState<StartupData | null>(null);
@@ -73,7 +75,7 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen app-container text-slate-200 flex flex-col">
+        <div className={`min-h-screen app-container flex flex-col`}>
             <Header />
             <main className="flex-grow flex items-center justify-center p-4">
                 <div className="w-full max-w-7xl mx-auto">

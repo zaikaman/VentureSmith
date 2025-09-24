@@ -18,10 +18,10 @@ const ChartCard: React.FC<{ data: ScorecardData }> = ({ data }) => {
         <div className="w-full h-80">
             <ResponsiveContainer>
                 <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-                    <PolarGrid stroke="#475569" />
-                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 14 }} />
-                    <Radar name="Score" dataKey="A" stroke="#8B5CF6" fill="#8B5CF6" fillOpacity={0.6} />
-                    <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', color: '#e2e8f0' }} />
+                    <PolarGrid stroke="var(--border-slate-700)" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-slate-400)', fontSize: 14 }} />
+                    <Radar name="Score" dataKey="A" stroke="var(--primary-color)" fill="var(--primary-color)" fillOpacity={0.6} />
+                    <Tooltip contentStyle={{ backgroundColor: 'var(--bg-slate-800)', border: '1px solid var(--border-slate-700)', color: 'var(--text-slate-200)' }} />
                 </RadarChart>
             </ResponsiveContainer>
         </div>
@@ -29,12 +29,12 @@ const ChartCard: React.FC<{ data: ScorecardData }> = ({ data }) => {
 };
 
 const ScoreInfoCard: React.FC<{ title: string; score: number; justification: string }> = ({ title, score, justification }) => (
-    <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
+    <div className="bg-[var(--bg-slate-800)] p-4 rounded-lg border border-[var(--border-slate-700)]">
         <div className="flex justify-between items-baseline mb-2">
-            <h3 className="font-semibold text-lg text-white">{title}</h3>
-            <span className="font-bold text-xl text-pink-400">{score}/100</span>
+            <h3 className="font-semibold text-lg text-[var(--text-color)]">{title}</h3>
+            <span className="font-bold text-xl text-[var(--secondary-color)]">{score}/100</span>
         </div>
-        <p className="text-sm text-slate-400">{justification}</p>
+        <p className="text-sm text-[var(--text-slate-400)]">{justification}</p>
     </div>
 );
 
@@ -43,12 +43,12 @@ export const Scorecard: React.FC<ScorecardProps> = ({ data }) => {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-slate-300 mb-2">Overall Startup Score</h2>
+                <h2 className="text-2xl font-bold text-[var(--text-slate-300)] mb-2">Overall Startup Score</h2>
                 <div className="relative w-48 h-48 flex items-center justify-center">
                     <svg className="absolute w-full h-full" viewBox="0 0 100 100">
-                        <circle className="text-slate-700" strokeWidth="8" stroke="currentColor" fill="transparent" r="45" cx="50" cy="50" />
+                        <circle className="text-[var(--border-slate-700)]" strokeWidth="8" stroke="currentColor" fill="transparent" r="45" cx="50" cy="50" />
                         <circle
-                            className="text-purple-500"
+                            className="text-[var(--primary-color)]"
                             strokeWidth="8"
                             strokeDasharray={2 * Math.PI * 45}
                             strokeDashoffset={2 * Math.PI * 45 * (1 - data.overallScore / 100)}
@@ -61,7 +61,7 @@ export const Scorecard: React.FC<ScorecardProps> = ({ data }) => {
                             style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%', transition: 'stroke-dashoffset 1s ease-out' }}
                         />
                     </svg>
-                    <span className="text-5xl font-bold text-white">{data.overallScore}</span>
+                    <span className="text-5xl font-bold text-[var(--text-color)]">{data.overallScore}</span>
                 </div>
                  <div className="mt-6 w-full max-w-sm">
                     <ChartCard data={data} />
