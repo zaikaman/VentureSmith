@@ -13,7 +13,6 @@ import { Header } from './components/Header';
 import './App.css';
 
 const App: React.FC = () => {
-    console.log("App.tsx: component rendering");
     const [idea, setIdea] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [results, setResults] = useState<StartupData | null>(null);
