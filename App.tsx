@@ -15,6 +15,7 @@ import { useTheme } from './contexts/ThemeContext';
 import { SignIn } from './components/pages/SignIn';
 import { SignUp } from './components/pages/SignUp';
 import { authClient } from './lib/auth-client';
+import { LoginModal } from './components/LoginModal';
 import './App.css';
 
 const App: React.FC = () => {
@@ -23,9 +24,14 @@ const App: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [results, setResults] = useState<StartupData | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const { data: session, isPending } = authClient.useSession();
 
     const handleGenerate = useCallback(async (submittedIdea: string) => {
+        if (!session) {
+            setIsLoginModalOpen(true);
+            return;
+        }
         if (!submittedIdea || isLoading) return;
         setIdea(submittedIdea);
         setIsLoading(true);
@@ -40,7 +46,7 @@ const App: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [isLoading]);
+    }, [isLoading, session]);
     
     const handleReset = () => {
         setIdea('');
@@ -52,18 +58,6 @@ const App: React.FC = () => {
     const renderContent = () => {
         if (isPending) {
             return <LoadingIndicator idea="Checking session..." />;
-        }
-
-        if (!session) {
-            return (
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold mb-4">Welcome to VentureSmith</h2>
-                    <p className="mb-6">Please sign in to generate startup ideas.</p>
-                    <Link to="/signin" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-2 px-6 rounded-lg hover:opacity-90 transition-colors duration-300">
-                        Sign In
-                    </Link>
-                </div>
-            );
         }
 
         if (isLoading) {
@@ -110,6 +104,7 @@ const App: React.FC = () => {
                     </div>
                 </main>
                 <Footer />
+                <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
             </div>
         </BrowserRouter>
     );

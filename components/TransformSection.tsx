@@ -52,7 +52,7 @@ export const TransformSection: React.FC = () => {
                                 <span>Years of Industry Expertise</span>
                             </div>
                             <div style={{backgroundColor: `var(--bg-slate-700)`}} className="w-full rounded-full h-2.5">
-                                <div style={{backgroundColor: `var(--primary-color)`}} className="h-2.5 rounded-full" style={{width: '45%'}}></div>
+                                <div style={{ backgroundColor: `var(--primary-color)`, width: '45%' }} className="h-2.5 rounded-full"></div>
                             </div>
                         </div>
                         <p style={{color: `var(--text-slate-400)`}} className="text-sm mt-4">Step into the forefront of innovation with our AI Startup & Technology solutions.</p>
