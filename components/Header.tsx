@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 
 const QuestionMarkIcon = () => (
@@ -32,14 +32,61 @@ const MoonIcon = () => (
     </svg>
 );
 
+
+import { authClient } from '../lib/auth-client';
+
+// ... (keep all the existing icon components)
+
 export const Header: React.FC = () => {
     const { theme, toggleTheme } = useTheme();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const navigate = useNavigate();
+    const { data: session } = authClient.useSession();
     const navLinks = ["Home", "About Us", "Services", "Features", "Contact"];
+
+    const handleSignOut = async () => {
+        console.log("Attempting to sign out...");
+        try {
+            await authClient.signOut({
+                fetchOptions: {
+                    onSuccess: () => {
+                        console.log("Sign out successful, navigating...");
+                        navigate('/');
+                    },
+                    onError: (err) => {
+                        console.error("Sign out error:", err);
+                    }
+                }
+            });
+        } catch (error) {
+            console.error("Caught sign out error:", error);
+        }
+    };
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
+
+    const authButtons = session ? (
+        <div className="flex items-center space-x-2">
+            <Link to="/account" style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
+                Account
+            </Link>
+            <button onClick={handleSignOut} style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
+                Sign out
+            </button>
+        </div>
+    ) : (
+        <div className="flex items-center space-x-2">
+            <Link to="/signin" style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
+                Sign in
+            </Link>
+            <Link to="/signup" style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
+                Sign up
+            </Link>
+        </div>
+    );
+
 
     return (
         <>
@@ -48,10 +95,10 @@ export const Header: React.FC = () => {
                 <div className="flex items-center justify-between h-20">
                     {/* Left: Logo */}
                     <div className="flex items-center">
-                        <a href="#" style={{color: `var(--primary-color)`}} className="flex items-center space-x-3 text-3xl font-bold">
+                        <Link to="/" style={{color: `var(--primary-color)`}} className="flex items-center space-x-3 text-3xl font-bold">
                             <img src="/logo.png" alt="VentureSmith Logo" className="h-10 w-10" />
                             <span>VentureSmith</span>
-                        </a>
+                        </Link>
                     </div>
                     
                     {/* Center: Navigation Links (Desktop) */}
@@ -79,14 +126,7 @@ export const Header: React.FC = () => {
                              </button>
                              <a href="#" style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)] transition-colors p-1 rounded-full"><MenuIcon /></a>
                         </div>
-                        <div className="flex items-center space-x-2">
-                             <Link to="/signin" style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
-                                Sign in
-                            </Link>
-                            <Link to="/signup" style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
-                                Sign up
-                            </Link>
-                        </div>
+                        {authButtons}
                     </div>
                     
                     {/* Mobile Menu Button */}
@@ -119,12 +159,7 @@ export const Header: React.FC = () => {
                         <button onClick={toggleTheme} style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)] transition-colors p-1 rounded-full">
                             {theme === 'light' ? <MoonIcon /> : <SunIcon />}
                         </button>
-                        <Link to="/signin" style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
-                            Sign in
-                        </Link>
-                        <Link to="/signup" style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
-                            Sign up
-                        </Link>
+                        {authButtons}
                     </div>
                 </nav>
             </div>
