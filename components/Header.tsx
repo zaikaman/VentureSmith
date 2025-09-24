@@ -27,8 +27,9 @@ export const Header: React.FC = () => {
                 <div className="flex items-center justify-between h-20">
                     {/* Left: Logo */}
                     <div className="flex items-center">
-                        <a href="#" className="text-3xl font-bold text-purple-400">
-                            VentureForge
+                        <a href="#" className="flex items-center space-x-3 text-3xl font-bold text-purple-400">
+                            <img src="/logo.png" alt="VentureForge Logo" className="h-8 w-8" />
+                            <span>VentureForge</span>
                         </a>
                     </div>
                     

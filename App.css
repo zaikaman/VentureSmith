@@ -1,0 +1,11 @@
+body {
+    background-color: #0D0B14;
+}
+
+.app-container {
+    background: 
+        radial-gradient(ellipse at 50% 0%, rgba(80, 42, 99, 0.6) 0%, rgba(13, 11, 20, 0) 50%),
+        radial-gradient(ellipse at 90% 20%, rgba(80, 42, 99, 0.2) 0%, rgba(13, 11, 20, 0) 40%);
+    color: #fff;
+    min-height: 100vh;
+}

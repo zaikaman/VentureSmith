@@ -3,9 +3,14 @@ import React, { useState, useCallback } from 'react';
 import { StartupData } from './types';
 import { generateStartupAssets } from './services/geminiService';
 import { IdeaInputForm } from './components/IdeaInputForm';
+import { InfoSection } from './components/InfoSection';
+import { GrowthSection } from './components/GrowthSection';
+import { TransformSection } from './components/TransformSection';
 import { LoadingIndicator } from './components/LoadingIndicator';
 import { ResultsDashboard } from './components/ResultsDashboard';
+import { Footer } from './components/Footer';
 import { Header } from './components/Header';
+import './App.css';
 
 const App: React.FC = () => {
     const [idea, setIdea] = useState<string>('');
@@ -27,8 +32,7 @@ const App: React.FC = () => {
             setError(err.message || 'An unexpected error occurred.');
         } finally {
             setIsLoading(false);
-        }
-    }, [isLoading]);
+        }    }, [isLoading]);
     
     const handleReset = () => {
         setIdea('');
@@ -58,17 +62,25 @@ const App: React.FC = () => {
                 </div>
             );
         }
-        return <IdeaInputForm onGenerate={handleGenerate} />;
+        return (
+            <>
+                <IdeaInputForm onGenerate={handleGenerate} />
+                <InfoSection />
+                <GrowthSection />
+                <TransformSection />
+            </>
+        );
     };
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-200 flex flex-col">
+        <div className="min-h-screen app-container text-slate-200 flex flex-col">
             <Header />
             <main className="flex-grow flex items-center justify-center p-4">
                 <div className="w-full max-w-7xl mx-auto">
                     {renderContent()}
                 </div>
             </main>
+            <Footer />
         </div>
     );
 };
