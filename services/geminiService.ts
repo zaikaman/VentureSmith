@@ -87,7 +87,7 @@ const startupDataSchema = {
 
 export const generateStartupAssets = async (idea: string): Promise<StartupData> => {
     try {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
         const prompt = `Based on the following startup idea, generate a comprehensive startup plan.
         Idea: "${idea}"
