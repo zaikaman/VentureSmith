@@ -86,6 +86,7 @@ const startupDataSchema = {
 
 
 export const generateStartupAssets = async (idea: string): Promise<StartupData> => {
+    console.log("geminiService.ts: API_KEY:", process.env.GEMINI_API_KEY);
     try {
         const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
