@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 
 const QuestionMarkIcon = () => (
@@ -33,10 +33,16 @@ const MoonIcon = () => (
 
 export const Header: React.FC = () => {
     const { theme, toggleTheme } = useTheme();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const navLinks = ["Home", "About Us", "Services", "Features", "Contact"];
 
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
     return (
-        <header style={{backgroundColor: `var(--bg-slate-900)`}} className="sticky top-0 z-50 w-full backdrop-blur-sm border-b border-[var(--border-slate-700)]/50">
+        <>
+            <header style={{backgroundColor: `var(--bg-slate-900)`}} className="sticky top-0 z-50 w-full backdrop-blur-sm border-b border-[var(--border-slate-700)]/50">
             <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     {/* Left: Logo */}
@@ -84,7 +90,7 @@ export const Header: React.FC = () => {
                     
                     {/* Mobile Menu Button */}
                     <div className="lg:hidden">
-                        <button style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)]" aria-label="Open menu">
+                        <button onClick={toggleMobileMenu} style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)]" aria-label="Open menu">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                             </svg>
@@ -93,5 +99,32 @@ export const Header: React.FC = () => {
                 </div>
             </div>
         </header>
+        {isMobileMenuOpen && (
+            <div className="lg:hidden fixed inset-0 bg-[var(--background-color)] z-50">
+                <div className="flex justify-end p-4">
+                    <button onClick={toggleMobileMenu} style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)]" aria-label="Close menu">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <nav className="flex flex-col items-center space-y-4">
+                    {navLinks.map(link => (
+                        <a key={link} href="#" style={{color: `var(--text-slate-300)`}} className="hover:text-[var(--text-color)] text-lg font-medium transition-colors">
+                            {link}
+                        </a>
+                    ))}
+                    <div className="flex flex-col items-center space-y-4 mt-4">
+                        <a href="#" style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
+                            Sign in
+                        </a>
+                        <a href="#" style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
+                            Sign up
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        )}
+    </>
     );
 };
