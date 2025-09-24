@@ -93,7 +93,7 @@ export const Header: React.FC = () => {
 
     return (
         <>
-            <header style={{backgroundColor: `var(--bg-slate-900)`}} className="sticky top-0 z-50 w-full backdrop-blur-sm border-b border-[var(--border-slate-700)]/50">
+            <header style={{backgroundColor: `var(--bg-slate-900)`}} className="sticky top-0 z-50 w-full backdrop-blur-sm border-[var(--border-slate-700)]/50">
             <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     {/* Left: Logo */}

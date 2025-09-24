@@ -10,8 +10,8 @@ export const InfoSection: React.FC = () => {
                         <p style={{color: `var(--text-slate-400)`}} className="text-lg mb-8">From developing intuitive algorithms to scalable AI-driven applications, we transform visions into impactful realities.</p>
                         <div className="flex flex-wrap gap-4">
                             <button style={{borderColor: `var(--primary-color)`, color: `var(--text-color)`}} className="bg-transparent border py-3 px-6 rounded-full hover:bg-[var(--primary-color)] transition-colors">Today with AI Startup Solutions</button>
-                            <button style={{borderColor: `var(--border-slate-700)`, color: `var(--text-slate-400)`}} className="bg-transparent border py-3 px-6 rounded-full hover:bg-[var(--border-slate-700)] hover:text-[var(--text-color)] transition-colors">AI Technology</button>
-                            <button style={{borderColor: `var(--border-slate-700)`, color: `var(--text-slate-400)`}} className="bg-transparent border py-3 px-6 rounded-full hover:bg-[var(--border-slate-700)] hover:text-[var(--text-color)] transition-colors">Innovating Tomorrow</button>
+                            <button style={{borderColor: `var(--primary-color)`, color: `var(--text-color)`}} className="bg-transparent border py-3 px-6 rounded-full hover:bg-[var(--primary-color)] transition-colors">AI Technology</button>
+                            <button style={{borderColor: `var(--primary-color)`, color: `var(--text-color)`}} className="bg-transparent border py-3 px-6 rounded-full hover:bg-[var(--primary-color)] transition-colors">Innovating Tomorrow</button>
                         </div>
                     </div>
                     <div className="space-y-8">
