@@ -20,10 +20,7 @@ export interface BusinessPlanData {
 }
 
 export interface WebsitePrototypeData {
-  headline: string;
-  subheading: string;
-  features: { title: string; description: string }[];
-  cta: string;
+  code: string;
 }
 
 export interface PitchDeckData {

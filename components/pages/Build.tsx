@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { StartupData } from '../../types';
 import { generateStartupAssets } from '../../services/geminiService';
@@ -17,13 +17,19 @@ export const Build: React.FC = () => {
     const { data: session, isPending } = authClient.useSession();
     const location = useLocation();
     const navigate = useNavigate();
+    const generationFired = useRef(false);
 
-    const handleGenerate = async (submittedIdea: string) => {
+    const handleGenerate = useCallback(async (submittedIdea: string) => {
+        console.log(`Generation started for idea: "${submittedIdea}"`);
         if (!session) {
+            console.log("No session found, opening login modal.");
             setIsLoginModalOpen(true);
             return;
         }
-        if (!submittedIdea || isLoading) return;
+        if (!submittedIdea || isLoading) {
+            console.log("Skipping generation: no idea or already loading.");
+            return;
+        }
         setIdea(submittedIdea);
         setIsLoading(true);
         setResults(null);
@@ -31,13 +37,16 @@ export const Build: React.FC = () => {
 
         try {
             const data = await generateStartupAssets(submittedIdea);
+            console.log("API call successful, received data:", data);
             setResults(data);
         } catch (err: any) {
+            console.error("Error caught in Build component:", err);
             setError(err.message || 'An unexpected error occurred.');
         } finally {
+            console.log("Setting loading to false.");
             setIsLoading(false);
         }
-    };
+    }, [session, isLoading]);
     
     const handleReset = () => {
         setIdea('');
@@ -50,10 +59,15 @@ export const Build: React.FC = () => {
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const ideaFromQuery = searchParams.get('idea');
-        if (ideaFromQuery) {
-            handleGenerate(ideaFromQuery);
+        if (ideaFromQuery && !generationFired.current) {
+            if (session) {
+                generationFired.current = true;
+                handleGenerate(ideaFromQuery);
+            } else if (!isPending) {
+                setIsLoginModalOpen(true);
+            }
         }
-    }, [location.search, session]);
+    }, [location.search, session, isPending, handleGenerate]);
 
     if (isPending) {
         return <LoadingIndicator idea="Checking session..." />;
@@ -62,9 +76,11 @@ export const Build: React.FC = () => {
     if (isLoading) {
         return <LoadingIndicator idea={idea} />;
     }
+
     if (results) {
         return <ResultsDashboard data={results} onReset={handleReset} />;
     }
+
     if (error) {
         return (
             <div className="text-center p-8">
@@ -79,9 +95,10 @@ export const Build: React.FC = () => {
             </div>
         );
     }
+
     return (
         <div className="build-container">
             <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
         </div>
     );
-}
+};

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface LoadingIndicatorProps {
     idea: string;
@@ -15,6 +16,7 @@ const loadingSteps = [
 ];
 
 export const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({ idea }) => {
+    const { theme } = useTheme();
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
     useEffect(() => {
@@ -35,7 +37,7 @@ export const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({ idea }) => {
                     </svg>
                 </div>
             </div>
-            <h2 className="text-3xl font-bold text-white mb-2">Forging Your Venture</h2>
+            <h2 className={`text-3xl font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Forging Your Venture</h2>
             <p className="text-slate-400 max-w-xl mb-8">"{idea}"</p>
             <div className="w-full max-w-md">
                 <div className="h-2 bg-slate-700 rounded-full overflow-hidden mb-4">
