@@ -26,4 +26,4 @@ dist-ssr
 better-auth
 firecrawl
 client-sdk-web
-server-sdk-typescript
+resend-node
