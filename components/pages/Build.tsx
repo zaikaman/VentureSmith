@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { StartupData } from '../../types';
-import { generateStartupAssets } from '../../services/geminiService';
+import { generateStartupAssets, getMentorFeedback } from '../../services/geminiService'; // Import getMentorFeedback
 import { LoadingIndicator } from './LoadingIndicator';
 import { ResultsDashboard } from './ResultsDashboard';
 import { authClient } from '../../lib/auth-client';
@@ -26,6 +26,8 @@ export const Build: React.FC = () => {
     const [marketResearch, setMarketResearch] = useState<{ landscape: SearchResultItem[], competitors: SearchResultItem[], trends: SearchResultItem[] } | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+    const [mentorFeedback, setMentorFeedback] = useState<string | null>(null); // Mentor feedback state
+    const [isMentorLoading, setIsMentorLoading] = useState<boolean>(false); // Mentor feedback loading state
     const { data: session, isPending } = authClient.useSession();
     const location = useLocation();
     const navigate = useNavigate();
@@ -73,6 +75,24 @@ export const Build: React.FC = () => {
             setIsLoading(false);
         }
     }, [session, isLoading, getMarketLandscape, getCompetitorsAction, getKeyTrendsAction]);
+
+    const handleGetMentorFeedback = async () => {
+        if (!results || !marketResearch) return;
+
+        setIsMentorLoading(true);
+        setError(null);
+        try {
+            const feedback = await getMentorFeedback(results, marketResearch);
+            setMentorFeedback(feedback);
+        } catch (err: any) {
+            console.error("Error getting mentor feedback:", err);
+            setError("Failed to get feedback from AI Mentor. Please try again.");
+            // Optionally clear previous feedback
+            setMentorFeedback(null);
+        } finally {
+            setIsMentorLoading(false);
+        }
+    };
     
     const handleReset = () => {
         setIdea('');
@@ -110,6 +130,9 @@ export const Build: React.FC = () => {
             idea={idea} 
             marketResearch={marketResearch}
             onReset={handleReset} 
+            mentorFeedback={mentorFeedback}
+            isMentorLoading={isMentorLoading}
+            onGetMentorFeedback={handleGetMentorFeedback}
         />;
     }
 

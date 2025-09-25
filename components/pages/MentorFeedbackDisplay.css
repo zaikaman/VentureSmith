@@ -1,0 +1,118 @@
+
+.feedback-container {
+    animation: fade-in 0.5s ease-out;
+}
+
+.feedback-section {
+    background-color: var(--bg-slate-900);
+    border: 1px solid var(--border-slate-700);
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.feedback-section h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--border-slate-700);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+}
+
+.feedback-section .content {
+    padding: 1.5rem;
+    color: var(--text-slate-300);
+}
+
+.feedback-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.feedback-section li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.feedback-section li::before {
+    content: '\2713'; /* Checkmark */
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #22c55e; /* green-500 */
+    font-weight: bold;
+}
+
+/* Specific icons and colors for sections */
+.feedback-section.strengths li::before {
+    content: '\2713'; /* Checkmark */
+    color: #22c55e; /* green-500 */
+}
+
+.feedback-section.risks li::before {
+    content: '\26A0'; /* Warning sign */
+    color: #f97316; /* orange-500 */
+}
+
+.feedback-section.questions li::before {
+    content: '?';
+    color: #38bdf8; /* lightBlue-400 */
+    font-weight: bold;
+}
+
+.score-card {
+    text-align: center;
+    padding: 2rem;
+}
+
+.score-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 1rem;
+    background: conic-gradient(from 0deg, var(--gradient-from), var(--gradient-to), var(--gradient-from));
+    position: relative;
+}
+
+.score-circle-inner {
+    width: 100px;
+    height: 100px;
+    background-color: var(--bg-slate-900);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.score-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.score-label {
+    font-size: 0.875rem;
+    color: var(--text-slate-400);
+    margin-top: -5px;
+}
+
+.score-justification {
+    font-style: italic;
+    color: var(--text-slate-300);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

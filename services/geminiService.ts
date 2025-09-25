@@ -218,3 +218,72 @@ export const regenerateWebsitePrototype = async (idea: string): Promise<{ code: 
 
     throw new Error(`Failed to regenerate website prototype after ${maxRetries + 1} attempts. Last error: ${lastError?.message}`);
 };
+
+export const getMentorFeedback = async (startupData: StartupData, marketResearch: any): Promise<string> => {
+    const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+
+    const prompt = `
+        You are a seasoned venture capitalist and startup mentor. Your name is "Alex Chen".
+        A startup founder has generated the following business assets and is asking for your expert feedback.
+        Please provide a critical, insightful, and constructive analysis of their entire plan.
+
+        Here is the data they have generated:
+        ---
+        **Core Business Data:**
+        ${JSON.stringify(startupData, null, 2)}
+        ---
+        **External Market Research Data:**
+        ${JSON.stringify(marketResearch, null, 2)}
+        ---
+
+        Based on all the information provided, please structure your feedback in markdown format as follows:
+
+        # AI Mentor Feedback
+
+        ### Overall Investability Score: [Provide a score out of 10] / 10
+        **Justification:** [Provide a brief, sharp justification for your score.]
+
+        ---
+
+        ### Key Strengths
+        *   **Strength 1:** [Describe the first major strength of the business idea/plan.]
+        *   **Strength 2:** [Describe the second major strength.]
+        *   **Strength 3:** [Describe the third major strength.]
+
+        ---
+
+        ### Potential Risks & Weaknesses
+        *   **Risk 1:** [Describe the first major risk or weakness.]
+        *   **Risk 2:** [Describe the second major risk or weakness.]
+        *   **Risk 3:** [Describe the third major risk or weakness.]
+
+        ---
+
+        ### Critical Investor Questions
+        *   **Question 1:** [Pose a challenging, insightful question an investor would ask.]
+        *   **Question 2:** [Pose another critical question.]
+        *   **Question 3:** [Pose a final, thought-provoking question.]
+
+        Your tone should be professional, direct, and helpful. You are here to challenge the founder to make their idea better.
+    `;
+
+    try {
+        console.log("--- Requesting Mentor Feedback from Gemini ---");
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt,
+        });
+        const feedbackText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+        if (!feedbackText) {
+            throw new Error("No feedback text received from Gemini API");
+        }
+        
+        console.log("Mentor feedback received successfully.");
+        return feedbackText;
+
+    } catch (error: any) {
+        console.error("Failed to get mentor feedback:", error.message);
+        throw new Error(`Failed to get mentor feedback from Gemini API. Error: ${error.message}`);
+    }
+};
