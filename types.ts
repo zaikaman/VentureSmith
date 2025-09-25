@@ -25,6 +25,10 @@ export interface WebsitePrototypeData {
 
 export interface PitchDeckData {
   script: string;
+  slides: Array<{
+    title: string;
+    content: string;
+  }>;
 }
 
 export interface MarketResearchData {

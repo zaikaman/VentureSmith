@@ -44,9 +44,21 @@ const startupDataSchema = {
         pitchDeck: {
             type: Type.OBJECT,
             properties: {
-                script: { type: Type.STRING, description: "A 1-minute voice pitch script an AI CEO would deliver." }
+                script: { type: Type.STRING, description: "A 1-minute voice pitch script an AI CEO would deliver, written in a natural, conversational tone." },
+                slides: {
+                    type: Type.ARRAY,
+                    description: "An array of 8-10 slides for a standard startup pitch deck.",
+                    items: {
+                        type: Type.OBJECT,
+                        properties: {
+                            title: { type: Type.STRING, description: "The title of the slide." },
+                            content: { type: Type.STRING, description: "The key content for the slide, formatted as markdown with bullet points using hyphens." }
+                        },
+                        required: ["title", "content"]
+                    }
+                }
             },
-            required: ["script"]
+            required: ["script", "slides"]
         },
         marketResearch: {
             type: Type.OBJECT,
@@ -84,48 +96,17 @@ export const generateStartupAssets = async (idea: string): Promise<StartupData> 
         2. A concise business plan covering the problem, solution, target audience, and revenue model.
         3. A self-contained React functional component code string for a comprehensive website landing page prototype. CRITICAL FORMATTING REQUIREMENTS:
         - The returned code string must be a raw string of valid, well-formed JSX code only
-        - Any internal double quotes within the code string MUST be escaped with a backslash (e.g., "some-class" should be \"some-class\")
+        - Any internal double quotes within the code string MUST be escaped with a backslash (e.g., \"some-class\")
         - NO markdown formatting whatsoever (no jsx blocks, no backticks, no code blocks)
         - Must be properly formatted with line breaks and indentation for readability (NOT minified or single-line)
-        - Each JSX element should be on its own line with proper indentation
         - String must start with: const WebsitePrototypeComponent = () => {
         - String must end with: };
-        - Component name must be exactly 'WebsitePrototypeComponent'
-        - Use modern React functional component syntax
-        - Style with Tailwind CSS classes only
-        - All HTML tags must be self-closing where appropriate (<img />, <br />, etc.)
-        - Component must be completely self-contained with no external references
-        - Return a single root JSX element
-        - Do not include any import statements
+        - Use modern React functional component syntax and Tailwind CSS classes only.
         
-        STRUCTURE REQUIREMENTS:
-        - Include a header with startup name and navigation menu
-        - Include a footer with social media links and copyright
-        - Include at least 2-3 content sections showcasing the startup's value proposition
-        - Make the design responsive and modern
-        
-        EXAMPLE FORMAT (follow this exact structure):
-        const WebsitePrototypeComponent = () => {
-          return (
-            <div className="min-h-screen">
-              <header className="bg-white shadow">
-                {/* header content */}
-              </header>
-              <main>
-                <section className="hero-section">
-                  {/* hero content */}
-                </section>
-                <section className="features-section">
-                  {/* features content */}
-                </section>
-              </main>
-              <footer className="bg-gray-800">
-                {/* footer content */}
-              </footer>
-            </div>
-          );
-        };
-        4. A short script for a voice pitch deck.
+        4. A full Pitch Deck including:
+           a. A natural, conversational 1-minute voice pitch script.
+           b. A slide deck of 8-10 slides. For each slide, provide a title and content. The content should be concise, using markdown bullet points (hyphens). The slides should cover: Problem, Solution, Market Opportunity, Business Model, Product Demo (use a placeholder description), Market Validation, Competition, Financial Projection (use high-level estimates), Team (use placeholder founders), and a Call to Action.
+
         5. A brief market research summary including potential competitors and trends.
         
         Return the entire output as a single JSON object that conforms to the provided schema.`;
@@ -167,7 +148,7 @@ export const generateStartupAssets = async (idea: string): Promise<StartupData> 
 
             const parsedData: StartupData = JSON.parse(jsonText);
             console.log("JSON parsing successful.");
-            return parsedData; // Success!
+            return parsedData; // Success! 
 
         } catch (error: any) {
             console.error(`Attempt ${i + 1} failed:`, error.message);
