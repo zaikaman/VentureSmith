@@ -133,7 +133,7 @@ export const Header: React.FC = () => {
                     </div>
                     
                     {/* Mobile Menu Button */}
-                    <div className="lg:hidden">
+                    <div className="lg:hidden mt-2">
                         <button onClick={toggleMobileMenu} style={{color: `var(--text-slate-400)`}} className="hover:text-[var(--text-color)]" aria-label="Open menu">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
