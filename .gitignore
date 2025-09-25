@@ -25,6 +25,6 @@ dist-ssr
 .env
 better-auth
 firecrawl
-client-sdk-web
+# client-sdk-web
 resend-node
 GEMINI.md
