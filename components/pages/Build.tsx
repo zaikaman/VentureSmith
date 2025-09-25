@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { StartupData } from '../../types';
@@ -6,12 +7,23 @@ import { LoadingIndicator } from './LoadingIndicator';
 import { ResultsDashboard } from './ResultsDashboard';
 import { authClient } from '../../lib/auth-client';
 import { LoginModal } from './LoginModal';
+import { useAction } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 import './Build.css';
+
+// Define types here for clarity
+type SearchResultItem = {
+    url: string;
+    title: string;
+    description: string;
+    position: number;
+};
 
 export const Build: React.FC = () => {
     const [idea, setIdea] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [results, setResults] = useState<StartupData | null>(null);
+    const [marketResearch, setMarketResearch] = useState<{ landscape: SearchResultItem[], competitors: SearchResultItem[], trends: SearchResultItem[] } | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const { data: session, isPending } = authClient.useSession();
@@ -19,38 +31,53 @@ export const Build: React.FC = () => {
     const navigate = useNavigate();
     const generationFired = useRef(false);
 
+    // Get Convex actions for market research
+    const getMarketLandscape = useAction(api.firecrawl.getMarketLandscape);
+    const getCompetitorsAction = useAction(api.firecrawl.getCompetitors);
+    const getKeyTrendsAction = useAction(api.firecrawl.getKeyTrends);
+
     const handleGenerate = useCallback(async (submittedIdea: string) => {
-        console.log(`Generation started for idea: "${submittedIdea}"`);
         if (!session) {
-            console.log("No session found, opening login modal.");
             setIsLoginModalOpen(true);
             return;
         }
         if (!submittedIdea || isLoading) {
-            console.log("Skipping generation: no idea or already loading.");
             return;
         }
         setIdea(submittedIdea);
         setIsLoading(true);
         setResults(null);
+        setMarketResearch(null);
         setError(null);
 
         try {
-            const data = await generateStartupAssets(submittedIdea);
-            console.log("API call successful, received data:", data);
-            setResults(data);
+            // Run all data fetching in parallel
+            const [mainData, landscapeRes, competitorsRes, trendsRes] = await Promise.all([
+                generateStartupAssets(submittedIdea),
+                getMarketLandscape({ keyword: submittedIdea }),
+                getCompetitorsAction({ keyword: submittedIdea }),
+                getKeyTrendsAction({ keyword: submittedIdea })
+            ]);
+
+            setResults(mainData);
+            setMarketResearch({
+                landscape: landscapeRes.web || [],
+                competitors: competitorsRes.web || [],
+                trends: trendsRes.web || [],
+            });
+
         } catch (err: any) {
-            console.error("Error caught in Build component:", err);
+            console.error("Error caught during parallel generation:", err);
             setError(err.message || 'An unexpected error occurred.');
         } finally {
-            console.log("Setting loading to false.");
             setIsLoading(false);
         }
-    }, [session, isLoading]);
+    }, [session, isLoading, getMarketLandscape, getCompetitorsAction, getKeyTrendsAction]);
     
     const handleReset = () => {
         setIdea('');
         setResults(null);
+        setMarketResearch(null);
         setError(null);
         setIsLoading(false);
         navigate('/');
@@ -77,8 +104,13 @@ export const Build: React.FC = () => {
         return <LoadingIndicator idea={idea} />;
     }
 
-    if (results) {
-        return <ResultsDashboard data={results} onReset={handleReset} />;
+    if (results && marketResearch) {
+        return <ResultsDashboard 
+            data={results} 
+            idea={idea} 
+            marketResearch={marketResearch}
+            onReset={handleReset} 
+        />;
     }
 
     if (error) {

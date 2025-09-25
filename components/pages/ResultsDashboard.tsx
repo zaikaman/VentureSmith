@@ -1,13 +1,30 @@
+
 import React, { useState } from 'react';
 import { StartupData } from '../../types';
 import { Scorecard } from './Scorecard';
 import { BusinessPlan } from './BusinessPlan';
 import { WebsitePrototype } from './WebsitePrototype';
 import { PitchDeck } from './PitchDeck';
-import { MarketResearch } from './MarketResearch';
+import { MarketResearchDisplay } from './MarketResearchDisplay';
+
+// Define types here for clarity
+type SearchResultItem = {
+    url: string;
+    title: string;
+    description: string;
+    position: number;
+};
+
+interface MarketResearchProps {
+    landscape: SearchResultItem[];
+    competitors: SearchResultItem[];
+    trends: SearchResultItem[];
+}
 
 interface ResultsDashboardProps {
     data: StartupData;
+    idea: string;
+    marketResearch: MarketResearchProps;
     onReset: () => void;
 }
 
@@ -21,8 +38,7 @@ const icons: Record<Tab, JSX.Element> = {
     'Market Research': <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M9 9a2 2 0 114 0 2 2 0 01-4 0z" /><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a4 4 0 00-3.446 6.032l-2.261 2.26a1 1 0 101.414 1.414l2.26-2.26A4 4 0 1011 5z" clipRule="evenodd" /></svg>,
 };
 
-
-export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ data, onReset }) => {
+export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ data, idea, marketResearch, onReset }) => {
     const [activeTab, setActiveTab] = useState<Tab>('Dashboard');
 
     const renderTabContent = () => {
@@ -36,7 +52,14 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ data, onRese
             case 'Pitch Deck':
                 return <PitchDeck data={data.pitchDeck} />;
             case 'Market Research':
-                return <MarketResearch data={data.marketResearch} />;
+                return <MarketResearchDisplay 
+                    isLoading={false} // Data is preloaded, so not loading
+                    error={null}      // Data is preloaded, so no error state to manage here
+                    landscape={marketResearch.landscape}
+                    competitors={marketResearch.competitors}
+                    trends={marketResearch.trends}
+                    topic={idea}
+                />;
             default:
                 return null;
         }
@@ -65,11 +88,7 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ data, onRese
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`${
-                                    activeTab === tab
-                                        ? 'border-[var(--primary-color)] text-[var(--primary-color)]'
-                                        : 'border-transparent text-[var(--text-slate-400)] hover:text-[var(--text-slate-200)] hover:border-[var(--border-slate-500)]'
-                                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center transition-colors`}
+                                className={`${activeTab === tab ? 'border-[var(--primary-color)] text-[var(--primary-color)]' : 'border-transparent text-[var(--text-slate-400)] hover:text-[var(--text-slate-200)] hover:border-[var(--border-slate-500)]'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center transition-colors`}
                             >
                                 {icons[tab]} {tab}
                             </button>
