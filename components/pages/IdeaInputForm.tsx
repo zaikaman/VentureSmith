@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useScrollAndHighlight } from '../../contexts/ScrollAndHighlightContext'; // Import the hook
 
 interface IdeaInputFormProps {
     onGenerate: (idea: string) => void;
@@ -7,6 +8,7 @@ interface IdeaInputFormProps {
 export const IdeaInputForm: React.FC<IdeaInputFormProps> = ({ onGenerate }) => {
     const [idea, setIdea] = useState('');
     const [isFocused, setIsFocused] = useState(false);
+    const { inputRef } = useScrollAndHighlight(); // Get inputRef from context
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,6 +32,7 @@ export const IdeaInputForm: React.FC<IdeaInputFormProps> = ({ onGenerate }) => {
             <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
                 <div className={`relative transition-all duration-300 ${isFocused ? 'scale-105' : 'scale-100'}`}>
                     <textarea
+                        ref={inputRef} // Assign the ref to the textarea
                         value={idea}
                         onChange={(e) => setIdea(e.target.value)}
                         onFocus={() => setIsFocused(true)}

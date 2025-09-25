@@ -71,3 +71,13 @@ body {
 .sonner-toast button[data-close-button]:hover {
     color: var(--text-slate-200);
 }
+
+.highlight-input {
+    box-shadow: 0 0 0 4px var(--primary-color) !important;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.animate-reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
