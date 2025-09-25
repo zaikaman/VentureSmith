@@ -26,13 +26,43 @@ const startupDataSchema = {
         businessPlan: {
             type: Type.OBJECT,
             properties: {
-                slogan: { type: Type.STRING, description: "A catchy slogan for the startup." },
-                problem: { type: Type.STRING, description: "The core problem the startup is solving." },
-                solution: { type: Type.STRING, description: "The startup's solution to the problem." },
-                targetAudience: { type: Type.STRING, description: "A description of the ideal customer profile." },
-                revenueModel: { type: Type.STRING, description: "How the startup plans to make money." }
+                executiveSummary: { type: Type.STRING, description: "A concise, compelling summary of the entire business plan." },
+                companyDescription: { type: Type.STRING, description: "The company's mission, vision, and core values." },
+                marketAnalysis: {
+                    type: Type.OBJECT,
+                    properties: {
+                        industryOverview: { type: Type.STRING, description: "An overview of the industry, including size and growth rate." },
+                        targetMarket: { type: Type.STRING, description: "A detailed description of the target customer segments." },
+                        competitiveAnalysis: { type: Type.STRING, description: "An analysis of key competitors, their strengths, and weaknesses." },
+                    },
+                    required: ["industryOverview", "targetMarket", "competitiveAnalysis"]
+                },
+                organizationAndManagement: { type: Type.STRING, description: "Description of the organizational structure and key management personnel (using placeholder roles)." },
+                productsAndServices: { type: Type.STRING, description: "A detailed description of the products or services offered, including unique features and benefits." },
+                marketingAndSalesStrategy: { type: Type.STRING, description: "The strategy for marketing, customer acquisition, and sales channels." },
+                financialProjections: {
+                    type: Type.OBJECT,
+                    properties: {
+                        summary: { type: Type.STRING, description: "A brief summary of the financial outlook and key assumptions." },
+                        forecast: {
+                            type: Type.ARRAY,
+                            description: "A 3-year financial forecast table.",
+                            items: {
+                                type: Type.OBJECT,
+                                properties: {
+                                    year: { type: Type.NUMBER, description: "The forecast year (1, 2, 3)." },
+                                    revenue: { type: Type.STRING, description: "Projected revenue for the year." },
+                                    cogs: { type: Type.STRING, description: "Projected Cost of Goods Sold for the year." },
+                                    netProfit: { type: Type.STRING, description: "Projected Net Profit for the year." },
+                                },
+                                required: ["year", "revenue", "cogs", "netProfit"]
+                            }
+                        }
+                    },
+                    required: ["summary", "forecast"]
+                }
             },
-            required: ["slogan", "problem", "solution", "targetAudience", "revenueModel"]
+            required: ["executiveSummary", "companyDescription", "marketAnalysis", "organizationAndManagement", "productsAndServices", "marketingAndSalesStrategy", "financialProjections"]
         },
         websitePrototype: {
             type: Type.OBJECT,
@@ -93,7 +123,15 @@ export const generateStartupAssets = async (idea: string): Promise<StartupData> 
         
         Generate the following assets:
         1. A scorecard rating the idea on market size, feasibility, and innovation.
-        2. A concise business plan covering the problem, solution, target audience, and revenue model.
+        2. A comprehensive 7-part business plan containing:
+            a. Executive Summary: A concise, compelling summary of the entire business plan.
+            b. Company Description: The company's mission, vision, and core values.
+            c. Market Analysis: A detailed analysis of the industry, target market, and competition.
+            d. Organization and Management: Description of the team and structure (use placeholder roles like 'CEO', 'CTO').
+            e. Products or Services: A detailed description of the offering and its competitive advantages.
+            f. Marketing and Sales Strategy: The plan for customer acquisition, marketing, and sales.
+            g. Financial Projections: A summary of the financial outlook and a 3-year forecast table (revenue, COGS, net profit).
+
         3. A self-contained React functional component code string for a comprehensive website landing page prototype. CRITICAL FORMATTING REQUIREMENTS:
         - The returned code string must be a raw string of valid, well-formed JSX code only
         - Any internal double quotes within the code string MUST be escaped with a backslash (e.g., \"some-class\")

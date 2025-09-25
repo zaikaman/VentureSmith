@@ -59,7 +59,7 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
             case 'Dashboard':
                 return <Scorecard data={data.scorecard} />;
             case 'Business Plan':
-                return <BusinessPlan data={data.businessPlan} />;
+                return <BusinessPlan data={data.businessPlan} idea={idea} />;
             case 'Website':
                 return <WebsitePrototype data={data.websitePrototype} idea={idea} />;
             case 'Pitch Deck':
