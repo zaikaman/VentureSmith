@@ -1,5 +1,5 @@
 
-import { toast } from 'react-toastify'; // Added
+import { toast } from 'sonner';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authClient } from '../../lib/auth-client';

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster } from 'sonner';
 import { Footer } from './components/pages/Footer';
 import { Header } from './components/pages/Header';
 import { useTheme } from './contexts/ThemeContext';
@@ -33,10 +32,7 @@ const App: React.FC = () => {
                 <Footer />
                 <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
             </div>
-            <ToastContainer
-                theme={theme}
-                className="toast-container"
-            />
+            <Toaster position="top-right" richColors theme={theme} closeButton />
         </BrowserRouter>
     );
 };
