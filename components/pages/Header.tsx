@@ -72,19 +72,19 @@ export const Header: React.FC = () => {
 
     const authButtons = session ? (
         <div className="flex items-center space-x-2">
-            <Link to="/account" style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
+            <Link to="/account" onClick={toggleMobileMenu} style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
                 Account
             </Link>
-            <button onClick={handleSignOut} style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
+            <button onClick={() => { handleSignOut(); toggleMobileMenu(); }} style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
                 Sign out
             </button>
         </div>
     ) : (
         <div className="flex items-center space-x-2">
-            <Link to="/signin" style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
+            <Link to="/signin" onClick={toggleMobileMenu} style={{color: `var(--text-slate-200)`, backgroundColor: `var(--bg-slate-800)`}} className="hover:bg-[var(--bg-slate-700)] transition-colors px-5 py-2.5 rounded-full text-sm font-semibold">
                 Sign in
             </Link>
-            <Link to="/signup" style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
+            <Link to="/signup" onClick={toggleMobileMenu} style={{backgroundImage: `linear-gradient(to right, var(--gradient-from), var(--gradient-to))`}} className="text-white hover:opacity-90 transition-opacity px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
                 Sign up
             </Link>
         </div>
@@ -154,7 +154,7 @@ export const Header: React.FC = () => {
                 </div>
                 <nav className="flex flex-col items-center space-y-4">
                     {navLinks.map(link => (
-                        <a key={link} href="#" style={{color: `var(--text-slate-300)`}} className="hover:text-[var(--text-color)] text-lg font-medium transition-colors">
+                        <a key={link} href="#" onClick={toggleMobileMenu} style={{color: `var(--text-slate-300)`}} className="hover:text-[var(--text-color)] text-lg font-medium transition-colors">
                             {link}
                         </a>
                     ))}
