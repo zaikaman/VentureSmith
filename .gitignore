@@ -23,6 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .env
-# better-auth
-# firecrawl
-# client-sdk-web
+better-auth
+firecrawl
+client-sdk-web
+server-sdk-typescript

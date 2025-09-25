@@ -31,7 +31,7 @@ export const search = action({
         return searchResult; // Success
       } catch (error: any) {
         // Check if it's a rate limit error
-        if (error.message && error.message.includes("Rate limit exceeded")) {
+        if (error.message && (error.message.includes("Rate limit exceeded") || error.message.includes("AbortError"))) {
           if (i < maxRetries - 1) {
             console.warn(`Rate limit hit for keyword '${keyword}'. Retrying in ${retryDelay / 1000}s... (Attempt ${i + 1}/${maxRetries})`);
             await wait(retryDelay);
