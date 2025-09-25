@@ -48,7 +48,7 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ data, idea, 
             case 'Business Plan':
                 return <BusinessPlan data={data.businessPlan} />;
             case 'Website':
-                return <WebsitePrototype data={data.websitePrototype} />;
+                return <WebsitePrototype data={data.websitePrototype} idea={idea} />;
             case 'Pitch Deck':
                 return <PitchDeck data={data.pitchDeck} />;
             case 'Market Research':

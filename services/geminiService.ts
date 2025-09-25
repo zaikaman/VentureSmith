@@ -178,3 +178,60 @@ export const generateStartupAssets = async (idea: string): Promise<StartupData> 
     console.error("Failed to generate and parse startup assets after all retries.");
     throw new Error(`Failed to generate startup assets from Gemini API after ${maxRetries + 1} attempts. Last error: ${lastError?.message}`);
 };
+
+export const regenerateWebsitePrototype = async (idea: string): Promise<{ code: string }> => {
+    const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+    const maxRetries = 2;
+    let lastError: Error | null = null;
+    let jsonText: string | undefined;
+
+    const websiteSchema = {
+        type: Type.OBJECT,
+        properties: {
+            code: { type: Type.STRING, description: "A React component code string for the website landing page." }
+        },
+        required: ["code"]
+    };
+
+    const prompt = `Based on the following startup idea, regenerate a new and different design for the website landing page prototype. 
+        Idea: "${idea}"
+        
+        CRITICAL FORMATTING REQUIREMENTS:
+        - The returned code string must be a raw string of valid, well-formed JSX code only
+        - Any internal double quotes within the code string MUST be escaped with a backslash (e.g., \"some-class\")
+        - NO markdown formatting whatsoever (no jsx blocks, no backticks, no code blocks)
+        - Must be properly formatted with line breaks and indentation for readability (NOT minified or single-line)
+        - String must start with: const WebsitePrototypeComponent = () => {
+        - String must end with: };
+        - Use modern React functional component syntax and Tailwind CSS classes only.
+        - Make the design responsive and modern.
+
+        Return the entire output as a single JSON object that conforms to the provided schema.`;
+
+    for (let i = 0; i <= maxRetries; i++) {
+        try {
+            const response = await ai.models.generateContent({
+                model: "gemini-2.5-flash",
+                contents: prompt,
+                config: {
+                    responseMimeType: "application/json",
+                    responseSchema: websiteSchema,
+                },
+            });
+            jsonText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+            if (!jsonText) {
+                throw new Error("No response text received from Gemini API for website regeneration");
+            }
+
+            const parsedData: { code: string } = JSON.parse(jsonText);
+            return parsedData;
+
+        } catch (error: any) {
+            console.error(`Website regeneration attempt ${i + 1} failed:`, error.message);
+            lastError = error;
+        }
+    }
+
+    throw new Error(`Failed to regenerate website prototype after ${maxRetries + 1} attempts. Last error: ${lastError?.message}`);
+};
