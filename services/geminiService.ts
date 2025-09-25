@@ -102,6 +102,7 @@ export const generateStartupAssets = async (idea: string): Promise<StartupData> 
         - String must start with: const WebsitePrototypeComponent = () => {
         - String must end with: };
         - Use modern React functional component syntax and Tailwind CSS classes only.
+        - Do not use any external images or assets. The component must be self-contained.
         
         4. A full Pitch Deck including:
            a. A natural, conversational 1-minute voice pitch script.
@@ -185,6 +186,7 @@ export const regenerateWebsitePrototype = async (idea: string): Promise<{ code: 
         - String must start with: const WebsitePrototypeComponent = () => {
         - String must end with: };
         - Use modern React functional component syntax and Tailwind CSS classes only.
+        - Do not use any external images or assets. The component must be self-contained.
         - Make the design responsive and modern.
 
         Return the entire output as a single JSON object that conforms to the provided schema.`;
