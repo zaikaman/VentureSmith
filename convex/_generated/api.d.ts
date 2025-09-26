@@ -11,6 +11,7 @@
 import type * as auth from "../auth.js";
 import type * as emails_VerifyEmail from "../emails/VerifyEmail.js";
 import type * as firecrawl from "../firecrawl.js";
+import type * as gemini from "../gemini.js";
 import type * as http from "../http.js";
 import type * as startups from "../startups.js";
 import type * as users from "../users.js";
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   "emails/VerifyEmail": typeof emails_VerifyEmail;
   firecrawl: typeof firecrawl;
+  gemini: typeof gemini;
   http: typeof http;
   startups: typeof startups;
   users: typeof users;

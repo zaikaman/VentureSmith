@@ -1,9 +1,7 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { StartupData } from '../../types';
-import { generateStartupAssets, getMentorFeedback } from '../../services/geminiService';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { generateStartupAssets } from '../../services/geminiService';
 import { LoadingIndicator } from './LoadingIndicator';
-import { ResultsDashboard } from './ResultsDashboard';
 import { authClient } from '../../lib/auth-client';
 import { LoginModal } from './LoginModal';
 import { useAction, useMutation, useQuery } from 'convex/react';
@@ -11,32 +9,18 @@ import { api } from '../../convex/_generated/api';
 import { IdeaInputForm } from './IdeaInputForm'; // Import the form
 import './BlueprintBuilder.css';
 
-// Define types here for clarity
-type SearchResultItem = {
-    url: string;
-    title: string;
-    description: string;
-    position: number;
-};
-
 export const BlueprintBuilder: React.FC = () => {
     const [idea, setIdea] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [results, setResults] = useState<StartupData | null>(null);
-    const [marketResearch, setMarketResearch] = useState<{ landscape: SearchResultItem[], competitors: SearchResultItem[], trends: SearchResultItem[] } | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
-    const [mentorFeedback, setMentorFeedback] = useState<string | null>(null); // Mentor feedback state
-    const [isMentorLoading, setIsMentorLoading] = useState<boolean>(false); // Mentor feedback loading state
     const [showHistory, setShowHistory] = useState<boolean>(false);
     const { data: session, isPending } = authClient.useSession();
     const navigate = useNavigate();
 
     const startups = useQuery(api.startups.getStartupsForUser);
-    // Get Convex actions for market research
-    const getMarketLandscape = useAction(api.firecrawl.getMarketLandscape);
-    const getCompetitorsAction = useAction(api.firecrawl.getCompetitors);
-    const getKeyTrendsAction = useAction(api.firecrawl.getKeyTrends);
+    // Get Convex actions
+    const performMarketAnalysis = useAction(api.firecrawl.performMarketAnalysis);
     const createStartup = useMutation(api.startups.createStartup);
 
     const handleGenerate = useCallback(async (submittedIdea: string) => {
@@ -49,37 +33,27 @@ export const BlueprintBuilder: React.FC = () => {
         }
         setIdea(submittedIdea);
         setIsLoading(true);
-        setResults(null);
-        setMarketResearch(null);
         setError(null);
 
         try {
             // Run all data fetching in parallel
-            const [mainData, landscapeRes, competitorsRes, trendsRes] = await Promise.all([
+            const [mainData, marketAnalysisResult] = await Promise.all([
                 generateStartupAssets(submittedIdea),
-                getMarketLandscape({ keyword: submittedIdea }),
-                getCompetitorsAction({ keyword: submittedIdea }),
-                getKeyTrendsAction({ keyword: submittedIdea })
+                performMarketAnalysis({ keyword: submittedIdea }),
             ]);
 
-            setResults(mainData);
-            setIdea(mainData.name);
-            const marketResearchData = {
-                landscape: landscapeRes.web || [],
-                competitors: competitorsRes.web || [],
-                trends: trendsRes.web || [],
-            };
-            setMarketResearch(marketResearchData);
-
-            // Save to database
-            await createStartup({
+            // Save to database and get the new ID
+            const newStartupId = await createStartup({
                 name: mainData.name,
                 dashboard: JSON.stringify(mainData.scorecard, null, 2),
                 businessPlan: JSON.stringify(mainData.businessPlan, null, 2),
                 website: JSON.stringify(mainData.websitePrototype, null, 2),
                 pitchDeck: JSON.stringify(mainData.pitchDeck, null, 2),
-                marketResearch: JSON.stringify(marketResearchData, null, 2),
+                marketResearch: JSON.stringify(marketAnalysisResult, null, 2),
             });
+
+            // Navigate directly to the new venture workspace
+            navigate(`/venture/${newStartupId}`);
 
         } catch (err: any) {
             console.error("Error caught during parallel generation:", err);
@@ -87,25 +61,7 @@ export const BlueprintBuilder: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [session, isLoading, getMarketLandscape, getCompetitorsAction, getKeyTrendsAction, createStartup]);
-
-    const handleGetMentorFeedback = async () => {
-        if (!results || !marketResearch) return;
-
-        setIsMentorLoading(true);
-        setError(null);
-        try {
-            const feedback = await getMentorFeedback(results, marketResearch);
-            setMentorFeedback(feedback);
-        } catch (err: any) {
-            console.error("Error getting mentor feedback:", err);
-            setError("Failed to get feedback from AI Mentor. Please try again.");
-            // Optionally clear previous feedback
-            setMentorFeedback(null);
-        } finally {
-            setIsMentorLoading(false);
-        }
-    };
+    }, [session, isLoading, performMarketAnalysis, createStartup, navigate]);
 
     const handleHistoryItemClick = (startup: any) => {
         navigate(`/venture/${startup._id}`);
@@ -113,8 +69,6 @@ export const BlueprintBuilder: React.FC = () => {
 
     const handleReset = () => {
         setIdea('');
-        setResults(null);
-        setMarketResearch(null);
         setError(null);
         setIsLoading(false);
         navigate('/blueprint-builder');
@@ -134,29 +88,19 @@ export const BlueprintBuilder: React.FC = () => {
         return <LoadingIndicator idea={idea} />;
     }
 
-    if (results && marketResearch) {
-        return <ResultsDashboard 
-            data={results} 
-            idea={idea} 
-            marketResearch={marketResearch}
-            onReset={handleReset} 
-            mentorFeedback={mentorFeedback}
-            isMentorLoading={isMentorLoading}
-            onGetMentorFeedback={handleGetMentorFeedback}
-        />;
-    }
-
     if (error) {
         return (
-            <div className="text-center p-8">
-                <h2 className="text-2xl font-bold text-red-500 mb-4">Generation Failed</h2>
-                <p className="text-red-300 mb-6 max-w-2xl mx-auto">{error}</p>
-                <button
-                    onClick={handleReset}
-                    className="bg-gradient-to-r from-gray-700 to-gray-800 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-600 transition-colors duration-300"
-                >
-                    Try Again
-                </button>
+            <div className="blueprint-builder-container">
+                <div className="text-center p-8">
+                    <h2 className="text-2xl font-bold text-red-500 mb-4">Generation Failed</h2>
+                    <p className="text-red-300 mb-6 max-w-2xl mx-auto">{error}</p>
+                    <button
+                        onClick={handleReset}
+                        className="bg-gradient-to-r from-gray-700 to-gray-800 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-600 transition-colors duration-300"
+                    >
+                        Try Again
+                    </button>
+                </div>
             </div>
         );
     }

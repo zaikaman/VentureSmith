@@ -20,9 +20,10 @@ interface PhaseChecklistProps {
     startup: any; // Replace 'any' with a proper type later
     onTaskClick: (taskId: TaskID) => void;
     activeTask: TaskID;
+    mentorFeedback: string | null;
 }
 
-export const PhaseChecklist: React.FC<PhaseChecklistProps> = ({ startup, onTaskClick, activeTask }) => {
+export const PhaseChecklist: React.FC<PhaseChecklistProps> = ({ startup, onTaskClick, activeTask, mentorFeedback }) => {
 
     const phases: Phase[] = [
         {
@@ -40,7 +41,7 @@ export const PhaseChecklist: React.FC<PhaseChecklistProps> = ({ startup, onTaskC
             name: 'Phase 2: Validation & Strategy',
             tasks: [
                 { id: 'marketResearch', name: 'Analyze Market & Competitor Research', isCompleted: !!startup.marketResearch },
-                { id: 'aiMentor', name: 'Get Feedback from AI Mentor', isCompleted: false }, // This will need state
+                { id: 'aiMentor', name: 'Get Feedback from AI Mentor', isCompleted: !!mentorFeedback }, // Use the prop here
                 { id: 'validateProblem', name: 'Validate Problem with 5 Potential Customers', isCompleted: false },
             ]
         },

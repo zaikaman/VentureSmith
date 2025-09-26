@@ -52,11 +52,12 @@ export const createStartup = mutation({
       throw new Error("User not found");
     }
 
-    await ctx.db.insert("startups", {
+    const startupId = await ctx.db.insert("startups", {
       userId: user._id,
       createdAt: Date.now(),
       ...args,
     });
+    return startupId;
   },
 });
 
@@ -115,6 +116,37 @@ export const updateWebsitePrototype = mutation({
     // Update the startup document
     await ctx.db.patch(args.startupId, {
       website: JSON.stringify(newWebsiteData, null, 2),
+    });
+
+    return { success: true };
+  },
+});
+
+export const updateMentorFeedback = mutation({
+  args: { 
+    startupId: v.id("startups"), 
+    feedback: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const startup = await ctx.db.get(args.startupId);
+    if (!startup) {
+      throw new Error("Startup not found");
+    }
+
+    // Check for ownership
+    const user = await ctx.db.query("users").withIndex("by_subject", q => q.eq("subject", identity.subject)).unique();
+    if (!user || user._id !== startup.userId) {
+      throw new Error("Not authorized to update this startup");
+    }
+
+    // Update the startup document
+    await ctx.db.patch(args.startupId, {
+      aiMentor: args.feedback,
     });
 
     return { success: true };

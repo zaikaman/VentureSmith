@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery } from 'convex/react';
+import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { authClient } from '../../lib/auth-client';
@@ -11,20 +11,65 @@ import { BusinessPlan } from './BusinessPlan';
 import { PitchDeck } from './PitchDeck';
 import { WebsitePrototype } from './WebsitePrototype';
 import { MarketResearchDisplay } from './MarketResearchDisplay';
+import { MentorFeedbackDisplay } from './MentorFeedbackDisplay';
+import { getMentorFeedback } from '../../services/geminiService';
 import './VentureWorkspace.css';
 
 export const VentureWorkspace: React.FC = () => {
     const { id } = useParams<{ id: Id<"startups"> }>();
     const { data: session, isPending: isSessionPending } = authClient.useSession();
     const [activeView, setActiveView] = useState<TaskID>('scorecard');
+    const [mentorFeedback, setMentorFeedback] = useState<string | null>(null);
+    const [isMentorLoading, setIsMentorLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const updateMentorFeedbackInDB = useMutation(api.startups.updateMentorFeedback);
 
     const startup = useQuery(
         api.startups.getStartupById, 
         session && id ? { id } : 'skip'
     );
 
+    // Initialize mentorFeedback state when startup data loads
+    React.useEffect(() => {
+        if (startup?.aiMentor) {
+            setMentorFeedback(startup.aiMentor);
+        }
+    }, [startup]);
+
     const handleTaskClick = (taskId: TaskID) => {
         setActiveView(taskId);
+    };
+
+    const handleGetMentorFeedback = async () => {
+        if (!startup) return;
+
+        setIsMentorLoading(true);
+        setError(null);
+        try {
+            const results = {
+                name: startup.name || '',
+                scorecard: startup.dashboard ? JSON.parse(startup.dashboard) : {},
+                businessPlan: startup.businessPlan ? JSON.parse(startup.businessPlan) : {},
+                websitePrototype: startup.website ? JSON.parse(startup.website) : {},
+                pitchDeck: startup.pitchDeck ? JSON.parse(startup.pitchDeck) : {},
+            };
+            const marketResearch = startup.marketResearch ? JSON.parse(startup.marketResearch) : {};
+
+            const feedback = await getMentorFeedback(results, marketResearch);
+            setMentorFeedback(feedback);
+
+            // Save feedback to the database
+            await updateMentorFeedbackInDB({ startupId: startup._id, feedback });
+            toast.success("AI Mentor feedback saved!");
+
+        } catch (err: any) {
+            console.error("Error getting mentor feedback:", err);
+            setError("Failed to get feedback from AI Mentor. Please try again.");
+            setMentorFeedback(null);
+        } finally {
+            setIsMentorLoading(false);
+        }
     };
 
     const renderActiveView = () => {
@@ -35,7 +80,7 @@ export const VentureWorkspace: React.FC = () => {
         const businessPlan = startup.businessPlan ? JSON.parse(startup.businessPlan) : {};
         const pitchDeck = startup.pitchDeck ? JSON.parse(startup.pitchDeck) : {};
         const websitePrototype = startup.website ? JSON.parse(startup.website) : {};
-        const marketResearch = startup.marketResearch ? JSON.parse(startup.marketResearch) : { landscape: [], competitors: [], trends: [] };
+        const marketResearch = startup.marketResearch ? JSON.parse(startup.marketResearch) : { summary: "", sources: [] };
 
         switch (activeView) {
             case 'scorecard':
@@ -48,11 +93,37 @@ export const VentureWorkspace: React.FC = () => {
                 return <WebsitePrototype data={websitePrototype} idea={startup.name || ''} startupId={startup._id} />;
             case 'marketResearch':
                 return <MarketResearchDisplay 
-                    isLoading={false} 
-                    error={null} 
+                    summary={marketResearch.summary} 
+                    sources={marketResearch.sources} 
                     topic={startup.name || ''} 
-                    {...marketResearch} 
                 />;
+            case 'aiMentor':
+                if (isMentorLoading) {
+                    return (
+                        <div className="flex flex-col items-center justify-center p-10 text-center">
+                            <div className="spinner"></div>
+                            <p className="mt-6 text-xl font-semibold animate-pulse">Our AI Mentor is analyzing your venture...</p>
+                        </div>
+                    );
+                }
+                if (mentorFeedback) {
+                    return <MentorFeedbackDisplay feedback={mentorFeedback} />;
+                }
+                return (
+                    <div className="text-center p-12">
+                        <h3 className="text-3xl font-bold mb-4">Unlock Expert AI Analysis</h3>
+                        <p className="text-slate-300 mb-8 max-w-3xl mx-auto">
+                            Let our AI Mentor, modeled after a seasoned venture capitalist, analyze your generated assets. It will provide critical feedback on strengths, weaknesses, and investor questions to help you strengthen your business case.
+                        </p>
+                        <button
+                            onClick={handleGetMentorFeedback}
+                            className="cta-button"
+                        >
+                            Analyze & Get Feedback
+                        </button>
+                        {error && <p className="text-red-500 mt-4">{error}</p>}
+                    </div>
+                );
             default:
                 return <div className="p-4">Select a task to view its content.</div>;
         }
@@ -87,7 +158,7 @@ export const VentureWorkspace: React.FC = () => {
             
             <div className="workspace-layout">
                 <aside className="workspace-sidebar">
-                    <PhaseChecklist startup={startup} onTaskClick={handleTaskClick} activeTask={activeView} />
+                    <PhaseChecklist startup={startup} onTaskClick={handleTaskClick} activeTask={activeView} mentorFeedback={mentorFeedback} />
                 </aside>
                 <main className="workspace-content">
                     {renderActiveView()}

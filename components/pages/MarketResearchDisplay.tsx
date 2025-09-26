@@ -1,72 +1,58 @@
 
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import './MarketResearchDisplay.css';
 
-// This type will be moved to a more central location or imported, but defined here for clarity
-type SearchResultItem = {
-    url: string;
+interface Source {
     title: string;
-    description: string;
-    position: number;
-};
+    url: string;
+}
 
 interface MarketResearchDisplayProps {
-    isLoading: boolean;
-    error: string | null;
-    landscape: SearchResultItem[];
-    competitors: SearchResultItem[];
-    trends: SearchResultItem[];
+    summary: string;
+    sources: Source[];
     topic: string;
 }
 
-const Chip: React.FC<{ children: React.ReactNode; href: string }> = ({ children, href }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="competitor-chip">
-        {children}
-    </a>
-);
-
-const ResultCard: React.FC<{ item: SearchResultItem }> = ({ item }) => (
-    <div className="result-card">
-        <h4 className="result-card-title">
-            <a href={item.url} target="_blank" rel="noopener noreferrer">
-                {item.title}
-            </a>
-        </h4>
-        <p className="result-card-description">{item.description}</p>
-    </div>
-);
-
-export const MarketResearchDisplay: React.FC<MarketResearchDisplayProps> = ({ isLoading, error, landscape, competitors, trends, topic }) => {
-    if (isLoading) {
-        return <div className="text-center p-10">Loading market research for "{topic}"...</div>;
-    }
-
-    if (error) {
-        return <div className="text-center p-10 text-red-500">{error}</div>;
-    }
-
+export const MarketResearchDisplay: React.FC<MarketResearchDisplayProps> = ({ summary, sources, topic }) => {
     return (
         <div className="market-research-container">
-            <div className="mr-section">
-                <h3 className="mr-section-title">Market Landscape</h3>
-                <div className="mr-grid">
-                    {landscape.map((item) => <ResultCard key={item.position} item={item} />)}
-                </div>
+            <div className="mr-header">
+                <h2 className="mr-title">AI-Powered Market Analysis</h2>
+                <p className="mr-topic">Topic: {topic}</p>
             </div>
 
-            <div className="mr-section">
-                <h3 className="mr-section-title">Potential Competitors</h3>
-                <div className="competitor-chips">
-                    {competitors.map((item) => <Chip key={item.position} href={item.url}>{item.title}</Chip>)}
-                </div>
+            <div className="mr-summary">
+                <ReactMarkdown
+                    components={{
+                        h1: ({node, ...props}) => <h3 className="md-h3" {...props} />,
+                        h2: ({node, ...props}) => <h4 className="md-h4" {...props} />,
+                        h3: ({node, ...props}) => <h5 className="md-h5" {...props} />,
+                        p: ({node, ...props}) => <p className="md-p" {...props} />,
+                        ul: ({node, ...props}) => <ul className="md-ul" {...props} />,
+                        li: ({node, ...props}) => <li className="md-li" {...props} />,
+                        strong: ({node, ...props}) => <strong className="md-strong" {...props} />,
+                    }}
+                >
+                    {summary}
+                </ReactMarkdown>
             </div>
 
-            <div className="mr-section">
-                <h3 className="mr-section-title">Key Trends</h3>
-                <div className="mr-grid">
-                     {trends.map((item) => <ResultCard key={item.position} item={item} />)}
+            {sources && sources.length > 0 && (
+                <div className="mr-sources">
+                    <h3 className="mr-sources-title">Sources</h3>
+                    <ul className="mr-sources-list">
+                        {sources.map((source, index) => (
+                            <li key={index}>
+                                <a href={source.url} target="_blank" rel="noopener noreferrer">
+                                    {source.title}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
-            </div>
+            )}
         </div>
     );
 };
+

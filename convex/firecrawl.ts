@@ -1,7 +1,7 @@
 
 import { v } from "convex/values";
 import { action } from "./_generated/server";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 import FirecrawlApp from "@mendable/firecrawl-js";
 
 // Helper function for waiting
@@ -24,55 +24,77 @@ export const search = action({
       try {
         const searchResult = await app.search(keyword, {
           pageOptions: {
-            fetchPageContent: true,
+            fetchPageContent: true, // This is crucial
           }
         });
         console.log(`Firecrawl API Result for keyword '${keyword}':`, searchResult);
         return searchResult; // Success
       } catch (error: any) {
-        // Check if it's a rate limit error
         if (error.message && (error.message.includes("Rate limit exceeded") || error.message.includes("AbortError"))) {
           if (i < maxRetries - 1) {
             console.warn(`Rate limit hit for keyword '${keyword}'. Retrying in ${retryDelay / 1000}s... (Attempt ${i + 1}/${maxRetries})`);
             await wait(retryDelay);
           } else {
-            // Last attempt failed, throw a specific error
             throw new Error(`Failed to fetch data for '${keyword}' after ${maxRetries} attempts due to rate limiting.`);
           }
         } else {
-          // Not a rate limit error, re-throw it immediately
           throw error;
         }
       }
     }
-    // This part should be unreachable, but typescript needs a return path
     throw new Error("Search action failed unexpectedly.");
   },
 });
 
-// Action to get market landscape information
-export const getMarketLandscape = action({
-    args: { keyword: v.string() },
-    handler: async (ctx, { keyword }) => {
-        const fullQuery = `market landscape for ${keyword}`;
-        return await ctx.runAction(api.firecrawl.search, { keyword: fullQuery });
-    }
-});
 
-// Action to find potential competitors
-export const getCompetitors = action({
+export const performMarketAnalysis = action({
     args: { keyword: v.string() },
     handler: async (ctx, { keyword }) => {
-        const fullQuery = `competitors for ${keyword}`;
-        return await ctx.runAction(api.firecrawl.search, { keyword: fullQuery });
-    }
-});
+        const apiKey = process.env.FIRECRAWL_API_KEY;
+        if (!apiKey) {
+          throw new Error("FIRECRAWL_API_KEY environment variable not set.");
+        }
+        const app = new FirecrawlApp({ apiKey });
 
-// Action to get key industry trends
-export const getKeyTrends = action({
-    args: { keyword: v.string() },
-    handler: async (ctx, { keyword }) => {
-        const fullQuery = `key trends for ${keyword}`;
-        return await ctx.runAction(api.firecrawl.search, { keyword: fullQuery });
+        const fullQuery = `in-depth market analysis for a startup idea: ${keyword}`;
+        
+        // 1. Search for URLs first, without scraping
+        const searchResults = await app.search(fullQuery, { pageOptions: { fetchPageContent: false } });
+        const topUrls = (searchResults?.web || []).slice(0, 5).map((res: any) => res.url);
+
+        if (topUrls.length === 0) {
+            console.warn("No URLs found from Firecrawl search.");
+            return {
+                summary: "We couldn't find any relevant web pages to analyze for this idea. Please try a different or more specific keyword.",
+                sources: [],
+            };
+        }
+
+        // 2. Scrape each URL individually
+        const scrapePromises = topUrls.map((url: string) => app.scrape(url));
+        const scrapeResults = await Promise.allSettled(scrapePromises);
+
+        const scrapedContent = scrapeResults
+            .filter(result => result.status === 'fulfilled' && result.value.markdown && result.value.markdown.length > 100)
+            .map((result: any) => result.value);
+
+        if (scrapedContent.length === 0) {
+            console.warn("Scraping completed, but no content-rich pages found.");
+            return {
+                summary: "We found some web pages, but could not extract enough content to perform an analysis. This can happen with complex or protected websites.",
+                sources: topUrls.map((url: string) => ({ title: url, url }))
+            };
+        }
+
+        // 3. Call Gemini to summarize the content
+        const summary = await ctx.runAction(internal.gemini.summarizeMarketContent, { scrapedContent });
+
+        // 4. Format sources
+        const sources = scrapedContent.map((result: any) => ({
+            title: result.metadata.title,
+            url: result.metadata.sourceURL,
+        }));
+
+        return { summary, sources };
     }
 });
