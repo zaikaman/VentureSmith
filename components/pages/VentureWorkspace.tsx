@@ -12,6 +12,7 @@ import { PitchDeck } from './PitchDeck';
 import { WebsitePrototype } from './WebsitePrototype';
 import { MarketResearchDisplay } from './MarketResearchDisplay';
 import { MentorFeedbackDisplay } from './MentorFeedbackDisplay';
+import CustomerValidation from './CustomerValidation';
 import { getMentorFeedback } from '../../services/geminiService';
 import './VentureWorkspace.css';
 
@@ -129,6 +130,8 @@ export const VentureWorkspace: React.FC = () => {
                         {error && <p className="text-red-500 mt-4">{error}</p>}
                     </div>
                 );
+            case 'validateProblem':
+                return <CustomerValidation startup={startup} />;
             default:
                 return <div className="p-4">Select a task to view its content.</div>;
         }

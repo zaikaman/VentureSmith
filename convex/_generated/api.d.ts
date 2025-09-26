@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as actions from "../actions.js";
 import type * as auth from "../auth.js";
 import type * as emails_VerifyEmail from "../emails/VerifyEmail.js";
 import type * as firecrawl from "../firecrawl.js";
@@ -31,6 +32,7 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  actions: typeof actions;
   auth: typeof auth;
   "emails/VerifyEmail": typeof emails_VerifyEmail;
   firecrawl: typeof firecrawl;

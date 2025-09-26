@@ -42,7 +42,7 @@ export const PhaseChecklist: React.FC<PhaseChecklistProps> = ({ startup, onTaskC
             tasks: [
                 { id: 'marketResearch', name: 'Analyze Market & Competitor Research', isCompleted: !!startup.marketResearch },
                 { id: 'aiMentor', name: 'Get Feedback from AI Mentor', isCompleted: !!mentorFeedback }, // Use the prop here
-                { id: 'validateProblem', name: 'Validate Problem with 5 Potential Customers', isCompleted: false },
+                { id: 'validateProblem', name: 'Validate Problem with 4 Potential Customers', isCompleted: !!startup.customerValidation },
             ]
         },
         {

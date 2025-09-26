@@ -57,3 +57,54 @@ export const summarizeMarketContent = internalAction(
     }
   }
 );
+
+export const validateProblemWithAI = internalAction(
+  async (
+    _,
+    { startupName, startupDescription }: { startupName: string, startupDescription: string }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const prompt = `
+      You are an AI simulating potential customers for a new startup idea.
+      The startup is called "${startupName}".
+      Here is a brief description of the startup: "${startupDescription}".
+
+      Please generate 4 distinct potential customer personas who might be interested in this startup.
+      For each persona, provide:
+      1.  **Name:** A realistic name.
+      2.  **Demographics:** Age, occupation, and other relevant details.
+      3.  **Problem/Need:** What problem or need does this person have that the startup could solve?
+      4.  **Feedback:** Their initial thoughts and feedback on the startup idea. What do they like? What are their concerns? What questions do they have?
+
+      Present the output as a JSON array of objects. Each object should represent a customer persona and have the fields: "name", "demographics", "problem", and "feedback".
+    `;
+
+    try {
+      console.log("--- Requesting Customer Validation from Gemini ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+            responseMimeType: "application/json",
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No customer validation data received from Gemini API");
+      }
+
+      console.log("Customer validation data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get customer validation:", error.message);
+      throw new Error(`Failed to get customer validation from Gemini API. Error: ${error.message}`);
+    }
+  }
+);

@@ -18,6 +18,7 @@ export default defineSchema({
     pitchDeck: v.optional(v.string()),
     marketResearch: v.optional(v.string()),
     aiMentor: v.optional(v.string()),
+    customerValidation: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),
 });

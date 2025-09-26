@@ -1,0 +1,40 @@
+.customer-validation-container {
+  padding: 2rem;
+}
+
+.personas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.persona-card {
+  background-color: var(--bg-slate-800);
+  border: 1px solid var(--border-slate-700);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.persona-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.persona-demographics {
+  font-style: italic;
+  color: var(--text-slate-400);
+}
+
+.persona-section h4 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-slate-200);
+}
+
+.persona-section p {
+  color: var(--text-slate-300);
+}
