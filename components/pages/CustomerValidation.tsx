@@ -20,6 +20,10 @@ interface CustomerValidationProps {
   };
 }
 
+const cleanText = (text: string) => {
+    return text ? String(text).replace(/\*/g, '') : '';
+};
+
 const CustomerValidation: React.FC<CustomerValidationProps> = ({ startup }) => {
   const getCustomerValidation = useAction(api.actions.getCustomerValidation);
   const [personas, setPersonas] = useState<CustomerPersona[]>([]);
@@ -61,24 +65,24 @@ const CustomerValidation: React.FC<CustomerValidationProps> = ({ startup }) => {
 
   const renderDemographics = (demographics: any) => {
     if (typeof demographics === 'string') {
-      return demographics;
+      return cleanText(demographics);
     }
     if (typeof demographics === 'object' && demographics !== null) {
-      return Object.values(demographics).join(', ');
+      return Object.values(demographics).map(v => cleanText(String(v))).join(', ');
     }
     return null;
   };
 
   const renderFeedback = (feedback: any) => {
     if (typeof feedback === 'string') {
-      return <p>{feedback}</p>;
+      return <p>{cleanText(feedback)}</p>;
     }
     if (typeof feedback === 'object' && feedback !== null) {
       return (
         <>
-          {feedback.likes && <p><strong>Likes:</strong> {feedback.likes}</p>}
-          {feedback.concerns && <p><strong>Concerns:</strong> {feedback.concerns}</p>}
-          {feedback.questions && <p><strong>Questions:</strong> {feedback.questions}</p>}
+          {feedback.likes && <p><strong>Likes:</strong> {cleanText(feedback.likes)}</p>}
+          {feedback.concerns && <p><strong>Concerns:</strong> {cleanText(feedback.concerns)}</p>}
+          {feedback.questions && <p><strong>Questions:</strong> {cleanText(feedback.questions)}</p>}
         </>
       );
     }
@@ -106,11 +110,11 @@ const CustomerValidation: React.FC<CustomerValidationProps> = ({ startup }) => {
       <div className="personas-grid">
         {personas.map((persona, index) => (
           <div key={index} className="persona-card">
-            <h3 className="persona-name">{persona.name}</h3>
+            <h3 className="persona-name">{cleanText(persona.name)}</h3>
             <p className="persona-demographics">{renderDemographics(persona.demographics)}</p>
             <div className="persona-section">
               <h4>Problem/Need:</h4>
-              <p>{persona.problem}</p>
+              <p>{cleanText(persona.problem)}</p>
             </div>
             <div className="persona-section">
               <h4>Feedback:</h4>

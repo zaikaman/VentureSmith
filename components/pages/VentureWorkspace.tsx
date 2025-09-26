@@ -8,18 +8,20 @@ import { LoadingIndicator } from './LoadingIndicator';
 import { PhaseChecklist, TaskID } from './PhaseChecklist';
 import { Scorecard } from './Scorecard';
 import { BusinessPlan } from './BusinessPlan';
-import { PitchDeck } from './PitchDeck';
+import PitchDeck from './PitchDeck';
 import { WebsitePrototype } from './WebsitePrototype';
 import { MarketResearchDisplay } from './MarketResearchDisplay';
 import { MentorFeedbackDisplay } from './MentorFeedbackDisplay';
 import CustomerValidation from './CustomerValidation';
+import Placeholder from './Placeholder';
+import BrainstormIdea from './BrainstormIdea';
 import { getMentorFeedback } from '../../services/geminiService';
 import './VentureWorkspace.css';
 
 export const VentureWorkspace: React.FC = () => {
     const { id } = useParams<{ id: Id<"startups"> }>();
     const { data: session, isPending: isSessionPending } = authClient.useSession();
-    const [activeView, setActiveView] = useState<TaskID>('scorecard');
+    const [activeView, setActiveView] = useState<TaskID>('brainstormIdea');
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
     const [mentorFeedback, setMentorFeedback] = useState<string | null>(null);
     const [isMentorLoading, setIsMentorLoading] = useState<boolean>(false);
@@ -81,28 +83,66 @@ export const VentureWorkspace: React.FC = () => {
     const renderActiveView = () => {
         if (!startup) return null;
 
-        // Parse the stringified JSON data
-        const scorecard = startup.dashboard ? JSON.parse(startup.dashboard) : {};
-        const businessPlan = startup.businessPlan ? JSON.parse(startup.businessPlan) : {};
-        const pitchDeck = startup.pitchDeck ? JSON.parse(startup.pitchDeck) : {};
+        // Data parsing
         const websitePrototype = startup.website ? JSON.parse(startup.website) : {};
-        const marketResearch = startup.marketResearch ? JSON.parse(startup.marketResearch) : { summary: "", sources: [] };
+
+        // Task name mapping
+        const taskNames: { [key in TaskID]: string } = {
+            brainstormIdea: 'Brainstorm & Refine Idea',
+            marketPulseCheck: 'Initial Market Pulse Check',
+            defineMissionVision: 'Define Mission & Vision',
+            generateNameIdentity: 'Generate Business Name & Identity',
+            scorecard: 'AI-Powered Scorecard Analysis',
+            businessPlan: 'Develop Initial Business Plan',
+            pitchDeck: 'Create Pitch Deck Outline',
+            marketResearch: 'Deep Dive Market Analysis',
+            competitorMatrix: 'Competitor Landscape Matrix',
+            generateCustomerPersonas: 'Generate Ideal Customer Personas',
+            generateInterviewScripts: 'Generate Interview Scripts',
+            validateProblem: 'Simulate Customer Interviews',
+            aiMentor: 'Get Feedback from AI Mentor',
+            userFlowDiagrams: 'Generate User Flow Diagram',
+            aiWireframing: 'AI-Powered Wireframing',
+            website: 'Build Interactive Website Prototype',
+            defineDataModels: 'Define Data Models & Database Schema',
+            configureBackend: 'Configure Backend Functions & Logic',
+            designFrontend: 'Design Frontend UI & Component Library',
+            connectFrontendBackend: 'Connect Frontend to Backend',
+            oneClickDeployment: 'One-Click Deployment',
+            alphaTesting: 'Internal Alpha Testing',
+            betaTesterRecruitment: 'Recruit Beta Testers',
+            feedbackAnalysis: 'AI-Powered Feedback Analysis',
+            pricingStrategy: 'AI-Assisted Pricing Strategy',
+            marketingCopy: 'Generate Marketing & Sales Copy',
+            preLaunchWaitlist: 'Build Pre-Launch Waitlist Page',
+            productHuntKit: 'Product Hunt Launch Kit',
+            pressRelease: 'Draft Press Release & Media Outreach',
+            launchMonitoring: 'Real-time Launch Monitoring',
+            growthMetrics: 'Identify Key Growth Metrics (AARRR)',
+            abTestIdeas: 'Brainstorm A/B Test Ideas',
+            seoStrategy: 'Generate SEO Keyword Strategy',
+            processAutomation: 'Map Processes for Automation',
+            draftJobDescriptions: 'Draft Job Descriptions for Key Hires',
+            cloudCostEstimation: 'Cloud Cost Estimation',
+            investorMatching: 'AI Investor Matching',
+            dueDiligenceChecklist: 'Due Diligence Checklist',
+            aiPitchCoach: 'AI Pitch Coach',
+        };
 
         switch (activeView) {
+            case 'brainstormIdea':
+                return <BrainstormIdea startup={startup} />;
+            // Existing implemented views
             case 'scorecard':
-                return <Scorecard data={scorecard} />;
+                return <Scorecard startup={startup} />;
             case 'businessPlan':
-                return <BusinessPlan data={businessPlan} idea={startup.name || ''} />;
+                return <BusinessPlan startup={startup} />;
             case 'pitchDeck':
-                return <PitchDeck data={pitchDeck} />;
+                return <PitchDeck startup={startup} />;
             case 'website':
                 return <WebsitePrototype data={websitePrototype} idea={startup.name || ''} startupId={startup._id} />;
             case 'marketResearch':
-                return <MarketResearchDisplay 
-                    summary={marketResearch.summary} 
-                    sources={marketResearch.sources} 
-                    topic={startup.name || ''} 
-                />;
+                return <MarketResearchDisplay startup={startup} />;
             case 'aiMentor':
                 if (isMentorLoading) {
                     return (
@@ -132,8 +172,11 @@ export const VentureWorkspace: React.FC = () => {
                 );
             case 'validateProblem':
                 return <CustomerValidation startup={startup} />;
+
+            // Placeholder for all new tasks
             default:
-                return <div className="p-4">Select a task to view its content.</div>;
+                const taskName = taskNames[activeView] || "Selected Task";
+                return <Placeholder taskName={taskName} />;
         }
     };
 

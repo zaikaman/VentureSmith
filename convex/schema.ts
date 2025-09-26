@@ -12,6 +12,8 @@ export default defineSchema({
   startups: defineTable({
     userId: v.id("users"),
     name: v.optional(v.string()),
+    idea: v.optional(v.string()),
+    brainstormResult: v.optional(v.string()),
     dashboard: v.optional(v.string()),
     businessPlan: v.optional(v.string()),
     website: v.optional(v.string()),

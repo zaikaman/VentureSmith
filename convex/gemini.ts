@@ -108,3 +108,207 @@ export const validateProblemWithAI = internalAction(
     }
   }
 );
+
+export const brainstormIdeaWithAI = internalAction(
+  async (
+    _,
+    { idea }: { idea: string }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const prompt = `
+      You are an expert startup consultant and creative thinker.
+      You have been given a raw startup idea. Your task is to brainstorm and refine it.
+
+      Initial Idea: "${idea}"
+
+      Please provide the following:
+      1.  **Refined Idea:** A more polished, single-sentence version of the idea.
+      2.  **Key Features (Top 3):** List the three most important features or aspects of this product/service.
+      3.  **Potential Angles (Top 2):** Suggest two unique angles or target niches for this idea that the founder might not have considered.
+      4.  **Initial Concerns (Top 2):** Raise two immediate questions or concerns that need to be addressed.
+
+      Present the output as a JSON object with the fields: "refinedIdea", "keyFeatures", "potentialAngles", and "initialConcerns".
+      "keyFeatures", "potentialAngles", and "initialConcerns" should be arrays of strings.
+    `;
+
+    try {
+      console.log("--- Requesting Idea Brainstorm from Gemini ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No brainstorm data received from Gemini API");
+      }
+
+      console.log("Brainstorm data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get brainstorm data:", error.message);
+      throw new Error(`Failed to get brainstorm data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+export const generateScorecardWithAI = internalAction(
+  async (
+    _,
+    { idea }: { idea: string }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const prompt = `
+      You are a startup analyst. Based on the following startup idea, generate a scorecard rating the idea on market size, feasibility, and innovation.
+
+      Idea: "${idea}"
+
+      Return the output as a JSON object with the following structure:
+      {
+        "marketSize": { "score": number, "justification": string },
+        "feasibility": { "score": number, "justification": string },
+        "innovation": { "score": number, "justification": string },
+        "overallScore": number
+      }
+      The overallScore should be a weighted average of the other three scores.
+    `;
+
+    try {
+      console.log("--- Requesting Scorecard from Gemini ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No scorecard data received from Gemini API");
+      }
+
+      console.log("Scorecard data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get scorecard data:", error.message);
+      throw new Error(`Failed to get scorecard data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+export const generateBusinessPlanWithAI = internalAction(
+  async (
+    _,
+    { idea }: { idea: string }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const prompt = `
+      You are a business strategist. Based on the following startup idea, generate a comprehensive 7-part business plan.
+
+      Idea: "${idea}"
+
+      Generate the following sections:
+      1.  Executive Summary
+      2.  Company Description
+      3.  Market Analysis (Industry Overview, Target Market, Competitive Analysis)
+      4.  Organization and Management
+      5.  Products or Services
+      6.  Marketing and Sales Strategy
+      7.  Financial Projections (Summary and a 3-year forecast table)
+
+      Return the output as a JSON object.
+    `;
+
+    try {
+      console.log("--- Requesting Business Plan from Gemini ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-1.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No business plan data received from Gemini API");
+      }
+
+      console.log("Business plan data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get business plan data:", error.message);
+      throw new Error(`Failed to get business plan data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+export const generatePitchDeckWithAI = internalAction(
+  async (
+    _,
+    { idea }: { idea: string }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const prompt = `
+      You are a startup pitch expert. Based on the following startup idea, generate a full Pitch Deck.
+
+      Idea: "${idea}"
+
+      Generate the following:
+      1.  A natural, conversational 1-minute voice pitch script.
+      2.  A slide deck of 8-10 slides. For each slide, provide a title and content. The content should be concise, using markdown bullet points (hyphens). The slides should cover: Problem, Solution, Market Opportunity, Business Model, Product Demo (use a placeholder description), Market Validation, Competition, Financial Projection (use high-level estimates), Team (use placeholder founders), and a Call to Action.
+
+      Return the output as a JSON object with the fields "script" and "slides".
+    `;
+
+    try {
+      console.log("--- Requesting Pitch Deck from Gemini ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-1.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No pitch deck data received from Gemini API");
+      }
+
+      console.log("Pitch deck data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get pitch deck data:", error.message);
+      throw new Error(`Failed to get pitch deck data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);

@@ -30,6 +30,7 @@ export const getStartupsForUser = query({
 export const createStartup = mutation({
   args: {
     name: v.optional(v.string()),
+    idea: v.optional(v.string()),
     dashboard: v.optional(v.string()),
     businessPlan: v.optional(v.string()),
     website: v.optional(v.string()),
@@ -177,6 +178,180 @@ export const updateCustomerValidation = mutation({
 
     await ctx.db.patch(args.startupId, {
       customerValidation: args.customerValidation,
+    });
+
+    return { success: true };
+  },
+});
+
+export const updateScorecard = mutation({
+  args: {
+    startupId: v.id("startups"),
+    scorecard: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const startup = await ctx.db.get(args.startupId);
+    if (!startup) {
+      throw new Error("Startup not found");
+    }
+
+    // Check for ownership
+    const user = await ctx.db.query("users").withIndex("by_subject", q => q.eq("subject", identity.subject)).unique();
+    if (!user || user._id !== startup.userId) {
+      throw new Error("Not authorized to update this startup");
+    }
+
+    await ctx.db.patch(args.startupId, {
+      dashboard: args.scorecard,
+    });
+
+    return { success: true };
+  },
+});
+
+export const updateBrainstormResult = mutation({
+  args: {
+    startupId: v.id("startups"),
+    brainstormResult: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const startup = await ctx.db.get(args.startupId);
+    if (!startup) {
+      throw new Error("Startup not found");
+    }
+
+    // Check for ownership
+    const user = await ctx.db.query("users").withIndex("by_subject", q => q.eq("subject", identity.subject)).unique();
+    if (!user || user._id !== startup.userId) {
+      throw new Error("Not authorized to update this startup");
+    }
+
+    return { success: true };
+  },
+});
+
+export const deleteStartup = mutation({
+  args: { id: v.id("startups") },
+  handler: async (ctx, args) => {
+    console.log(`Backend: Attempting to delete document with ID: ${args.id}`);
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const startup = await ctx.db.get(args.id);
+    if (!startup) {
+      throw new Error("Startup not found");
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_subject", (q) => q.eq("subject", identity.subject))
+      .unique();
+
+    if (!user || user._id !== startup.userId) {
+      throw new Error("Not authorized to delete this startup");
+    }
+
+    await ctx.db.delete(args.id);
+    return { success: true };
+  },
+});
+
+export const updateBusinessPlan = mutation({
+  args: {
+    startupId: v.id("startups"),
+    businessPlan: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const startup = await ctx.db.get(args.startupId);
+    if (!startup) {
+      throw new Error("Startup not found");
+    }
+
+    // Check for ownership
+    const user = await ctx.db.query("users").withIndex("by_subject", q => q.eq("subject", identity.subject)).unique();
+    if (!user || user._id !== startup.userId) {
+      throw new Error("Not authorized to update this startup");
+    }
+
+    await ctx.db.patch(args.startupId, {
+      businessPlan: args.businessPlan,
+    });
+
+    return { success: true };
+  },
+});
+
+export const updatePitchDeck = mutation({
+  args: {
+    startupId: v.id("startups"),
+    pitchDeck: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const startup = await ctx.db.get(args.startupId);
+    if (!startup) {
+      throw new Error("Startup not found");
+    }
+
+    // Check for ownership
+    const user = await ctx.db.query("users").withIndex("by_subject", q => q.eq("subject", identity.subject)).unique();
+    if (!user || user._id !== startup.userId) {
+      throw new Error("Not authorized to update this startup");
+    }
+
+    await ctx.db.patch(args.startupId, {
+      pitchDeck: args.pitchDeck,
+    });
+
+    return { success: true };
+  },
+});
+
+export const updateMarketResearch = mutation({
+  args: {
+    startupId: v.id("startups"),
+    marketResearch: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const startup = await ctx.db.get(args.startupId);
+    if (!startup) {
+      throw new Error("Startup not found");
+    }
+
+    // Check for ownership
+    const user = await ctx.db.query("users").withIndex("by_subject", q => q.eq("subject", identity.subject)).unique();
+    if (!user || user._id !== startup.userId) {
+      throw new Error("Not authorized to update this startup");
+    }
+
+    await ctx.db.patch(args.startupId, {
+      marketResearch: args.marketResearch,
     });
 
     return { success: true };

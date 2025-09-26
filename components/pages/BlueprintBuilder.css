@@ -65,12 +65,34 @@
 }
 
 .startup-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: var(--bg-slate-800);
     padding: 1rem;
     border-radius: 4px;
     margin-bottom: 1rem;
     border: 1px solid var(--border-slate-700);
+}
+
+.startup-item-content {
     cursor: pointer;
+    flex-grow: 1;
+}
+
+.delete-button {
+    background-color: #ef4444; /* red-500 */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.delete-button:hover {
+    background-color: #dc2626; /* red-600 */
 }
 
 .startup-item p {

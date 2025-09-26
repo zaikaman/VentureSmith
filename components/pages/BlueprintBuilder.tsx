@@ -1,12 +1,14 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { generateStartupAssets } from '../../services/geminiService';
+import { toast } from 'sonner';
 import { LoadingIndicator } from './LoadingIndicator';
 import { authClient } from '../../lib/auth-client';
 import { LoginModal } from './LoginModal';
-import { useAction, useMutation, useQuery } from 'convex/react';
+import { ConfirmationModal } from './ConfirmationModal'; // Import the new modal
+import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
-import { IdeaInputForm } from './IdeaInputForm'; // Import the form
+import { Id } from '../../convex/_generated/dataModel';
+import { IdeaInputForm } from './IdeaInputForm';
 import './BlueprintBuilder.css';
 
 export const BlueprintBuilder: React.FC = () => {
@@ -15,13 +17,15 @@ export const BlueprintBuilder: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const [showHistory, setShowHistory] = useState<boolean>(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [startupToDelete, setStartupToDelete] = useState<Id<"startups"> | null>(null);
+
     const { data: session, isPending } = authClient.useSession();
     const navigate = useNavigate();
 
     const startups = useQuery(api.startups.getStartupsForUser);
-    // Get Convex actions
-    const performMarketAnalysis = useAction(api.firecrawl.performMarketAnalysis);
     const createStartup = useMutation(api.startups.createStartup);
+    const deleteStartupMutation = useMutation(api.startups.deleteStartup);
 
     const handleGenerate = useCallback(async (submittedIdea: string) => {
         if (!session) {
@@ -36,35 +40,49 @@ export const BlueprintBuilder: React.FC = () => {
         setError(null);
 
         try {
-            // Run all data fetching in parallel
-            const [mainData, marketAnalysisResult] = await Promise.all([
-                generateStartupAssets(submittedIdea),
-                performMarketAnalysis({ keyword: submittedIdea }),
-            ]);
-
-            // Save to database and get the new ID
+            const startupName = submittedIdea.length > 50 ? submittedIdea.substring(0, 47) + "..." : submittedIdea;
             const newStartupId = await createStartup({
-                name: mainData.name,
-                dashboard: JSON.stringify(mainData.scorecard, null, 2),
-                businessPlan: JSON.stringify(mainData.businessPlan, null, 2),
-                website: JSON.stringify(mainData.websitePrototype, null, 2),
-                pitchDeck: JSON.stringify(mainData.pitchDeck, null, 2),
-                marketResearch: JSON.stringify(marketAnalysisResult, null, 2),
+                name: startupName,
+                idea: submittedIdea,
             });
-
-            // Navigate directly to the new venture workspace
             navigate(`/venture/${newStartupId}`);
-
         } catch (err: any) {
-            console.error("Error caught during parallel generation:", err);
+            console.error("Error caught during startup creation:", err);
             setError(err.message || 'An unexpected error occurred.');
         } finally {
             setIsLoading(false);
         }
-    }, [session, isLoading, performMarketAnalysis, createStartup, navigate]);
+    }, [session, isLoading, createStartup, navigate]);
 
     const handleHistoryItemClick = (startup: any) => {
         navigate(`/venture/${startup._id}`);
+    };
+
+    const handleDelete = (startupId: Id<"startups">) => {
+        setStartupToDelete(startupId);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = () => {
+        if (!startupToDelete) return;
+
+        const promise = () => deleteStartupMutation({ id: startupToDelete });
+
+        toast.promise(promise, {
+            loading: 'Deleting startup...',
+            success: () => {
+                // No need to reload, reactivity should handle it now
+                return 'Startup deleted successfully!';
+            },
+            error: 'Failed to delete startup.',
+        });
+
+        closeDeleteModal();
+    };
+
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
+        setStartupToDelete(null);
     };
 
     const handleReset = () => {
@@ -122,14 +140,23 @@ export const BlueprintBuilder: React.FC = () => {
                             <h2>My Startups</h2>
                             {startups && startups.length > 0 ? (
                                 <ul className="startup-list">
-                                    {startups.map((startup) => {
-                                        return (
-                                            <li key={startup._id} className="startup-item" onClick={() => handleHistoryItemClick(startup)}>
+                                    {startups.map((startup) => (
+                                        <li key={startup._id} className="startup-item">
+                                            <div className="startup-item-content" onClick={() => handleHistoryItemClick(startup)}>
                                                 <p><strong>Name:</strong> {startup.name}</p>
                                                 <p><strong>Created At:</strong> {new Date(startup.createdAt).toLocaleDateString()}</p>
-                                            </li>
-                                        );
-                                    })}
+                                            </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevent navigation
+                                                    handleDelete(startup._id);
+                                                }}
+                                                className="delete-button"
+                                            >
+                                                Delete
+                                            </button>
+                                        </li>
+                                    ))}
                                 </ul>
                             ) : (
                                 <p>You haven't created any startups yet.</p>
@@ -139,6 +166,13 @@ export const BlueprintBuilder: React.FC = () => {
                 </div>
             )}
             <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+            <ConfirmationModal
+                isOpen={isDeleteModalOpen}
+                onClose={closeDeleteModal}
+                onConfirm={confirmDelete}
+                title="Confirm Deletion"
+                message="Are you sure you want to delete this startup? This action is permanent and cannot be undone."
+            />
         </div>
     );
 };
