@@ -3,18 +3,25 @@ import * as React from 'react';
 import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
 import { WebsitePrototypeData } from '../../types';
 import { regenerateWebsitePrototype } from '../../services/geminiService';
+import { useMutation } from 'convex/react';
+import { api } from '../../convex/_generated/api';
+import { Id } from '../../convex/_generated/dataModel';
+import { toast } from 'sonner';
 import './WebsitePrototype.css';
 
 interface WebsitePrototypeProps {
     data: WebsitePrototypeData;
     idea: string;
+    startupId: Id<"startups">;
 }
 
-export const WebsitePrototype: React.FC<WebsitePrototypeProps> = ({ data, idea }) => {
+export const WebsitePrototype: React.FC<WebsitePrototypeProps> = ({ data, idea, startupId }) => {
     const [currentCode, setCurrentCode] = React.useState(data.code);
     const [isRegenerating, setIsRegenerating] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
     const scope = { React };
+
+    const updateWebsiteInDB = useMutation(api.startups.updateWebsitePrototype);
 
     const handleRegenerate = async () => {
         setIsRegenerating(true);
@@ -22,8 +29,18 @@ export const WebsitePrototype: React.FC<WebsitePrototypeProps> = ({ data, idea }
         try {
             const result = await regenerateWebsitePrototype(idea);
             setCurrentCode(result.code);
+
+            // Save the new code to the database
+            await updateWebsiteInDB({ 
+                startupId: startupId,
+                newCode: result.code 
+            });
+
+            toast.success("Website prototype updated and saved!");
+
         } catch (err: any) {
             setError(err.message || 'Failed to regenerate website.');
+            toast.error("Failed to update website prototype.");
         } finally {
             setIsRegenerating(false);
         }
@@ -45,7 +62,7 @@ export const WebsitePrototype: React.FC<WebsitePrototypeProps> = ({ data, idea }
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
                             <span className="button-text">Regenerating...</span>
-                        </>
+                        </> 
                     ) : (
                         <>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -55,6 +72,9 @@ export const WebsitePrototype: React.FC<WebsitePrototypeProps> = ({ data, idea }
                         </>
                     )}
                 </button>
+            </div>
+            <div className="wp-warning-box">
+                <p><strong>Note:</strong> This website is just a prototype. It might not be perfect or responsive yet. If there's a problem, you can always regenerate the website.</p>
             </div>
             {error && <p className="live-error">Error: {error}</p>}
             <div className="browser-window">

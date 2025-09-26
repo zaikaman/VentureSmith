@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { StartupData } from '../../types';
@@ -10,7 +9,7 @@ import { LoginModal } from './LoginModal';
 import { useAction, useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { IdeaInputForm } from './IdeaInputForm'; // Import the form
-import './Build.css';
+import './BlueprintBuilder.css';
 
 // Define types here for clarity
 type SearchResultItem = {
@@ -20,7 +19,7 @@ type SearchResultItem = {
     position: number;
 };
 
-export const Build: React.FC = () => {
+export const BlueprintBuilder: React.FC = () => {
     const [idea, setIdea] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [results, setResults] = useState<StartupData | null>(null);
@@ -109,19 +108,7 @@ export const Build: React.FC = () => {
     };
 
     const handleHistoryItemClick = (startup: any) => {
-        const marketResearchData = JSON.parse(startup.marketResearch);
-        const resultsData = {
-            name: startup.name,
-            scorecard: JSON.parse(startup.dashboard),
-            businessPlan: JSON.parse(startup.businessPlan),
-            websitePrototype: JSON.parse(startup.website),
-            pitchDeck: JSON.parse(startup.pitchDeck),
-            marketResearch: marketResearchData,
-        };
-        setResults(resultsData);
-        setMarketResearch(marketResearchData);
-        setIdea(startup.name);
-        setShowHistory(false);
+        navigate(`/venture/${startup._id}`);
     };
 
     const handleReset = () => {
@@ -130,7 +117,7 @@ export const Build: React.FC = () => {
         setMarketResearch(null);
         setError(null);
         setIsLoading(false);
-        navigate('/build');
+        navigate('/blueprint-builder');
     }
 
     useEffect(() => {
@@ -175,9 +162,9 @@ export const Build: React.FC = () => {
     }
 
     return (
-        <div className="build-container">
+        <div className="blueprint-builder-container">
             <div className="text-center p-8">
-                <h1 className="text-4xl font-bold mb-4">Let's build your startup</h1>
+                <h1 className="text-4xl font-bold mb-4">Create Your Startup Blueprint</h1>
                 <p className="text-lg text-slate-400 mb-8">Describe your business idea below to get started.</p>
                 <IdeaInputForm onGenerate={handleGenerate} />
             </div>

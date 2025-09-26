@@ -19,7 +19,7 @@ export const HeroSection: React.FC = () => {
             <h1 ref={headlineRef} className={isHeadlineVisible ? 'is-visible' : ''}>Build your business, one block at a time</h1>
             <p ref={subheadlineRef} className={isSubheadlineVisible ? 'is-visible' : ''}>VentureSmith helps you validate, plan, and build your next business idea with the power of AI.</p>
             <div ref={ctaRef} className={`cta-container ${isCtaVisible ? 'is-visible' : ''}`}>
-                <Link to="/build" className="cta-button">
+                <Link to="/blueprint-builder" className="cta-button">
                     Build Your Startup Now
                 </Link>
                 <div className="cta-note">

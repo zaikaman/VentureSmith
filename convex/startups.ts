@@ -59,3 +59,64 @@ export const createStartup = mutation({
     });
   },
 });
+
+export const getStartupById = query({
+  args: { id: v.id("startups") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const startup = await ctx.db.get(args.id);
+
+    if (!startup) {
+      throw new Error("Startup not found");
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_subject", (q) => q.eq("subject", identity.subject))
+      .unique();
+
+    if (!user || user._id !== startup.userId) {
+      throw new Error("Not authorized to view this startup");
+    }
+
+    return startup;
+  },
+});
+
+export const updateWebsitePrototype = mutation({
+  args: { 
+    startupId: v.id("startups"), 
+    newCode: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const startup = await ctx.db.get(args.startupId);
+    if (!startup) {
+      throw new Error("Startup not found");
+    }
+
+    // Check for ownership
+    const user = await ctx.db.query("users").withIndex("by_subject", q => q.eq("subject", identity.subject)).unique();
+    if (!user || user._id !== startup.userId) {
+      throw new Error("Not authorized to update this startup");
+    }
+
+    // Create the new website object
+    const newWebsiteData = { code: args.newCode };
+
+    // Update the startup document
+    await ctx.db.patch(args.startupId, {
+      website: JSON.stringify(newWebsiteData, null, 2),
+    });
+
+    return { success: true };
+  },
+});

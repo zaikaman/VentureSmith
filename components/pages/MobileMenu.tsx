@@ -28,7 +28,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
 
     const navLinks = [
         { name: "Home", path: "/" },
-        { name: "Build", path: "/build" },
+        { name: "Build", path: "/blueprint-builder" },
     ];
 
     const handleSignOut = async () => {

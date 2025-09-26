@@ -25,7 +25,7 @@ export const Header: React.FC = () => {
     const { data: session } = authClient.useSession();
     const navLinks = [
         { name: "Home", path: "/" },
-        { name: "Build", path: "/build" },
+        { name: "Blueprint", path: "/blueprint-builder" },
     ];
 
     const handleSignOut = async () => {

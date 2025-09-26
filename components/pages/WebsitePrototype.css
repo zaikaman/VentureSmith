@@ -40,6 +40,25 @@
     cursor: not-allowed;
 }
 
+.wp-warning-box {
+    background-color: rgba(252, 211, 77, 0.1); /* amber-300 with 10% opacity */
+    border: 1px solid rgba(252, 211, 77, 0.4);
+    color: #fde68a; /* amber-200 */
+    padding: 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.wp-warning-box p {
+    margin: 0;
+}
+
+.wp-warning-box strong {
+    color: #fcd34d; /* amber-300 */
+}
+
 .browser-window {
     background-color: var(--bg-slate-900);
     border-radius: 1rem;

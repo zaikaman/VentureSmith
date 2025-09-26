@@ -1,0 +1,38 @@
+.venture-workspace-container {
+    padding: 8rem 2rem 2rem;
+    max-width: 1400px; /* Increase max-width for wider layout */
+    margin: 0 auto;
+}
+
+.venture-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.venture-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-slate-300);
+    margin-bottom: 3rem;
+}
+
+.workspace-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 1024px) { /* lg breakpoint */
+    .workspace-layout {
+        grid-template-columns: 1fr 2fr; /* Sidebar and content area */
+    }
+}
+
+.workspace-content {
+    background-color: var(--bg-slate-900);
+    border: 1px solid var(--border-slate-700);
+    border-radius: 1rem;
+    padding: 2rem;
+    min-height: 500px; /* Ensure it has some height */
+}
