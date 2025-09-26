@@ -8,7 +8,7 @@ interface CustomerPersona {
   name: string;
   demographics: any;
   problem: string;
-  feedback: string;
+  feedback: any;
 }
 
 interface CustomerValidationProps {
@@ -69,6 +69,22 @@ const CustomerValidation: React.FC<CustomerValidationProps> = ({ startup }) => {
     return null;
   };
 
+  const renderFeedback = (feedback: any) => {
+    if (typeof feedback === 'string') {
+      return <p>{feedback}</p>;
+    }
+    if (typeof feedback === 'object' && feedback !== null) {
+      return (
+        <>
+          {feedback.likes && <p><strong>Likes:</strong> {feedback.likes}</p>}
+          {feedback.concerns && <p><strong>Concerns:</strong> {feedback.concerns}</p>}
+          {feedback.questions && <p><strong>Questions:</strong> {feedback.questions}</p>}
+        </>
+      );
+    }
+    return null;
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center p-10 text-center">
@@ -98,7 +114,7 @@ const CustomerValidation: React.FC<CustomerValidationProps> = ({ startup }) => {
             </div>
             <div className="persona-section">
               <h4>Feedback:</h4>
-              <p>{persona.feedback}</p>
+              {renderFeedback(persona.feedback)}
             </div>
           </div>
         ))}
