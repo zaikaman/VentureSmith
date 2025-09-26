@@ -9,6 +9,7 @@ import { SignUp } from './components/pages/SignUp';
 import { Build } from './components/pages/Build';
 import { Home } from './components/pages/Home';
 import { LoginModal } from './components/pages/LoginModal';
+import AccountPage from './components/pages/AccountPage';
 import './App.css';
 
 const App: React.FC = () => {
@@ -26,6 +27,7 @@ const App: React.FC = () => {
                             <Route path="/build" element={<Build />} />
                             <Route path="/signin" element={<SignIn />} />
                             <Route path="/signup" element={<SignUp />} />
+                            <Route path="/account" element={<AccountPage />} />
                         </Routes>
                     </div>
                 </main>
