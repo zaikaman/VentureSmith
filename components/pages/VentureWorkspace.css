@@ -2,6 +2,7 @@
     padding: 8rem 2rem 2rem;
     max-width: 1400px; /* Increase max-width for wider layout */
     margin: 0 auto;
+    position: relative; /* Needed for absolute positioning of the button */
 }
 
 .venture-title {
@@ -17,22 +18,80 @@
     margin-bottom: 3rem;
 }
 
-.workspace-layout {
-    display: grid;
-    grid-template-columns: 1fr 2fr; /* Default to 2 columns for desktop */
-    gap: 2rem;
+.sidebar-toggle-button {
+    position: absolute;
+    top: 15rem; /* Adjust to align with the top of the cards */
+    left: calc(380px - 1.25rem); /* Position based on sidebar width */
+    z-index: 10;
+    background-color: var(--bg-slate-700);
+    border: 1px solid var(--border-slate-700);
+    color: var(--text-slate-200);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
 }
 
-@media (max-width: 1023px) {
-    .workspace-layout {
-        grid-template-columns: 1fr; /* Collapse to 1 column on mobile */
-    }
+.sidebar-toggle-button:hover {
+    background-color: var(--bg-slate-600);
+    transform: scale(1.1);
+}
+
+.sidebar-toggle-button svg {
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar-toggle-button.collapsed {
+    left: -1.25rem;
+}
+
+.sidebar-toggle-button.collapsed svg {
+    transform: rotate(180deg);
+}
+
+.workspace-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    align-items: flex-start; /* Align items to the top */
+}
+
+.workspace-sidebar {
+    flex: 1 1 380px; /* Let it grow and shrink, with a base width */
+    min-width: 300px; /* Prevent it from becoming too small */
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+
+.workspace-sidebar.collapsed {
+    flex: 0 0 0; /* Do not grow, do not shrink, basis of 0 */
+    min-width: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.workspace-sidebar.collapsed .phase-checklist-container {
+    opacity: 0;
 }
 
 .workspace-content {
+    flex: 2 1 0;
+    min-width: 0; /* Crucial for preventing overflow in flex children */
     background-color: var(--bg-slate-900);
     border: 1px solid var(--border-slate-700);
     border-radius: 1rem;
     padding: 2rem;
-    min-height: 500px; /* Ensure it has some height */
+}
+
+@media (max-width: 1023px) {
+    .workspace-layout {
+        flex-direction: column; /* Stack on mobile */
+    }
+    .workspace-sidebar {
+        flex-basis: auto; /* Reset basis on mobile */
+    }
 }

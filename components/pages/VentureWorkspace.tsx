@@ -19,6 +19,7 @@ export const VentureWorkspace: React.FC = () => {
     const { id } = useParams<{ id: Id<"startups"> }>();
     const { data: session, isPending: isSessionPending } = authClient.useSession();
     const [activeView, setActiveView] = useState<TaskID>('scorecard');
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
     const [mentorFeedback, setMentorFeedback] = useState<string | null>(null);
     const [isMentorLoading, setIsMentorLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -39,6 +40,10 @@ export const VentureWorkspace: React.FC = () => {
 
     const handleTaskClick = (taskId: TaskID) => {
         setActiveView(taskId);
+    };
+
+    const toggleSidebar = () => {
+        setIsSidebarCollapsed(!isSidebarCollapsed);
     };
 
     const handleGetMentorFeedback = async () => {
@@ -155,9 +160,15 @@ export const VentureWorkspace: React.FC = () => {
         <div className="venture-workspace-container">
             <h1 className="venture-title">{startup.name}</h1>
             <p className="venture-subtitle">This is your dedicated workspace. Follow the steps below to turn your idea into a reality.</p>
+
+            <button onClick={toggleSidebar} className={`sidebar-toggle-button ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+            </button>
             
-            <div className="workspace-layout">
-                <aside className="workspace-sidebar">
+            <div className={`workspace-layout ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+                <aside className={`workspace-sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
                     <PhaseChecklist startup={startup} onTaskClick={handleTaskClick} activeTask={activeView} mentorFeedback={mentorFeedback} />
                 </aside>
                 <main className="workspace-content">
