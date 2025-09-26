@@ -1,25 +1,21 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { InfoSection } from './InfoSection';
-import { GrowthSection } from './GrowthSection';
-import { TransformSection } from './TransformSection';
-import { IdeaInputForm } from './IdeaInputForm';
-
-import { ScrollAndHighlightProvider } from '../../contexts/ScrollAndHighlightContext'; // Import the provider
+import { HeroSection } from './HeroSection';
+import { LogoTicker } from './LogoTicker';
+import { FeaturesSection } from './FeaturesSection';
+import { HowItWorksSection } from './HowItWorksSection';
+import { TestimonialsSection } from './TestimonialsSection';
+import { CTASection } from './CTASection';
+import './Home.css';
 
 export const Home: React.FC = () => {
-    const navigate = useNavigate();
-
-    const handleGenerate = (idea: string) => {
-        navigate(`/build?idea=${idea}`);
-    };
-
     return (
-        <ScrollAndHighlightProvider>
-            <IdeaInputForm onGenerate={handleGenerate} />
-            <InfoSection />
-            <GrowthSection />
-            <TransformSection />
-        </ScrollAndHighlightProvider>
+        <div className="homepage-container">
+            <HeroSection />
+            <LogoTicker />
+            <FeaturesSection />
+            <HowItWorksSection />
+            <TestimonialsSection />
+            <CTASection />
+        </div>
     );
 };

@@ -1,0 +1,106 @@
+
+.business-plan-container {
+    /* The main container styles are in ResultsDashboard.css (.tab-content) */
+}
+
+.bp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-slate-700);
+}
+
+.bp-title-section h2 {
+    font-size: 2.5rem; /* 40px */
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.bp-title-section p {
+    font-size: 1.25rem; /* 20px */
+    color: var(--text-slate-400);
+    margin-top: 0.5rem;
+}
+
+.download-button {
+    background-color: var(--bg-slate-800);
+    color: var(--text-slate-200);
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.download-button:hover {
+    background-color: var(--bg-slate-700);
+}
+
+.bp-section {
+    margin-bottom: 3rem;
+}
+
+.bp-section-title {
+    font-size: 1.75rem; /* 28px */
+    font-weight: 600;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-slate-700);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.bp-section-content {
+    color: var(--text-slate-300);
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+.bp-subsection {
+    margin-top: 2rem;
+}
+
+.bp-subsection-title {
+    font-size: 1.25rem; /* 20px */
+    font-weight: 600;
+    color: var(--text-slate-200);
+    margin-bottom: 0.75rem;
+}
+
+.financial-table-container {
+    margin-top: 2rem;
+    overflow-x: auto;
+}
+
+.financial-table {
+    min-width: 100%;
+    font-size: 0.95rem;
+    text-align: left;
+    color: var(--text-slate-300);
+}
+
+.financial-table thead {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    color: var(--text-slate-400);
+    background-color: var(--bg-slate-800);
+}
+
+.financial-table th, .financial-table td {
+    padding: 1rem 1.5rem;
+}
+
+.financial-table tbody tr {
+    border-bottom: 1px solid var(--border-slate-700);
+}
+
+.financial-table tbody tr:last-child {
+    border-bottom: none;
+}

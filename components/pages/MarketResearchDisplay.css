@@ -1,0 +1,93 @@
+
+.market-research-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.mr-section {
+    background-color: var(--bg-slate-800);
+    border: 1px solid var(--border-slate-700);
+    border-radius: 1rem;
+    padding: 2rem;
+}
+
+.mr-section-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.mr-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) { /* md breakpoint */
+    .mr-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) { /* lg breakpoint */
+    .mr-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.result-card {
+    background-color: var(--bg-slate-900);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-slate-700);
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.result-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+}
+
+.result-card-title a {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.result-card-title a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.result-card-description {
+    font-size: 0.95rem;
+    color: var(--text-slate-300);
+    line-height: 1.6;
+    margin-top: 0.75rem;
+}
+
+.competitor-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.competitor-chip {
+    background-color: var(--bg-slate-700);
+    color: var(--text-slate-200);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.competitor-chip:hover {
+    background-color: var(--primary-color);
+    color: white;
+}

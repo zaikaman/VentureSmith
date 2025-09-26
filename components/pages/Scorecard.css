@@ -1,0 +1,101 @@
+
+.scorecard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+}
+
+@media (min-width: 1024px) { /* lg breakpoint */
+    .scorecard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4rem;
+    }
+}
+
+.overall-score-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-slate-800);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    border: 1px solid var(--border-slate-700);
+}
+
+.overall-score-title {
+    font-size: 1.5rem; /* 24px */
+    font-weight: 600;
+    color: var(--text-slate-300);
+    margin-bottom: 1.5rem;
+}
+
+.score-circle-container {
+    position: relative;
+    width: 12rem; /* 192px */
+    height: 12rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.score-circle-bg {
+    stroke: var(--border-slate-700);
+}
+
+.score-circle-fg {
+    stroke: var(--primary-color);
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dashoffset 1s ease-out;
+}
+
+.overall-score-text {
+    font-size: 4rem; /* 64px */
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.radar-chart-container {
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 24rem; /* 384px */
+}
+
+.score-details-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.score-info-card {
+    background-color: var(--bg-slate-800);
+    padding: 1.5rem;
+    border-radius: 1rem; /* 16px */
+    border: 1px solid var(--border-slate-700);
+}
+
+.score-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+}
+
+.score-info-title {
+    font-size: 1.125rem; /* 18px */
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.score-info-value {
+    font-size: 1.25rem; /* 20px */
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.score-info-justification {
+    font-size: 0.95rem;
+    color: var(--text-slate-400);
+}

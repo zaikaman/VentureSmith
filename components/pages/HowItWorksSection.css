@@ -1,0 +1,109 @@
+.how-it-works-section {
+    padding: 6rem 2rem;
+    background-color: var(--background-color);
+}
+
+.how-it-works-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.how-it-works-header {
+    text-align: center;
+    margin-bottom: 5rem;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.how-it-works-header.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.how-it-works-headline {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.how-it-works-subheadline {
+    font-size: 1.125rem;
+    color: var(--text-slate-300);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.steps-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+/* The connecting line */
+.steps-container::before {
+    content: '';
+    position: absolute;
+    top: 2rem;
+    bottom: 2rem;
+    left: 40px;
+    width: 2px;
+    background-color: var(--border-slate-700);
+    transform: translateX(-50%);
+}
+
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    position: relative;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.step-item.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.step-number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    background-color: var(--bg-slate-900);
+    padding-right: 1rem;
+    z-index: 1;
+}
+
+.step-content {
+    padding-top: 0.5rem; /* Align with the number */
+}
+
+.step-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0.75rem;
+}
+
+.step-description {
+    font-size: 1rem;
+    color: var(--text-slate-400);
+    line-height: 1.6;
+    max-width: 500px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .steps-container::before {
+        left: 30px;
+    }
+
+    .step-number {
+        font-size: 2.5rem;
+    }
+}

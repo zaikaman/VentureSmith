@@ -2,13 +2,14 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { StartupData } from '../../types';
-import { generateStartupAssets, getMentorFeedback } from '../../services/geminiService'; // Import getMentorFeedback
+import { generateStartupAssets, getMentorFeedback } from '../../services/geminiService';
 import { LoadingIndicator } from './LoadingIndicator';
 import { ResultsDashboard } from './ResultsDashboard';
 import { authClient } from '../../lib/auth-client';
 import { LoginModal } from './LoginModal';
 import { useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
+import { IdeaInputForm } from './IdeaInputForm'; // Import the form
 import './Build.css';
 
 // Define types here for clarity
@@ -29,9 +30,7 @@ export const Build: React.FC = () => {
     const [mentorFeedback, setMentorFeedback] = useState<string | null>(null); // Mentor feedback state
     const [isMentorLoading, setIsMentorLoading] = useState<boolean>(false); // Mentor feedback loading state
     const { data: session, isPending } = authClient.useSession();
-    const location = useLocation();
     const navigate = useNavigate();
-    const generationFired = useRef(false);
 
     // Get Convex actions for market research
     const getMarketLandscape = useAction(api.firecrawl.getMarketLandscape);
@@ -93,7 +92,7 @@ export const Build: React.FC = () => {
             setIsMentorLoading(false);
         }
     };
-    
+
     const handleReset = () => {
         setIdea('');
         setResults(null);
@@ -104,17 +103,10 @@ export const Build: React.FC = () => {
     }
 
     useEffect(() => {
-        const searchParams = new URLSearchParams(location.search);
-        const ideaFromQuery = searchParams.get('idea');
-        if (ideaFromQuery && !generationFired.current) {
-            if (session) {
-                generationFired.current = true;
-                handleGenerate(ideaFromQuery);
-            } else if (!isPending) {
-                setIsLoginModalOpen(true);
-            }
+        if (!isPending && !session) {
+            setIsLoginModalOpen(true);
         }
-    }, [location.search, session, isPending, handleGenerate]);
+    }, [isPending, session]);
 
     if (isPending) {
         return <LoadingIndicator idea="Checking session..." />;
@@ -143,7 +135,7 @@ export const Build: React.FC = () => {
                 <p className="text-red-300 mb-6 max-w-2xl mx-auto">{error}</p>
                 <button
                     onClick={handleReset}
-                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-2 px-6 rounded-lg hover:opacity-90 transition-colors duration-300"
+                    className="bg-gradient-to-r from-gray-700 to-gray-800 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-600 transition-colors duration-300"
                 >
                     Try Again
                 </button>
@@ -153,6 +145,11 @@ export const Build: React.FC = () => {
 
     return (
         <div className="build-container">
+            <div className="text-center p-8">
+                <h1 className="text-4xl font-bold mb-4">Let's build your startup</h1>
+                <p className="text-lg text-slate-400 mb-8">Describe your business idea below to get started.</p>
+                <IdeaInputForm onGenerate={handleGenerate} />
+            </div>
             <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
         </div>
     );

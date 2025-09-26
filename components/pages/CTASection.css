@@ -1,0 +1,80 @@
+.cta-section {
+    padding: 6rem 2rem;
+    background-color: var(--background-color);
+}
+
+.cta-section .cta-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: var(--bg-slate-800);
+    border-radius: 2rem;
+    padding: 5rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section .cta-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(12, 12, 13, 0.9), rgba(19, 19, 21, 0.8));
+    z-index: 1;
+}
+
+[data-theme='light'] .cta-section .cta-container {
+    background-color: var(--bg-slate-700);
+}
+
+[data-theme='light'] .cta-section .cta-container::before {
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.9), rgba(243, 244, 246, 0.8));
+}
+
+.cta-section .cta-content {
+    position: relative;
+    z-index: 2;
+}
+
+.cta-section .cta-headline {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+}
+
+.cta-section .cta-subheadline {
+    font-size: 1.125rem;
+    color: var(--text-slate-300);
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+}
+
+.cta-section .cta-button {
+    background-color: white;
+    color: black;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 1rem 2.5rem;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cta-section .cta-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+[data-theme='light'] .cta-section .cta-button {
+    background-color: var(--text-color);
+    color: var(--background-color);
+}
+
+[data-theme='light'] .cta-section .cta-button:hover {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}

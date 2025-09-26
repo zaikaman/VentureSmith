@@ -1,0 +1,45 @@
+
+.logo-ticker-container {
+    width: 100%;
+    overflow: hidden;
+    padding: 4rem 0;
+    background-color: var(--background-color);
+    white-space: nowrap; /* Prevent line breaks */
+}
+
+.logo-ticker-track {
+    display: flex;
+    animation: scroll 40s linear infinite;
+    will-change: transform;
+}
+
+.logo-ticker-track:hover {
+    animation-play-state: paused;
+}
+
+.logo-item {
+    height: 40px; /* Adjust as needed */
+    margin: 0 40px;
+    filter: invert(1);
+    opacity: 0.6;
+    transition: opacity 0.3s;
+    flex-shrink: 0; /* Prevent logos from shrinking */
+}
+
+.logo-item:hover {
+    opacity: 1;
+}
+
+[data-theme='light'] .logo-item {
+    filter: none;
+}
+
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}

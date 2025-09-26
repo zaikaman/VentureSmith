@@ -1,31 +1,31 @@
-
 .account-page-container {
     display: flex;
     justify-content: center;
-    padding: 2rem;
+    padding: 10rem 2rem 2rem; /* Added top padding */
     width: 100%;
 }
 
 .account-card {
-    background-color: var(--bg-slate-800);
+    background-color: var(--bg-slate-900);
     border: 1px solid var(--border-slate-700);
-    border-radius: 8px;
-    padding: 2rem;
+    border-radius: 1.5rem; /* 24px */
+    padding: 2.5rem;
     width: 100%;
     max-width: 600px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .account-card h1 {
-    font-size: 1.875rem; /* 30px */
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    color: var(--text-slate-200);
+    font-size: 2.25rem; /* 36px */
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--text-color);
 }
 
 .account-info p {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     color: var(--text-slate-300);
+    font-size: 1rem;
 }
 
 .account-info strong {
@@ -33,7 +33,7 @@
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .form-group label {
@@ -46,9 +46,9 @@
 .form-group input {
     width: 100%;
     padding: 0.75rem 1rem;
-    background-color: var(--bg-slate-900);
+    background-color: var(--bg-slate-800);
     border: 1px solid var(--border-slate-700);
-    border-radius: 6px;
+    border-radius: 0.5rem; /* 8px */
     color: var(--text-slate-200);
     transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -60,16 +60,21 @@
 }
 
 .save-button {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: white;
+    color: black;
     font-weight: 600;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 2rem;
     border: none;
-    border-radius: 6px;
+    border-radius: 9999px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: transform 0.2s;
 }
 
 .save-button:hover {
-    background-color: #7c3aed; /* A slightly darker shade of the primary color */
+    transform: scale(1.05);
+}
+
+[data-theme='light'] .save-button {
+    background-color: var(--text-color);
+    color: var(--background-color);
 }

@@ -1,0 +1,227 @@
+
+.pitch-deck-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 1024px) { /* lg breakpoint */
+    .pitch-deck-grid {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+.slide-viewer {
+    background-color: var(--bg-slate-800);
+    border: 1px solid var(--border-slate-700);
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.slide-content-container {
+    aspect-ratio: 16 / 9;
+    background-color: var(--bg-slate-900);
+    border-radius: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    margin-bottom: 1rem;
+    box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.05);
+}
+
+.slide-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.slide-body {
+    font-size: 1.25rem;
+    text-align: center;
+    color: var(--text-slate-300);
+    line-height: 1.6;
+}
+
+.slide-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.slide-nav-button {
+    background-color: var(--bg-slate-700);
+    color: var(--text-slate-200);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.slide-nav-button:hover {
+    background-color: var(--bg-slate-600);
+}
+
+.slide-counter {
+    font-size: 0.875rem;
+    color: var(--text-slate-400);
+}
+
+.sidebar {
+    background-color: var(--bg-slate-800);
+    border: 1px solid var(--border-slate-700);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.script-viewer, .transcript-viewer {
+    flex-grow: 1;
+    overflow-y: auto;
+    background-color: var(--bg-slate-900);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    min-height: 200px;
+}
+
+.script-text {
+    white-space: pre-line;
+    line-height: 1.7;
+    color: var(--text-slate-300);
+}
+
+.transcript-message {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+}
+
+.transcript-message.user {
+    background-color: rgba(59, 130, 246, 0.1);
+    text-align: right;
+}
+
+.transcript-message.assistant {
+    background-color: rgba(139, 92, 246, 0.1);
+    text-align: left;
+}
+
+.message-role {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.message-role.user {
+    color: #60a5fa; /* blue-400 */
+}
+
+.message-role.assistant {
+    color: #a78bfa; /* violet-400 */
+}
+
+.message-text {
+    color: var(--text-slate-200);
+}
+
+.sidebar-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.sidebar-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.sidebar-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.listen-button {
+    background-color: #16a34a; /* green-600 */
+}
+.listen-button:hover:not(:disabled) {
+    background-color: #15803d; /* green-700 */
+}
+
+.stop-button {
+    background-color: #dc2626; /* red-600 */
+}
+.stop-button:hover:not(:disabled) {
+    background-color: #b91c1c; /* red-700 */
+}
+
+.qa-button {
+    background-color: #7c3aed; /* purple-600 */
+}
+.qa-button:hover:not(:disabled) {
+    background-color: #6d28d9; /* purple-700 */
+}
+
+.export-button {
+    background-color: #2563eb; /* blue-600 */
+}
+.export-button:hover:not(:disabled) {
+    background-color: #1d4ed8; /* blue-700 */
+}
+
+.error-message {
+    color: #ef4444; /* red-500 */
+    text-align: center;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+/* For PDF export */
+.pdf-slide-render {
+    width: 1920px;
+    height: 1080px;
+    background-color: var(--bg-slate-900);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem;
+}
+
+.pdf-slide-render h3 {
+    font-size: 5rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+}
+
+.pdf-slide-render div {
+    font-size: 2rem;
+    line-height: 1.6;
+    text-align: center;
+    color: var(--text-slate-200);
+}

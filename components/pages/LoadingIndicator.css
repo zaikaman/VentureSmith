@@ -1,0 +1,50 @@
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    min-height: 80vh;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--border-slate-700);
+    border-top-color: var(--text-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 2rem;
+}
+
+.loading-title {
+    font-size: 2.25rem; /* 36px */
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.loading-idea {
+    font-size: 1.125rem; /* 18px */
+    color: var(--text-slate-300);
+    max-width: 600px;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+.loading-step {
+    font-size: 1rem; /* 16px */
+    color: var(--text-slate-400);
+    height: 24px; /* Reserve space to prevent layout shift */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
