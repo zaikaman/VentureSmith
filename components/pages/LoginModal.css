@@ -1,4 +1,5 @@
 
+
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -58,3 +59,9 @@
 .modal-button.confirm:hover {
     opacity: 0.9;
 }
+
+[data-theme='light'] .modal-button.confirm {
+    background-color: var(--text-color);
+    color: var(--background-color);
+}
+
