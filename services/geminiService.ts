@@ -13,6 +13,7 @@ const scoreSchema = {
 const startupDataSchema = {
     type: Type.OBJECT,
     properties: {
+        name: { type: Type.STRING, description: "A creative and memorable name for the startup." },
         scorecard: {
             type: Type.OBJECT,
             properties: {
@@ -108,7 +109,7 @@ const startupDataSchema = {
              required: ["summary", "competitors", "trends"]
         }
     },
-    required: ["scorecard", "businessPlan", "websitePrototype", "pitchDeck", "marketResearch"]
+    required: ["name", "scorecard", "businessPlan", "websitePrototype", "pitchDeck", "marketResearch"]
 };
 
 
@@ -122,8 +123,9 @@ export const generateStartupAssets = async (idea: string): Promise<StartupData> 
         Idea: "${idea}"
         
         Generate the following assets:
-        1. A scorecard rating the idea on market size, feasibility, and innovation.
-        2. A comprehensive 7-part business plan containing:
+        1. A creative and memorable name for the startup.
+        2. A scorecard rating the idea on market size, feasibility, and innovation.
+        3. A comprehensive 7-part business plan containing:
             a. Executive Summary: A concise, compelling summary of the entire business plan.
             b. Company Description: The company's mission, vision, and core values.
             c. Market Analysis: A detailed analysis of the industry, target market, and competition.
@@ -132,7 +134,7 @@ export const generateStartupAssets = async (idea: string): Promise<StartupData> 
             f. Marketing and Sales Strategy: The plan for customer acquisition, marketing, and sales.
             g. Financial Projections: A summary of the financial outlook and a 3-year forecast table (revenue, COGS, net profit).
 
-        3. A self-contained React functional component code string for a comprehensive website landing page prototype. CRITICAL FORMATTING REQUIREMENTS:
+        4. A self-contained React functional component code string for a comprehensive website landing page prototype. CRITICAL FORMATTING REQUIREMENTS:
         - The returned code string must be a raw string of valid, well-formed JSX code only
         - Any internal double quotes within the code string MUST be escaped with a backslash (e.g., \"some-class\")
         - NO markdown formatting whatsoever (no jsx blocks, no backticks, no code blocks)
@@ -142,11 +144,11 @@ export const generateStartupAssets = async (idea: string): Promise<StartupData> 
         - Use modern React functional component syntax and Tailwind CSS classes only.
         - Do not use any external images or assets. The component must be self-contained.
         
-        4. A full Pitch Deck including:
+        5. A full Pitch Deck including:
            a. A natural, conversational 1-minute voice pitch script.
            b. A slide deck of 8-10 slides. For each slide, provide a title and content. The content should be concise, using markdown bullet points (hyphens). The slides should cover: Problem, Solution, Market Opportunity, Business Model, Product Demo (use a placeholder description), Market Validation, Competition, Financial Projection (use high-level estimates), Team (use placeholder founders), and a Call to Action.
 
-        5. A brief market research summary including potential competitors and trends.
+        6. A brief market research summary including potential competitors and trends.
         
         Return the entire output as a single JSON object that conforms to the provided schema.`;
 

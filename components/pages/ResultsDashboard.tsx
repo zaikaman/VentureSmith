@@ -44,14 +44,14 @@ const icons: Record<Tab, JSX.Element> = {
     'AI Mentor': <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3.5a.5.5 0 01.5.5v2.222l1.803.901a.5.5 0 01.22.67L11.5 9.472V13.5a.5.5 0 01-.5.5h-2a.5.5 0 01-.5-.5V9.472L7.477 7.793a.5.5 0 01.22-.67L9.5 6.222V4a.5.5 0 01.5-.5zM5.5 13a.5.5 0 000 1h9a.5.5 0 000-1h-9z" /><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM3 10a7 7 0 1114 0 7 7 0 01-14 0z" /></svg>,
 };
 
-export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ 
-    data, 
-    idea, 
-    marketResearch, 
-    onReset, 
-    mentorFeedback, 
-    isMentorLoading, 
-    onGetMentorFeedback 
+export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
+    data,
+    idea,
+    marketResearch,
+    onReset,
+    mentorFeedback,
+    isMentorLoading,
+    onGetMentorFeedback
 }) => {
     const [activeTab, setActiveTab] = useState<Tab>('Dashboard');
 
@@ -110,7 +110,7 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
-                <h1 className="dashboard-title">Your Venture Blueprint</h1>
+                <h1 className="dashboard-title">{idea}</h1>
                 <button onClick={onReset} className="reset-button">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />

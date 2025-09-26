@@ -38,6 +38,7 @@ export interface MarketResearchData {
 }
 
 export interface StartupData {
+  name: string;
   scorecard: ScorecardData;
   businessPlan: BusinessPlanData;
   websitePrototype: WebsitePrototypeData;

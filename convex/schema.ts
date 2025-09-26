@@ -8,4 +8,16 @@ export default defineSchema({
     email: v.string(),
     subject: v.string(),
   }).index("by_subject", ["subject"]),
+
+  startups: defineTable({
+    userId: v.id("users"),
+    name: v.optional(v.string()),
+    dashboard: v.optional(v.string()),
+    businessPlan: v.optional(v.string()),
+    website: v.optional(v.string()),
+    pitchDeck: v.optional(v.string()),
+    marketResearch: v.optional(v.string()),
+    aiMentor: v.optional(v.string()),
+    createdAt: v.number(),
+  }).index("by_userId", ["userId"]),
 });

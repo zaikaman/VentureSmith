@@ -7,7 +7,7 @@ import { LoadingIndicator } from './LoadingIndicator';
 import { ResultsDashboard } from './ResultsDashboard';
 import { authClient } from '../../lib/auth-client';
 import { LoginModal } from './LoginModal';
-import { useAction } from 'convex/react';
+import { useAction, useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { IdeaInputForm } from './IdeaInputForm'; // Import the form
 import './Build.css';
@@ -29,13 +29,16 @@ export const Build: React.FC = () => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const [mentorFeedback, setMentorFeedback] = useState<string | null>(null); // Mentor feedback state
     const [isMentorLoading, setIsMentorLoading] = useState<boolean>(false); // Mentor feedback loading state
+    const [showHistory, setShowHistory] = useState<boolean>(false);
     const { data: session, isPending } = authClient.useSession();
     const navigate = useNavigate();
 
+    const startups = useQuery(api.startups.getStartupsForUser);
     // Get Convex actions for market research
     const getMarketLandscape = useAction(api.firecrawl.getMarketLandscape);
     const getCompetitorsAction = useAction(api.firecrawl.getCompetitors);
     const getKeyTrendsAction = useAction(api.firecrawl.getKeyTrends);
+    const createStartup = useMutation(api.startups.createStartup);
 
     const handleGenerate = useCallback(async (submittedIdea: string) => {
         if (!session) {
@@ -61,10 +64,22 @@ export const Build: React.FC = () => {
             ]);
 
             setResults(mainData);
-            setMarketResearch({
+            setIdea(mainData.name);
+            const marketResearchData = {
                 landscape: landscapeRes.web || [],
                 competitors: competitorsRes.web || [],
                 trends: trendsRes.web || [],
+            };
+            setMarketResearch(marketResearchData);
+
+            // Save to database
+            await createStartup({
+                name: mainData.name,
+                dashboard: JSON.stringify(mainData.scorecard, null, 2),
+                businessPlan: JSON.stringify(mainData.businessPlan, null, 2),
+                website: JSON.stringify(mainData.websitePrototype, null, 2),
+                pitchDeck: JSON.stringify(mainData.pitchDeck, null, 2),
+                marketResearch: JSON.stringify(marketResearchData, null, 2),
             });
 
         } catch (err: any) {
@@ -73,7 +88,7 @@ export const Build: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [session, isLoading, getMarketLandscape, getCompetitorsAction, getKeyTrendsAction]);
+    }, [session, isLoading, getMarketLandscape, getCompetitorsAction, getKeyTrendsAction, createStartup]);
 
     const handleGetMentorFeedback = async () => {
         if (!results || !marketResearch) return;
@@ -93,13 +108,29 @@ export const Build: React.FC = () => {
         }
     };
 
+    const handleHistoryItemClick = (startup: any) => {
+        const marketResearchData = JSON.parse(startup.marketResearch);
+        const resultsData = {
+            name: startup.name,
+            scorecard: JSON.parse(startup.dashboard),
+            businessPlan: JSON.parse(startup.businessPlan),
+            websitePrototype: JSON.parse(startup.website),
+            pitchDeck: JSON.parse(startup.pitchDeck),
+            marketResearch: marketResearchData,
+        };
+        setResults(resultsData);
+        setMarketResearch(marketResearchData);
+        setIdea(startup.name);
+        setShowHistory(false);
+    };
+
     const handleReset = () => {
         setIdea('');
         setResults(null);
         setMarketResearch(null);
         setError(null);
         setIsLoading(false);
-        navigate('/');
+        navigate('/build');
     }
 
     useEffect(() => {
@@ -150,6 +181,32 @@ export const Build: React.FC = () => {
                 <p className="text-lg text-slate-400 mb-8">Describe your business idea below to get started.</p>
                 <IdeaInputForm onGenerate={handleGenerate} />
             </div>
+            {session && (
+                <div className="history-section">
+                    <button onClick={() => setShowHistory(!showHistory)} className="history-toggle-button">
+                        {showHistory ? "Hide" : "Show"} History
+                    </button>
+                    {showHistory && (
+                        <div className="startups-section">
+                            <h2>My Startups</h2>
+                            {startups && startups.length > 0 ? (
+                                <ul className="startup-list">
+                                    {startups.map((startup) => {
+                                        return (
+                                            <li key={startup._id} className="startup-item" onClick={() => handleHistoryItemClick(startup)}>
+                                                <p><strong>Name:</strong> {startup.name}</p>
+                                                <p><strong>Created At:</strong> {new Date(startup.createdAt).toLocaleDateString()}</p>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            ) : (
+                                <p>You haven't created any startups yet.</p>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
             <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
         </div>
     );
