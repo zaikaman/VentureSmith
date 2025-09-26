@@ -21,7 +21,7 @@
 .sidebar-toggle-button {
     position: absolute;
     top: 15rem; /* Adjust to align with the top of the cards */
-    left: calc(380px - 1.25rem); /* Position based on sidebar width */
+    left: -1.25rem; /* Position based on sidebar width */
     z-index: 10;
     background-color: var(--bg-slate-700);
     border: 1px solid var(--border-slate-700);
@@ -61,8 +61,8 @@
 }
 
 .workspace-sidebar {
-    flex: 1 1 380px; /* Let it grow and shrink, with a base width */
-    min-width: 300px; /* Prevent it from becoming too small */
+    flex: 0 0 auto; /* Let it grow and shrink, with a base width */
+    width: fit-content;
     transition: all 0.3s ease-in-out;
     position: relative;
 }
