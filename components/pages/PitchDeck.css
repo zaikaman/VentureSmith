@@ -88,13 +88,12 @@
 }
 
 .script-viewer, .transcript-viewer {
-    flex-grow: 1;
+    height: 400px; /* Fixed height */
     overflow-y: auto;
     background-color: var(--bg-slate-900);
     border-radius: 0.75rem;
     padding: 1rem;
     margin-bottom: 1.5rem;
-    min-height: 200px;
 }
 
 .script-text {

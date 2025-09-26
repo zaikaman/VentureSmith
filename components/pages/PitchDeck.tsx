@@ -170,7 +170,7 @@ export const PitchDeck: React.FC<PitchDeckProps> = ({ data }) => {
                             {isCallActive && isSimulating ? 'Stop Simulation' : 'Start Investor Q&A'}
                         </button>
                         <button onClick={handleExportPDF} disabled={isExporting || isCallActive} className="sidebar-button export-button">
-                            {isExporting ? 'Exporting...' : 'Export to PDF'}
+                            {isExporting ? 'Exporting...' : 'Export Slides to PDF'}
                         </button>
                     </div>
                 </div>

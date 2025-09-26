@@ -28,7 +28,80 @@ export const BusinessPlan: React.FC<BusinessPlanProps> = ({ data, idea }) => {
 
     const handleDownloadPDF = () => {
         const doc = new jsPDF();
-        // ... PDF generation logic remains the same
+        const page_width = doc.internal.pageSize.getWidth();
+        const page_height = doc.internal.pageSize.getHeight();
+        const center_pos = page_width / 2;
+        
+        doc.setFontSize(20);
+        doc.text("Business Plan", center_pos, 20, { align: "center" });
+        doc.setFontSize(12);
+        doc.text(idea, center_pos, 30, { align: "center" });
+
+        let current_y = 40;
+
+        const checkPageBreak = () => {
+            if (current_y > page_height - 40) { // 40 is a margin
+                doc.addPage();
+                current_y = 20;
+            }
+        }
+
+        const addSection = (title: string, content: string) => {
+            checkPageBreak();
+            doc.setFontSize(16);
+            doc.text(title, 14, current_y);
+            current_y += 8;
+            doc.setFontSize(12);
+            const splitContent = doc.splitTextToSize(content, 180);
+            doc.text(splitContent, 14, current_y);
+            current_y += splitContent.length * 7 + 10;
+        };
+
+        addSection("Executive Summary", data.executiveSummary);
+        addSection("Company Description", data.companyDescription);
+        
+        checkPageBreak();
+        doc.setFontSize(16);
+        doc.text("Market Analysis", 14, current_y);
+        current_y += 8;
+        
+        const addSubSection = (title: string, content: string) => {
+            checkPageBreak();
+            doc.setFontSize(14);
+            doc.text(title, 14, current_y);
+            current_y += 6;
+            doc.setFontSize(12);
+            const splitContent = doc.splitTextToSize(content, 170);
+            doc.text(splitContent, 20, current_y);
+            current_y += splitContent.length * 7 + 5;
+        };
+
+        addSubSection("Industry Overview", data.marketAnalysis.industryOverview);
+        addSubSection("Target Market", data.marketAnalysis.targetMarket);
+        addSubSection("Competitive Analysis", data.marketAnalysis.competitiveAnalysis);
+        
+        current_y += 5;
+
+        addSection("Organization and Management", data.organizationAndManagement);
+        addSection("Products and Services", data.productsAndServices);
+        addSection("Marketing and Sales Strategy", data.marketingAndSalesStrategy);
+
+        addSection("Financial Projections", data.financialProjections.summary);
+
+        checkPageBreak();
+
+        autoTable(doc, {
+            startY: current_y,
+            head: [['Year', 'Revenue', 'COGS', 'Net Profit']],
+            body: data.financialProjections.forecast.map(item => [item.year, item.revenue, item.cogs, item.netProfit]),
+            theme: 'striped',
+            headStyles: { fillColor: [22, 160, 133] },
+            didDrawPage: (data) => {
+                current_y = data.cursor.y + 10;
+            }
+        });
+
+        doc.save('business-plan.pdf');
     };
 
     return (

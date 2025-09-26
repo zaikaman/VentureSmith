@@ -81,3 +81,21 @@
 .startup-item strong {
     color: var(--text-slate-200);
 }
+
+@media (max-width: 768px) {
+    .history-section {
+        padding: 0 0.5rem;
+    }
+
+    .startups-section {
+        padding: 1rem;
+    }
+
+    .startups-section h2 {
+        font-size: 1.1rem;
+    }
+
+    .startup-item {
+        padding: 0.75rem;
+    }
+}
