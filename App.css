@@ -16,6 +16,16 @@
     --bg-white-10: rgba(255, 255, 255, 0.1);
     --blend-mode: multiply;
     --app-container-background: var(--background-color);
+
+    /* Button Colors */
+    --listen-button-bg: #14532d;
+    --listen-button-hover-bg: #166534;
+    --qa-button-bg: #4c1d95;
+    --qa-button-hover-bg: #5b21b6;
+    --export-button-bg: #1e3a8a;
+    --export-button-hover-bg: #1e40af;
+    --stop-button-bg: #7f1d1d;
+    --stop-button-hover-bg: #991b1b;
 }
 
 [data-theme='light'] {
@@ -38,6 +48,16 @@
     --bg-white-10: rgba(0, 0, 0, 0.05);
     --blend-mode: screen;
     --app-container-background: #FFFFFF;
+
+    /* Button Colors */
+    --listen-button-bg: #16a34a;
+    --listen-button-hover-bg: #15803d;
+    --qa-button-bg: #7c3aed;
+    --qa-button-hover-bg: #6d28d9;
+    --export-button-bg: #2563eb;
+    --export-button-hover-bg: #1d4ed8;
+    --stop-button-bg: #dc2626;
+    --stop-button-hover-bg: #b91c1c;
 }
 
 [data-theme='light'] .header-content {

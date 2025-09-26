@@ -164,31 +164,31 @@
 }
 
 .listen-button {
-    background-color: #16a34a; /* green-600 */
+    background-color: var(--listen-button-bg);
 }
 .listen-button:hover:not(:disabled) {
-    background-color: #15803d; /* green-700 */
+    background-color: var(--listen-button-hover-bg);
 }
 
 .stop-button {
-    background-color: #dc2626; /* red-600 */
+    background-color: var(--stop-button-bg);
 }
 .stop-button:hover:not(:disabled) {
-    background-color: #b91c1c; /* red-700 */
+    background-color: var(--stop-button-hover-bg);
 }
 
 .qa-button {
-    background-color: #7c3aed; /* purple-600 */
+    background-color: var(--qa-button-bg);
 }
 .qa-button:hover:not(:disabled) {
-    background-color: #6d28d9; /* purple-700 */
+    background-color: var(--qa-button-hover-bg);
 }
 
 .export-button {
-    background-color: #2563eb; /* blue-600 */
+    background-color: var(--export-button-bg);
 }
 .export-button:hover:not(:disabled) {
-    background-color: #1d4ed8; /* blue-700 */
+    background-color: var(--export-button-hover-bg);
 }
 
 .error-message {
