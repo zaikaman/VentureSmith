@@ -99,3 +99,30 @@
     font-size: 0.95rem;
     color: var(--text-slate-400);
 }
+
+@media (max-width: 768px) {
+    .scorecard-grid {
+        gap: 2rem;
+    }
+
+    .overall-score-container {
+        padding: 1.5rem;
+    }
+
+    .score-circle-container {
+        width: 10rem; /* 160px */
+        height: 10rem;
+    }
+
+    .overall-score-text {
+        font-size: 3rem; /* 48px */
+    }
+
+    .overall-score-title {
+        font-size: 1.25rem;
+    }
+
+    .score-info-card {
+        padding: 1rem;
+    }
+}
