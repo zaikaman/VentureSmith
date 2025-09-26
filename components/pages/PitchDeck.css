@@ -221,6 +221,46 @@
 .pdf-slide-render div {
     font-size: 2rem;
     line-height: 1.6;
-    text-align: center;
     color: var(--text-slate-200);
+}
+
+@media (max-width: 768px) {
+    .pitch-deck-grid {
+        gap: 1.5rem;
+    }
+
+    .slide-viewer,
+    .sidebar {
+        padding: 1rem;
+    }
+
+    .slide-content-container {
+        padding: 1.5rem;
+    }
+
+    .slide-title {
+        font-size: 1.75rem;
+    }
+
+    .slide-body {
+        font-size: 1rem;
+    }
+
+    .slide-controls {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .slide-nav-button {
+        width: 100%;
+    }
+
+    .script-viewer,
+    .transcript-viewer {
+        height: 300px;
+    }
+
+    .sidebar-title {
+        font-size: 1.125rem;
+    }
 }

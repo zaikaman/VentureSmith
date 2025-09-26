@@ -104,3 +104,35 @@
 .financial-table tbody tr:last-child {
     border-bottom: none;
 }
+
+@media (max-width: 768px) {
+    .bp-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .bp-title-section h2 {
+        font-size: 2rem;
+    }
+
+    .bp-title-section p {
+        font-size: 1rem;
+    }
+
+    .download-button .button-text {
+        display: none;
+    }
+
+    .download-button {
+        padding: 0.75rem;
+    }
+
+    .bp-section-title {
+        font-size: 1.5rem;
+    }
+
+    .financial-table th, .financial-table td {
+        padding: 0.75rem 1rem;
+    }
+}

@@ -108,3 +108,27 @@
     max-height: 400px;
     overflow: auto;
 }
+
+@media (max-width: 768px) {
+    .wp-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .wp-title {
+        font-size: 1.75rem;
+    }
+
+    .regenerate-button .button-text {
+        display: none;
+    }
+
+    .regenerate-button {
+        padding: 0.75rem;
+    }
+
+    .preview-and-editor {
+        padding: 1rem;
+    }
+}
