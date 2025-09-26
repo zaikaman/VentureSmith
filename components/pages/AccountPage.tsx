@@ -2,6 +2,7 @@
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useEffect, useState } from "react";
+import { toast } from 'sonner';
 import "./AccountPage.css";
 
 const AccountPage = () => {
@@ -37,7 +38,7 @@ const AccountPage = () => {
 
   const handleSave = async () => {
     await updateProfile({ name });
-    alert("Profile updated!");
+    toast.success("Profile updated!");
   };
 
   return (
