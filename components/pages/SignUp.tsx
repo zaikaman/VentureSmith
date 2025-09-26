@@ -117,7 +117,7 @@ export const SignUp: React.FC = () => {
                             {loading ? 'Verifying...' : 'Verify OTP'}
                         </button>
                         <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-                            <button type="button" onClick={handleResendOtp} disabled={resendCooldown > 0 || loading} className="link-button">
+                            <button type="button" onClick={handleResendOtp} disabled={resendCooldown > 0 || loading} className="secondary-button">
                                 {resendCooldown > 0 ? `Resend OTP in ${resendCooldown}s` : 'Resend OTP'}
                             </button>
                         </div>
