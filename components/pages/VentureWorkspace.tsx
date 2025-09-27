@@ -33,6 +33,7 @@ import GenerateDatabaseSchema from './GenerateDatabaseSchema';
 import GenerateApiEndpoints from './GenerateApiEndpoints';
 import GenerateDevelopmentRoadmap from './GenerateDevelopmentRoadmap';
 import EstimateCloudCosts from './EstimateCloudCosts';
+import AIPricingStrategy from './AIPricingStrategy';
 
 import './VentureWorkspace.css';
 
@@ -115,15 +116,7 @@ export const VentureWorkspace: React.FC = () => {
             ]
         },
         {
-            id: 'phase-7', name: 'Phase 7: Alpha & Beta Testing',
-            tasks: [
-                { id: 'alphaTesting', name: 'Internal Alpha Testing', isCompleted: false },
-                { id: 'betaTesterRecruitment', name: 'Recruit Beta Testers', isCompleted: false },
-                { id: 'feedbackAnalysis', name: 'AI Feedback Analysis', isCompleted: false },
-            ]
-        },
-        {
-            id: 'phase-8', name: 'Phase 8: Go-to-Market Strategy',
+            id: 'phase-7', name: 'Phase 7: Go-to-Market Strategy',
             tasks: [
                 { id: 'pricingStrategy', name: 'AI Pricing Strategy', isCompleted: false },
                 { id: 'marketingCopy', name: 'Generate Marketing Copy', isCompleted: false },
@@ -131,7 +124,7 @@ export const VentureWorkspace: React.FC = () => {
             ]
         },
         {
-            id: 'phase-9', name: 'Phase 9: Launch & Promotion',
+            id: 'phase-8', name: 'Phase 8: Launch & Promotion',
             tasks: [
                 { id: 'productHuntKit', name: 'Product Hunt Launch Kit', isCompleted: false },
                 { id: 'pressRelease', name: 'Draft Press Release', isCompleted: false },
@@ -139,7 +132,7 @@ export const VentureWorkspace: React.FC = () => {
             ]
         },
         {
-            id: 'phase-10', name: 'Phase 10: Growth Hacking & Analytics',
+            id: 'phase-9', name: 'Phase 9: Growth Hacking & Analytics',
             tasks: [
                 { id: 'growthMetrics', name: 'Identify Growth Metrics', isCompleted: false },
                 { id: 'abTestIdeas', name: 'Brainstorm A/B Test Ideas', isCompleted: false },
@@ -147,14 +140,14 @@ export const VentureWorkspace: React.FC = () => {
             ]
         },
         {
-            id: 'phase-11', name: 'Phase 11: Scaling & Operations',
+            id: 'phase-10', name: 'Phase 10: Scaling & Operations',
             tasks: [
                 { id: 'processAutomation', name: 'Map Processes for Automation', isCompleted: false },
                 { id: 'draftJobDescriptions', name: 'Draft Job Descriptions', isCompleted: false },
             ]
         },
         {
-            id: 'phase-12', name: 'Phase 12: Fundraising & Investor Relations',
+            id: 'phase-11', name: 'Phase 11: Fundraising & Investor Relations',
             tasks: [
                 { id: 'investorMatching', name: 'AI Investor Matching', isCompleted: false },
                 { id: 'dueDiligenceChecklist', name: 'Due Diligence Checklist', isCompleted: false },
@@ -286,6 +279,9 @@ export const VentureWorkspace: React.FC = () => {
                 return <GenerateDevelopmentRoadmap startup={startup} />;
             case 'estimateCosts':
                 return <EstimateCloudCosts startup={startup} />;
+            case 'pricingStrategy':
+                return <AIPricingStrategy startup={startup} />;
+            case 'marketingCopy':
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;

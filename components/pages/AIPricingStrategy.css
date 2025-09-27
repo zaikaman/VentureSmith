@@ -1,0 +1,218 @@
+.pricing-strategy-container {
+    background-color: #0f172a; /* bg-slate-900 */
+    padding: 2rem;
+    border-radius: 0.5rem;
+    color: white;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.regenerate-button {
+    background-color: #1e293b; /* bg-slate-800 */
+    color: #94a3b8; /* text-slate-400 */
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #334155; /* border-slate-700 */
+    transition: all 0.2s ease-in-out;
+}
+
+.regenerate-button:hover {
+    background-color: #334155; /* bg-slate-700 */
+    color: white;
+}
+
+.initial-view, .loading-container {
+    text-align: center;
+    padding: 3rem;
+    background-color: #1e293b; /* bg-slate-800 */
+    border-radius: 0.5rem;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cta-button {
+    background-color: #4f46e5; /* bg-indigo-600 */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+/* --- Loading Animation --- */
+.graph-animation-container {
+    width: 90%;
+    max-width: 400px;
+    height: 250px;
+    position: relative;
+}
+
+.graph-axes {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-left: 3px solid #334155;
+    border-bottom: 3px solid #334155;
+}
+
+.axis-label {
+    position: absolute;
+    color: #64748b;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.y-axis-label { top: -20px; left: -10px; transform: rotate(-90deg); transform-origin: 0 0; }
+.x-axis-label { bottom: -25px; right: -20px; }
+
+.graph-point {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: #fff;
+    border-radius: 50%;
+    transform: translate(-50%, 50%);
+    animation: plot-point 6s infinite ease-in-out;
+}
+
+.point-1 { left: 20%; bottom: 20%; animation-delay: 0s; background-color: #a5b4fc; }
+.point-2 { left: 50%; bottom: 55%; animation-delay: -4s; background-color: #818cf8; }
+.point-3 { left: 80%; bottom: 90%; animation-delay: -2s; background-color: #6366f1; }
+
+.graph-path {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 100%;
+    stroke: #4f46e5;
+    stroke-width: 3;
+    fill: none;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw-erase-path 4s infinite linear;
+}
+
+@keyframes draw-erase-path {
+    0% {
+        stroke-dashoffset: 1000;
+    }
+    50% {
+        stroke-dashoffset: 0;
+    }
+    100% {
+        stroke-dashoffset: -1000;
+    }
+}
+
+.loading-status-text {
+    margin-top: 2.5rem;
+}
+
+/* --- Results View --- */
+.pricing-results-container {
+    text-align: left;
+}
+
+.pricing-models-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    align-items: stretch;
+}
+
+.pricing-card {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pricing-card.recommended {
+    border-color: #4f46e5;
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
+}
+
+.pricing-card-header .recommend-badge {
+    background-color: #4f46e5;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+.pricing-card-header .tier-name {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.pricing-card-header .tier-price {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.pricing-card-header .tier-price span {
+    font-size: 1rem;
+    font-weight: normal;
+    color: #94a3b8;
+}
+
+.pricing-card-header .tier-description {
+    color: #94a3b8;
+    margin-bottom: 1.5rem;
+    min-height: 40px;
+}
+
+.pricing-card-cta {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: auto; /* Pushes button to the bottom */
+}
+
+.pricing-card.recommended .pricing-card-cta {
+    background-color: #4f46e5;
+    color: white;
+}
+
+.pricing-card:not(.recommended) .pricing-card-cta {
+    background-color: #334155;
+    color: #cbd5e1;
+}
+
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+}
+
+.features-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: #cbd5e1;
+}
+
+.features-list li .fa-check {
+    color: #22c55e;
+}

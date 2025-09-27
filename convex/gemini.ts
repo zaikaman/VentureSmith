@@ -1662,3 +1662,96 @@ export const estimateCloudCostsWithAI = internalAction(
     }
   }
 );
+
+export const generatePricingStrategyWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const pricingSchema = {
+      type: "OBJECT",
+      properties: {
+        models: {
+          type: "ARRAY",
+          description: "An array of 1 to 2 suggested pricing models.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              modelName: { type: "STRING", description: "The name of the pricing model (e.g., 'Tiered Subscription')." },
+              modelDescription: { type: "STRING", description: "A brief description of why this model is a good fit." },
+              tiers: {
+                type: "ARRAY",
+                description: "An array of 2-3 pricing tiers for this model.",
+                items: {
+                  type: "OBJECT",
+                  properties: {
+                    tierName: { type: "STRING", description: "Name of the tier (e.g., 'Basic', 'Pro', 'Enterprise')." },
+                    price: { type: "STRING", description: "The price for this tier (e.g., '$10/month', '$0/month')." },
+                    description: { type: "STRING", description: "A short description of the ideal customer for this tier." },
+                    features: { type: "ARRAY", items: { type: "STRING" }, description: "A list of key features included in this tier." },
+                    isRecommended: { type: "BOOLEAN", description: "Set to true for the single tier you most recommend for new users to start with." },
+                  },
+                  required: ["tierName", "price", "description", "features", "isRecommended"],
+                }
+              }
+            },
+            required: ["modelName", "modelDescription", "tiers"],
+          }
+        }
+      },
+      required: ["models"],
+    };
+
+    const prompt = `
+      You are a monetization and pricing strategist for tech startups.
+      Based on the provided business context, generate 1 or 2 potential pricing models with detailed tiers in a JSON format.
+
+      **Business Context:**
+      - **Business Plan:** ${JSON.stringify(fullContext.businessPlan, null, 2)}
+      - **Target Personas:** ${JSON.stringify(fullContext.customerPersonas, null, 2)}
+      - **Competitor Matrix:** ${JSON.stringify(fullContext.competitorMatrix, null, 2)}
+
+      **Your Task:**
+      Generate a JSON object that outlines 1-2 distinct pricing models. For each model, define 2-3 pricing tiers.
+
+      **JSON Schema Requirements:**
+      1.  The root object must have a "models" array.
+      2.  Each model object must have a "modelName", "modelDescription", and an array of "tiers".
+      3.  Each tier object must have "tierName", "price", "description", an array of "features", and a boolean "isRecommended".
+      4.  Ensure that for each model, exactly ONE tier has "isRecommended" set to true.
+      5.  The pricing and features should be logical and competitive based on the provided context.
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Pricing Strategy from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: pricingSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No pricing strategy data received from Gemini API");
+      }
+
+      console.log("Pricing strategy data received successfully.");
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get pricing strategy data:", error.message);
+      throw new Error(`Failed to get pricing strategy data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);

@@ -34,6 +34,7 @@ export default defineSchema({
     apiEndpoints: v.optional(v.string()),
     developmentRoadmap: v.optional(v.string()),
     costEstimate: v.optional(v.string()),
+    pricingStrategy: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),
 });

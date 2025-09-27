@@ -614,3 +614,30 @@ export const estimateCloudCosts = action({
     return result;
   },
 });
+
+export const generatePricingStrategy = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.businessPlan || !startup.customerPersonas || !startup.competitorMatrix) {
+      throw new Error("Business Plan, Customer Personas, and Competitor Matrix must be completed first.");
+    }
+
+    const fullContext = {
+      businessPlan: JSON.parse(startup.businessPlan),
+      customerPersonas: JSON.parse(startup.customerPersonas),
+      competitorMatrix: JSON.parse(startup.competitorMatrix),
+    };
+
+    const result = await ctx.runAction(internal.gemini.generatePricingStrategyWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updatePricingStrategy, {
+      startupId,
+      pricingStrategy: result,
+    });
+
+    return result;
+  },
+});
