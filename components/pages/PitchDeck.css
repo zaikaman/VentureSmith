@@ -1,266 +1,133 @@
+/* PitchDeck.css - Refactored for "Director's Room" */
 
-.pitch-deck-grid {
+.pd-initial-view, .presentation-container {
+    padding: 2rem;
+}
+
+.pd-initial-view { text-align: center; }
+.pd-initial-view .cta-button:disabled { background-color: var(--bg-slate-700); cursor: not-allowed; opacity: 0.6; }
+
+/* --- Animation --- */
+.directors-room-container {
+    height: 600px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.screen {
+    width: 80%;
+    height: 80%;
+    background: #111;
+    border: 4px solid #333;
+    position: relative;
+    overflow: hidden;
+    perspective: 800px;
+}
+
+.film-leader::before {
+    content: '3';
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    animation: countdown 3s forwards;
+    color: white; font-size: 15rem; font-weight: bold; display: flex; align-items: center; justify-content: center;
+}
+
+@keyframes countdown {
+    0%, 30% { content: '3'; opacity: 1; }
+    33%, 63% { content: '2'; opacity: 1; }
+    66%, 96% { content: '1'; opacity: 1; }
+    100% { content: ''; opacity: 0; }
+}
+
+.render-bars {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 50%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    opacity: 0;
+    animation: show-render 0.1s forwards 3s;
+}
+
+@keyframes show-render { to { opacity: 1; } }
+
+.render-bar {
+    width: 5%;
+    background: #a5b4fc;
+    animation: dance 1s infinite ease-in-out alternate;
+}
+
+@keyframes dance {
+    from { height: 10%; }
+    to { height: 100%; }
+}
+
+.render-bar:nth-child(2) { animation-delay: 0.2s; }
+.render-bar:nth-child(3) { animation-delay: 0.4s; }
+.render-bar:nth-child(4) { animation-delay: 0.6s; }
+.render-bar:nth-child(5) { animation-delay: 0.8s; }
+
+.production-status-text { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: #94a3b8; font-size: 1rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; animation: pulseText 2s infinite; }
+
+/* --- Results View --- */
+.presentation-container { animation: fadeInResults 1s forwards; }
+.header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+
+.presentation-layout {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 2fr 1fr;
     gap: 2rem;
 }
 
-@media (min-width: 1024px) { /* lg breakpoint */
-    .pitch-deck-grid {
-        grid-template-columns: 2fr 1fr;
-    }
-}
+.slide-viewer { background: var(--bg-slate-900); border: 1px solid var(--border-slate-700); border-radius: 16px; padding: 1rem; }
+.slide-display { aspect-ratio: 16 / 9; background: var(--bg-slate-800); border-radius: 8px; padding: 2rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+.slide-title { font-size: 2.5rem; font-weight: 700; color: #a5b4fc; margin-bottom: 1rem; }
+.slide-body { font-size: 1.25rem; line-height: 1.6; color: var(--text-slate-300); }
+.slide-body ul { padding-left: 1.5rem; text-align: left; }
 
-.slide-viewer {
-    background-color: var(--bg-slate-800);
-    border: 1px solid var(--border-slate-700);
-    border-radius: 1rem;
-    padding: 1.5rem;
-}
+.slide-controls { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+.slide-controls button { background: var(--bg-slate-700); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; }
+.slide-controls button:hover { background: var(--bg-slate-600); }
 
-.slide-content-container {
-    aspect-ratio: 16 / 9;
-    background-color: var(--bg-slate-900);
-    border-radius: 0.75rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-    margin-bottom: 1rem;
-    box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.05);
-}
+.teleprompter { background: var(--bg-slate-900); border: 1px solid var(--border-slate-700); border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column; overflow: hidden; /* Fix for scrollbox */ }
+.teleprompter h4 { font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; color: #e5e7eb; }
+.script-content { flex-grow: 1; overflow-y: auto; background: var(--bg-slate-800); border-radius: 8px; padding: 1rem; min-height: 0; /* Flexbox scroll fix */ }
+.script-content p { white-space: pre-line; line-height: 1.8; color: var(--text-slate-300); }
 
-.slide-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-align: center;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
+.script-content.transcript p { margin-bottom: 1rem; }
+.script-content.transcript strong { color: #a5b4fc; }
 
-.slide-body {
-    font-size: 1.25rem;
-    text-align: center;
-    color: var(--text-slate-300);
-    line-height: 1.6;
-}
-
-.slide-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.slide-nav-button {
-    background-color: var(--bg-slate-700);
-    color: var(--text-slate-200);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.slide-nav-button:hover {
-    background-color: var(--bg-slate-600);
-}
-
-.slide-counter {
-    font-size: 0.875rem;
-    color: var(--text-slate-400);
-}
-
-.sidebar {
-    background-color: var(--bg-slate-800);
-    border: 1px solid var(--border-slate-700);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-}
-
-.sidebar-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.script-viewer, .transcript-viewer {
-    height: 400px; /* Fixed height */
-    overflow-y: auto;
-    background-color: var(--bg-slate-900);
-    border-radius: 0.75rem;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.script-text {
-    white-space: pre-line;
-    line-height: 1.7;
-    color: var(--text-slate-300);
-}
-
-.transcript-message {
-    margin-bottom: 1rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-}
-
-.transcript-message.user {
-    background-color: rgba(59, 130, 246, 0.1);
-    text-align: right;
-}
-
-.transcript-message.assistant {
-    background-color: rgba(139, 92, 246, 0.1);
-    text-align: left;
-}
-
-.message-role {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 0.25rem;
-}
-
-.message-role.user {
-    color: #60a5fa; /* blue-400 */
-}
-
-.message-role.assistant {
-    color: #a78bfa; /* violet-400 */
-}
-
-.message-text {
-    color: var(--text-slate-200);
-}
-
-.sidebar-actions {
+.teleprompter-actions {
+    margin-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.sidebar-button {
+.action-button {
     width: 100%;
     padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
+    border-radius: 8px;
     font-weight: 600;
     color: white;
-    border: none;
+    border: 1px solid var(--border-slate-700);
+    background: var(--bg-slate-700);
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
     transition: background-color 0.2s;
 }
 
-.sidebar-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+.action-button:hover:not(:disabled) { background-color: var(--bg-slate-600); }
+.action-button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.listen-button {
-    background-color: var(--listen-button-bg);
-}
-.listen-button:hover:not(:disabled) {
-    background-color: var(--listen-button-hover-bg);
-}
+.error-message { color: #f87171; font-size: 0.9rem; text-align: center; }
 
-.stop-button {
-    background-color: var(--stop-button-bg);
-}
-.stop-button:hover:not(:disabled) {
-    background-color: var(--stop-button-hover-bg);
-}
-
-.qa-button {
-    background-color: var(--qa-button-bg);
-}
-.qa-button:hover:not(:disabled) {
-    background-color: var(--qa-button-hover-bg);
-}
-
-.export-button {
-    background-color: var(--export-button-bg);
-}
-.export-button:hover:not(:disabled) {
-    background-color: var(--export-button-hover-bg);
-}
-
-.error-message {
-    color: #ef4444; /* red-500 */
-    text-align: center;
-    font-size: 0.875rem;
-    margin-bottom: 0.5rem;
-}
-
-/* For PDF export */
-.pdf-slide-render {
-    width: 1920px;
-    height: 1080px;
-    background-color: var(--bg-slate-900);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 4rem;
-}
-
-.pdf-slide-render h3 {
-    font-size: 5rem;
-    font-weight: 700;
-    text-align: center;
-    color: var(--primary-color);
-    margin-bottom: 2rem;
-}
-
-.pdf-slide-render div {
-    font-size: 2rem;
-    line-height: 1.6;
-    color: var(--text-slate-200);
-}
-
-@media (max-width: 768px) {
-    .pitch-deck-grid {
-        gap: 1.5rem;
-    }
-
-    .slide-viewer,
-    .sidebar {
-        padding: 1rem;
-    }
-
-    .slide-content-container {
-        padding: 1.5rem;
-    }
-
-    .slide-title {
-        font-size: 1.75rem;
-    }
-
-    .slide-body {
-        font-size: 1rem;
-    }
-
-    .slide-controls {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .slide-nav-button {
-        width: 100%;
-    }
-
-    .script-viewer,
-    .transcript-viewer {
-        height: 300px;
-    }
-
-    .sidebar-title {
-        font-size: 1.125rem;
-    }
-}
+/* Regenerate Button */
+.regenerate-button { display: flex; align-items: center; gap: 0.5rem; background-color: var(--bg-slate-800); color: var(--text-slate-200); padding: 0.75rem 1.5rem; border-radius: 9999px; font-size: 0.95rem; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.2s; }
+.regenerate-button:hover { background-color: var(--bg-slate-700); color: white; }
+.regenerate-button svg { width: 1.25rem; height: 1.25rem; }

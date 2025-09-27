@@ -270,6 +270,8 @@ export const VentureWorkspace: React.FC = () => {
                 return <BusinessPlan startup={startup} />;
             case 'pitchDeck':
                 return <PitchDeck startup={startup} />;
+            case 'pitchDeck':
+                return <PitchDeck startup={startup} />;
             case 'website':
                 return <WebsitePrototype data={websitePrototype} idea={startup.name || ''} startupId={startup._id} />;
             case 'marketResearch':

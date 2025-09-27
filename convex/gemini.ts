@@ -365,33 +365,59 @@ export const generateBusinessPlanWithAI = internalAction(
 export const generatePitchDeckWithAI = internalAction(
   async (
     _,
-    { idea }: { idea: string }
+    { fullContext }: { fullContext: any }
   ) => {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables.");
+      throw new Error("GEMINI_API_KEY is not set.");
     }
     const ai = new GoogleGenAI({ apiKey });
 
+    const pitchDeckSchema = {
+      type: "OBJECT",
+      properties: {
+        script: { 
+          type: "STRING", 
+          description: "A natural, conversational 1-minute voice pitch script an AI CEO would deliver."
+        },
+        slides: {
+          type: "ARRAY",
+          description: "An array of 8-10 slides for a standard startup pitch deck.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              title: { type: "STRING", description: "The title of the slide." },
+              content: { type: "STRING", description: "The key content for the slide, formatted as markdown with bullet points using hyphens. Newlines must be escaped as \n." }
+            },
+            required: ["title", "content"]
+          }
+        }
+      },
+      required: ["script", "slides"]
+    };
+
     const prompt = `
-      You are a startup pitch expert. Based on the following startup idea, generate a full Pitch Deck.
+      You are a startup pitch expert (like a Y Combinator partner) creating a pitch deck.
+      You have the complete data package for a new venture.
 
-      Idea: "${idea}"
+      **Startup Data Package:**
+      ${JSON.stringify(fullContext, null, 2)}
 
-      Generate the following:
-      1.  A natural, conversational 1-minute voice pitch script.
-      2.  A slide deck of 8-10 slides. For each slide, provide a title and content. The content should be concise, using markdown bullet points (hyphens). The slides should cover: Problem, Solution, Market Opportunity, Business Model, Product Demo (use a placeholder description), Market Validation, Competition, Financial Projection (use high-level estimates), Team (use placeholder founders), and a Call to Action.
+      Based on this **entire** data package, generate a full Pitch Deck including:
+      1.  A 1-minute voice pitch script.
+      2.  A slide deck of 8-10 slides covering: Problem, Solution, Market, Product, Business Model, Competition, Team, Financials, and Call to Action.
 
-      Return the output as a JSON object with the fields "script" and "slides".
+      Your output MUST conform to the provided JSON schema. Ensure all strings, especially the 'content' field with markdown, are properly escaped.
     `;
 
     try {
-      console.log("--- Requesting Pitch Deck from Gemini ---");
+      console.log("--- Requesting Pitch Deck from Gemini with Schema ---");
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
+          responseSchema: pitchDeckSchema,
         },
       });
       const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
