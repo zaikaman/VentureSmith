@@ -1406,7 +1406,73 @@ export const generateDatabaseSchema = internalAction(
 
     } catch (error: any) {
       console.error("Failed to get Database Schema data:", error.message);
-      throw new Error(`Failed to get Database Schema data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+export const generateApiEndpointsWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const prompt = `
+      You are a senior backend engineer designing the RESTful API for a new application.
+      Based on the provided application context, including the core idea, user flows, and database schema, your task is to define a logical and comprehensive set of API endpoints.
+
+      **Application Context:**
+      - **Core Idea & Features:** ${JSON.stringify(fullContext.brainstormResult, null, 2)}
+      - **Primary User Flow:** ${JSON.stringify(fullContext.userFlowDiagram, null, 2)}
+      - **Database Schema:** ${JSON.stringify(fullContext.databaseSchema, null, 2)}
+
+      **Your Task:**
+      Generate a list of RESTful API endpoints required to power the application. Present the output in a clear Markdown format.
+
+      **Requirements:**
+      1.  **Format:** Use Markdown tables to structure the endpoints by resource (e.g., Users, Products, Orders).
+      2.  **Columns:** Each table should have three columns: "HTTP Method", "Path", and "Description".
+      3.  **Clarity:** The endpoint paths should be clear and follow RESTful conventions (e.g., \`/api/v1/users\`, \`/api/v1/users/{userId}\`).
+      4.  **Completeness:** Cover all the main CRUD (Create, Read, Update, Delete) operations for each major resource identified from the application context.
+      5.  **Group by Resource:** Group related endpoints under a clear resource heading (e.g., ### User Management).
+
+      **Example for a single resource:**
+
+      ### User Management
+
+      | HTTP Method | Path                  | Description                                      |
+      |-------------|-----------------------|--------------------------------------------------|
+      | POST        | /api/v1/users         | Creates a new user.                              |
+      | GET         | /api/v1/users         | Retrieves a list of users.                       |
+      | GET         | /api/v1/users/{userId}  | Retrieves a specific user by their ID.           |
+      | PUT         | /api/v1/users/{userId}  | Updates a specific user.                         |
+      | DELETE      | /api/v1/users/{userId}  | Deletes a specific user.                         |
+
+      Now, generate the full list of API endpoints based on the provided context.
+    `;
+
+    try {
+      console.log("--- Requesting API Endpoints from Gemini ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No API endpoint data received from Gemini API");
+      }
+
+      console.log("API endpoint data received successfully.");
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get API endpoint data:", error.message);
+      throw new Error(`Failed to get API endpoint data from Gemini API. Error: ${error.message}`);
     }
   }
 );

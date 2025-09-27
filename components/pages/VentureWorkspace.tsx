@@ -30,6 +30,7 @@ import UserFlowDiagram from './UserFlowDiagram';
 import AIWireframeGenerator from './AIWireframeGenerator';
 import GenerateTechStack from './GenerateTechStack';
 import GenerateDatabaseSchema from './GenerateDatabaseSchema';
+import GenerateApiEndpoints from './GenerateApiEndpoints';
 
 import './VentureWorkspace.css';
 
@@ -278,6 +279,7 @@ export const VentureWorkspace: React.FC = () => {
             case 'generateDatabaseSchema':
                 return <GenerateDatabaseSchema startup={startup} />;
             case 'generateAPIEndpoints':
+                return <GenerateApiEndpoints startup={startup} />;
             case 'generateDevelopmentRoadmap':
             case 'estimateCosts':
             default:
