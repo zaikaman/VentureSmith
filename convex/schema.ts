@@ -35,6 +35,7 @@ export default defineSchema({
     developmentRoadmap: v.optional(v.string()),
     costEstimate: v.optional(v.string()),
     pricingStrategy: v.optional(v.string()),
+    marketingCopy: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),
 });

@@ -1,0 +1,193 @@
+.marketing-copy-container {
+    background-color: #0f172a; /* bg-slate-900 */
+    padding: 2rem;
+    border-radius: 0.5rem;
+    color: white;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.regenerate-button {
+    background-color: #1e293b; /* bg-slate-800 */
+    color: #94a3b8; /* text-slate-400 */
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #334155; /* border-slate-700 */
+    transition: all 0.2s ease-in-out;
+}
+
+.initial-view, .loading-container {
+    text-align: center;
+    padding: 3rem;
+    background-color: #1e293b; /* bg-slate-800 */
+    border-radius: 0.5rem;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cta-button {
+    background-color: #4f46e5; /* bg-indigo-600 */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: bold;
+}
+
+/* --- Loading Animation --- */
+.megaphone-animation-container {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.megaphone-icon {
+    font-size: 4rem;
+    color: #a5b4fc;
+    text-shadow: 0 0 15px #a5b4fc;
+    animation: pulse-megaphone 2s infinite ease-in-out;
+    z-index: 10;
+}
+
+.sound-wave {
+    position: absolute;
+    border: 2px solid #4f46e5;
+    border-radius: 50%;
+    opacity: 0;
+    animation: spread-wave 4s infinite linear;
+}
+
+.wave-1 { animation-delay: 0s; }
+.wave-2 { animation-delay: -2s; }
+
+.floating-word {
+    position: absolute;
+    color: white;
+    font-weight: bold;
+    opacity: 0;
+    animation: float-away 4s infinite linear;
+}
+
+.word-1 { top: 20%; left: 20%; animation-delay: -0.5s; }
+.word-2 { top: 80%; left: 30%; animation-delay: -1.5s; }
+.word-3 { top: 50%; left: 80%; animation-delay: -2.5s; }
+.word-4 { top: 30%; left: 70%; animation-delay: -3.5s; }
+
+@keyframes pulse-megaphone {
+    50% { transform: scale(1.1); }
+}
+
+@keyframes spread-wave {
+    0% { width: 50px; height: 50px; opacity: 1; }
+    100% { width: 300px; height: 300px; opacity: 0; }
+}
+
+@keyframes float-away {
+    0%, 100% { opacity: 0; }
+    25% { opacity: 1; transform: scale(1.2); }
+    75% { opacity: 0; transform: scale(1.5); }
+}
+
+.loading-status-text {
+    margin-top: 1.5rem;
+}
+
+/* --- Results View --- */
+.copy-results-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.copy-section {
+    background-color: #1e293b;
+    border-radius: 8px;
+    border: 1px solid #334155;
+}
+
+.copy-section-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.copy-section-content {
+    padding: 1.5rem;
+    position: relative;
+}
+
+.copy-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #334155;
+    border: none;
+    color: #94a3b8;
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.copy-button:hover { background: #475569; }
+
+.tagline-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.tagline-card {
+    background-color: #0f172a;
+    padding: 1rem;
+    border-radius: 6px;
+    text-align: center;
+    font-style: italic;
+}
+
+.social-grid, .ad-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.social-card, .ad-card, .email-card {
+    background-color: #0f172a;
+    padding: 1.5rem;
+    border-radius: 6px;
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.card-content {
+    white-space: pre-wrap; /* Preserve line breaks */
+    color: #cbd5e1;
+    line-height: 1.6;
+}
+
+.ad-headline {
+    font-weight: bold;
+    color: #818cf8;
+}

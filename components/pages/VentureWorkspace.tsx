@@ -34,6 +34,7 @@ import GenerateApiEndpoints from './GenerateApiEndpoints';
 import GenerateDevelopmentRoadmap from './GenerateDevelopmentRoadmap';
 import EstimateCloudCosts from './EstimateCloudCosts';
 import AIPricingStrategy from './AIPricingStrategy';
+import GenerateMarketingCopy from './GenerateMarketingCopy';
 
 import './VentureWorkspace.css';
 
@@ -118,8 +119,8 @@ export const VentureWorkspace: React.FC = () => {
         {
             id: 'phase-7', name: 'Phase 7: Go-to-Market Strategy',
             tasks: [
-                { id: 'pricingStrategy', name: 'AI Pricing Strategy', isCompleted: false },
-                { id: 'marketingCopy', name: 'Generate Marketing Copy', isCompleted: false },
+                { id: 'pricingStrategy', name: 'AI Pricing Strategy', isCompleted: !!startup?.pricingStrategy },
+                { id: 'marketingCopy', name: 'Generate Marketing Copy', isCompleted: !!startup?.marketingCopy },
                 { id: 'preLaunchWaitlist', name: 'Build Waitlist Page', isCompleted: false },
             ]
         },
@@ -282,6 +283,7 @@ export const VentureWorkspace: React.FC = () => {
             case 'pricingStrategy':
                 return <AIPricingStrategy startup={startup} />;
             case 'marketingCopy':
+                return <GenerateMarketingCopy startup={startup} />;
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;

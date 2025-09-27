@@ -641,3 +641,31 @@ export const generatePricingStrategy = action({
     return result;
   },
 });
+
+export const generateMarketingCopy = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brandIdentity || !startup.missionVision || !startup.customerPersonas || !startup.pricingStrategy) {
+      throw new Error("Brand Identity, Mission/Vision, Customer Personas, and Pricing Strategy must be completed first.");
+    }
+
+    const fullContext = {
+      brandIdentity: JSON.parse(startup.brandIdentity),
+      missionVision: JSON.parse(startup.missionVision),
+      customerPersonas: JSON.parse(startup.customerPersonas),
+      pricingStrategy: JSON.parse(startup.pricingStrategy),
+    };
+
+    const result = await ctx.runAction(internal.gemini.generateMarketingCopyWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateMarketingCopy, {
+      startupId,
+      marketingCopy: result,
+    });
+
+    return result;
+  },
+});

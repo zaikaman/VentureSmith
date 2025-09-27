@@ -333,7 +333,7 @@ export const generateBusinessPlanWithAI = internalAction(
       Analyze the provided startup data and generate the 7-part business plan.
       
       **Startup Data Package:**
-      ${JSON.stringify(fullContext, null, 2)}
+      **Important Formatting Rule:** Do not use any markdown formatting. All text in the JSON string values must be plain text. Do not use asterisks (*).
 
       Your output MUST conform to the provided JSON schema.
     `;
@@ -409,7 +409,9 @@ export const generatePitchDeckWithAI = internalAction(
       1.  A 1-minute voice pitch script.
       2.  A slide deck of 8-10 slides covering: Problem, Solution, Market, Product, Business Model, Competition, Team, Financials, and Call to Action.
 
-      Your output MUST conform to the provided JSON schema. Ensure all strings, especially the 'content' field with markdown, are properly escaped.
+      **Important Formatting Rule:** Do not use any markdown formatting. All text in the JSON string values must be plain text. Do not use asterisks (*).
+
+      Your output MUST conform to the provided JSON schema. Ensure all strings are properly escaped.
     `;
 
     try {
@@ -1536,7 +1538,7 @@ export const generateDevelopmentRoadmapWithAI = internalAction(
       1.  The root object must have a key "roadmap" which is an array of phase objects.
       2.  Each phase object must have a "phase" title and an array of "epics".
       3.  Each epic object must have a "title", a suggested Font Awesome 5 free icon class name in the "icon" field (e.g., "fas fa-users", "fas fa-database", "fas fa-credit-card"), and an array of "tasks" (user stories).
-      4.  Prioritize features logically, starting with foundational elements.
+      **Important Formatting Rule:** Do not use any markdown formatting. All text in the JSON string values must be plain text. Do not use asterisks (*).
 
       Your output MUST conform to the provided JSON schema.
     `;
@@ -1725,7 +1727,7 @@ export const generatePricingStrategyWithAI = internalAction(
       2.  Each model object must have a "modelName", "modelDescription", and an array of "tiers".
       3.  Each tier object must have "tierName", "price", "description", an array of "features", and a boolean "isRecommended".
       4.  Ensure that for each model, exactly ONE tier has "isRecommended" set to true.
-      5.  The pricing and features should be logical and competitive based on the provided context.
+      **Important Formatting Rule:** Do not use any markdown formatting. All text in the JSON string values must be plain text. Do not use asterisks (*).
 
       Your output MUST conform to the provided JSON schema.
     `;
@@ -1752,6 +1754,121 @@ export const generatePricingStrategyWithAI = internalAction(
     } catch (error: any) {
       console.error("Failed to get pricing strategy data:", error.message);
       throw new Error(`Failed to get pricing strategy data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+export const generateMarketingCopyWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const marketingCopySchema = {
+      type: "OBJECT",
+      properties: {
+        taglines: {
+          type: "ARRAY",
+          description: "An array of 3-4 short, catchy taglines for the brand.",
+          items: { type: "STRING" },
+        },
+        socialMediaPosts: {
+          type: "OBJECT",
+          properties: {
+            linkedin: { type: "STRING", description: "A professional post for LinkedIn announcing the product." },
+            twitter: { type: "STRING", description: "A short, punchy tweet for Twitter/X." },
+            facebook: { type: "STRING", description: "An engaging post for a Facebook audience." },
+          },
+          required: ["linkedin", "twitter", "facebook"],
+        },
+        adCopy: {
+          type: "OBJECT",
+          properties: {
+            googleAds: {
+              type: "OBJECT",
+              properties: {
+                headline1: { type: "STRING", description: "A 30-character headline for Google Ads." },
+                headline2: { type: "STRING", description: "A second 30-character headline." },
+                description: { type: "STRING", description: "A 90-character description for Google Ads." },
+              },
+              required: ["headline1", "headline2", "description"],
+            },
+            facebookAd: {
+              type: "OBJECT",
+              properties: {
+                headline: { type: "STRING", description: "A headline for a Facebook Ad." },
+                primaryText: { type: "STRING", description: "The main body text for the Facebook Ad." },
+                callToAction: { type: "STRING", description: "A short call to action, e.g., 'Learn More'." },
+              },
+              required: ["headline", "primaryText", "callToAction"],
+            },
+          },
+          required: ["googleAds", "facebookAd"],
+        },
+        emailCampaign: {
+          type: "OBJECT",
+          properties: {
+            subject: { type: "STRING", description: "A compelling subject line for a product announcement email." },
+            body: { type: "STRING", description: "The full body of the announcement email, written in a persuasive tone. Use markdown for formatting." },
+          },
+          required: ["subject", "body"],
+        },
+      },
+      required: ["taglines", "socialMediaPosts", "adCopy", "emailCampaign"],
+    };
+
+    const prompt = `
+      You are a senior marketing copywriter for a new tech startup.
+      Based on the provided business context, generate a complete set of marketing copy in a JSON format.
+
+      **Business Context:**
+      - **Brand Identity:** ${JSON.stringify(fullContext.brandIdentity, null, 2)}
+      - **Mission & Vision:** ${JSON.stringify(fullContext.missionVision, null, 2)}
+      - **Target Personas:** ${JSON.stringify(fullContext.customerPersonas, null, 2)}
+      - **Pricing Strategy:** ${JSON.stringify(fullContext.pricingStrategy, null, 2)}
+
+      **Your Task:**
+      Generate a JSON object that contains a variety of marketing copy tailored to the business.
+
+      **Important Formatting Rule:** Do not use any markdown formatting. All text in the JSON string values must be plain text. Do not use asterisks (*).
+
+      **JSON Schema Requirements:**
+      1.  The root object must contain keys for "taglines", "socialMediaPosts", "adCopy", and "emailCampaign".
+      2.  **taglines**: Provide 3-4 diverse and catchy options.
+      3.  **socialMediaPosts**: Provide distinct copy for LinkedIn (professional), Twitter/X (concise), and Facebook (engaging).
+      4.  **adCopy**: Provide copy for both Google Ads (respecting character limits) and a Facebook Ad.
+      5.  **emailCampaign**: Write a complete announcement email with a strong subject line and body.
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Marketing Copy from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: marketingCopySchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No marketing copy data received from Gemini API");
+      }
+
+      console.log("Marketing copy data received successfully.");
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get marketing copy data:", error.message);
+      throw new Error(`Failed to get marketing copy data from Gemini API. Error: ${error.message}`);
     }
   }
 );
