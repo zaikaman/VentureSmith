@@ -587,3 +587,30 @@ export const generateDevelopmentRoadmap = action({
     return result;
   },
 });
+
+export const estimateCloudCosts = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.techStack || !startup.databaseSchema || !startup.apiEndpoints) {
+      throw new Error("Tech Stack, Database Schema, and API Endpoints must be completed first.");
+    }
+
+    const fullContext = {
+      techStack: JSON.parse(startup.techStack),
+      databaseSchema: JSON.parse(startup.databaseSchema),
+      apiEndpoints: startup.apiEndpoints,
+    };
+
+    const result = await ctx.runAction(internal.gemini.estimateCloudCostsWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateCostEstimate, {
+      startupId,
+      costEstimate: result,
+    });
+
+    return result;
+  },
+});

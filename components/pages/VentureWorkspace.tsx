@@ -32,6 +32,7 @@ import GenerateTechStack from './GenerateTechStack';
 import GenerateDatabaseSchema from './GenerateDatabaseSchema';
 import GenerateApiEndpoints from './GenerateApiEndpoints';
 import GenerateDevelopmentRoadmap from './GenerateDevelopmentRoadmap';
+import EstimateCloudCosts from './EstimateCloudCosts';
 
 import './VentureWorkspace.css';
 
@@ -284,6 +285,7 @@ export const VentureWorkspace: React.FC = () => {
             case 'generateDevelopmentRoadmap':
                 return <GenerateDevelopmentRoadmap startup={startup} />;
             case 'estimateCosts':
+                return <EstimateCloudCosts startup={startup} />;
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;

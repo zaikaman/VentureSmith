@@ -1,0 +1,215 @@
+.costs-container {
+    background-color: #0f172a; /* bg-slate-900 */
+    padding: 2rem;
+    border-radius: 0.5rem;
+    color: white;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.regenerate-button {
+    background-color: #1e293b; /* bg-slate-800 */
+    color: #94a3b8; /* text-slate-400 */
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #334155; /* border-slate-700 */
+    transition: all 0.2s ease-in-out;
+}
+
+.regenerate-button:hover {
+    background-color: #334155; /* bg-slate-700 */
+    color: white;
+}
+
+.regenerate-button svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.initial-view, .loading-container {
+    text-align: center;
+    padding: 3rem;
+    background-color: #1e293b; /* bg-slate-800 */
+    border-radius: 0.5rem;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cta-button {
+    background-color: #4f46e5; /* bg-indigo-600 */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.cta-button:hover {
+    background-color: #4338ca; /* bg-indigo-700 */
+}
+
+.cta-button:disabled {
+    background-color: #374151; /* bg-gray-700 */
+    cursor: not-allowed;
+}
+
+/* --- Loading Animation --- */
+.balance-animation-container {
+    width: 90%;
+    max-width: 400px;
+    height: 200px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.balance-beam {
+    width: 100%;
+    height: 8px;
+    background-color: #334155;
+    border-radius: 4px;
+    position: absolute;
+    top: 50%;
+    transform-origin: center;
+    transition: transform 0.5s ease-in-out;
+}
+
+.balance-fulcrum {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 30px solid #334155;
+    position: absolute;
+    top: calc(50% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.balance-pan {
+    width: 80px;
+    height: 20px;
+    border: 2px solid #475569;
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+    position: absolute;
+    top: calc(50% + 8px);
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    padding-bottom: 5px;
+}
+
+.pan-left { left: 10%; }
+.pan-right { right: 10%; }
+
+.service-icon, .cost-icon {
+    font-size: 1.5rem;
+    opacity: 0;
+    animation: drop-in 6s infinite linear;
+}
+
+.service-icon { color: #818cf8; }
+.cost-icon { color: #22c55e; }
+
+.service-1 { animation-delay: 0s; }
+.service-2 { animation-delay: -2s; }
+.service-3 { animation-delay: -4s; }
+
+.cost-1 { animation-delay: -0.5s; }
+.cost-2 { animation-delay: -1s; }
+.cost-3 { animation-delay: -1.5s; }
+.cost-4 { animation-delay: -2.5s; }
+.cost-5 { animation-delay: -3s; }
+.cost-6 { animation-delay: -3.5s; }
+
+@keyframes drop-in {
+    0% { opacity: 0; transform: translateY(-50px); }
+    10% { opacity: 1; transform: translateY(0); }
+    25% { opacity: 1; transform: translateY(0); }
+    35% { opacity: 0; transform: translateY(0); }
+    100% { opacity: 0; }
+}
+
+.loading-status-text {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    color: #94a3b8; /* slate-400 */
+    letter-spacing: 1px;
+}
+
+/* --- Results View --- */
+.costs-results-container {
+    overflow-x: auto; /* Enable horizontal scrolling on small screens */
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 0.5rem;
+}
+
+.costs-table {
+    width: 100%;
+    min-width: 800px; /* Minimum width to prevent squishing */
+    border-collapse: collapse;
+}
+
+.costs-table th, .costs-table td {
+    padding: 1.25rem 1rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.costs-table thead th {
+    border-bottom: 2px solid #334155;
+}
+
+.costs-table tbody tr:not(:last-child) td {
+    border-bottom: 1px solid #334155;
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.category-icon {
+    font-size: 1.5rem;
+    color: #818cf8;
+}
+
+.row-header {
+    font-weight: bold;
+    color: #94a3b8;
+    width: 20%;
+}
+
+.justification-cell {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.cost-cell {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #4ade80;
+}

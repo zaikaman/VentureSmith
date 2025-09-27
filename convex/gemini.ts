@@ -1567,3 +1567,98 @@ export const generateDevelopmentRoadmapWithAI = internalAction(
     }
   }
 );
+
+export const estimateCloudCostsWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const costSchema = {
+      type: "OBJECT",
+      properties: {
+        costs: {
+          type: "ARRAY",
+          description: "A breakdown of estimated costs by service category.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              service: { type: "STRING", description: "The name of the service category (e.g., 'Compute', 'Database')." },
+              icon: { type: "STRING", description: "A relevant Font Awesome 5 free icon class name (e.g., 'fas fa-server')." },
+              justification: { type: "STRING", description: "A brief explanation of why this service is needed." },
+              estimates: {
+                type: "ARRAY",
+                description: "A list of cost estimates for different stages.",
+                items: {
+                  type: "OBJECT",
+                  properties: {
+                    stage: { type: "STRING", description: "The name of the stage (e.g., 'Development', 'Initial Launch')." },
+                    cost: { type: "STRING", description: "The estimated monthly cost for this stage (e.g., '$10 - $20 / month')." },
+                  },
+                  required: ["stage", "cost"],
+                }
+              }
+            },
+            required: ["service", "icon", "justification", "estimates"],
+          }
+        },
+        summary: { type: "STRING", description: "A concluding summary of the overall cost strategy." },
+      },
+      required: ["costs", "summary"],
+    };
+
+    const prompt = `
+      You are a pragmatic Cloud Solutions Architect providing a high-level, initial cloud cost estimate for a new startup.
+      Based on the provided technical specifications, generate a cost breakdown in JSON format.
+
+      **Application Context:**
+      - **Technology Stack:** ${JSON.stringify(fullContext.techStack, null, 2)}
+      - **Database Schema:** ${JSON.stringify(fullContext.databaseSchema, null, 2)}
+      - **API Endpoints:** ${fullContext.apiEndpoints}
+
+      **Your Task:**
+      Generate a JSON object that estimates initial monthly cloud costs. Break down the costs into exactly 4 primary service categories: Compute, Database, Storage, and Networking.
+
+      **JSON Schema Requirements:**
+      1.  The root object must have a "costs" array and a "summary" string.
+      2.  Each item in the "costs" array should represent a service category and have:
+          - "service": The category name.
+          - "icon": A relevant Font Awesome 5 free icon class (e.g., "fas fa-server").
+          - "justification": A brief explanation.
+          - "estimates": An array of objects, each with a "stage" and a "cost" string for that stage.
+      3.  Provide estimates for three stages: "Development & Testing", "Initial Launch (Low Traffic)", and "Growth Stage (Moderate Traffic)".
+      4.  The cost estimates should be reasonable for a startup using modern, serverless-first or managed services where possible to keep initial costs low.
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Cloud Cost Estimate from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: costSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No cost estimate data received from Gemini API");
+      }
+
+      console.log("Cost estimate data received successfully.");
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get cost estimate data:", error.message);
+      throw new Error(`Failed to get cost estimate data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
