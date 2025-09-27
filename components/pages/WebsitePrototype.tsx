@@ -31,6 +31,35 @@ export const WebsitePrototype: React.FC<WebsitePrototypeProps> = ({ startup }) =
     }
   });
 
+  // State for the loading animation text
+  const loadingTexts = [
+    "Weaving digital threads...",
+    "Compiling abstract concepts...",
+    "Structuring the user experience...",
+    "Painting with pixels...",
+    "Assembling the interface...",
+    "Finalizing the digital tapestry...",
+  ];
+  const [currentLoadingText, setCurrentLoadingText] = useState(loadingTexts[0]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (isGenerating) {
+      interval = setInterval(() => {
+        setCurrentLoadingText(prevText => {
+          const currentIndex = loadingTexts.indexOf(prevText);
+          const nextIndex = (currentIndex + 1) % loadingTexts.length;
+          return loadingTexts[nextIndex];
+        });
+      }, 2500);
+    }
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [isGenerating]);
+
   const generatePrototypeAction = useAction(api.actions.generateWebsitePrototype);
 
   const canGenerate = 
@@ -71,14 +100,24 @@ export const WebsitePrototype: React.FC<WebsitePrototypeProps> = ({ startup }) =
 
   const renderLoading = () => (
     <div className="prototype-loading-container">
-      <div className="prototype-animation">
-        {/* Simple animation: a wireframe turning into a colorful site */}
-        <div className="wireframe-base"></div>
-        <div className="color-fill-1"></div>
-        <div className="color-fill-2"></div>
-        <div className="color-fill-3"></div>
+      <div className="digital-weaver-animation">
+        <svg viewBox="0 0 300 200">
+          {/* Weaving lines */}
+          <path className="weaver-path path1" d="M0 100 Q 75 20, 150 100 T 300 100" />
+          <path className="weaver-path path2" d="M0 100 Q 75 180, 150 100 T 300 100" />
+          <path className="weaver-path path3" d="M150 0 Q 20 75, 150 100 T 150 200" />
+          <path className="weaver-path path4" d="M150 0 Q 280 75, 150 100 T 150 200" />
+          
+          {/* Final UI structure */}
+          <g className="ui-structure">
+            <rect className="ui-rect header" x="50" y="30" width="200" height="20" rx="2" />
+            <rect className="ui-rect sidebar" x="50" y="60" width="50" height="110" rx="2" />
+            <rect className="ui-rect body" x="110" y="60" width="140" height="80" rx="2" />
+            <rect className="ui-rect footer" x="110" y="150" width="140" height="20" rx="2" />
+          </g>
+        </svg>
       </div>
-      <div className="prototype-status-text">BUILDING YOUR PROTOTYPE...</div>
+      <div className="prototype-status-text">{currentLoadingText}</div>
     </div>
   );
 
@@ -127,7 +166,7 @@ export const WebsitePrototype: React.FC<WebsitePrototypeProps> = ({ startup }) =
     </div>
   );
 
-  if (isGenerating && !code) {
+  if (isGenerating) {
     return renderLoading();
   }
 
