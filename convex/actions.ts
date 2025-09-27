@@ -669,3 +669,30 @@ export const generateMarketingCopy = action({
     return result;
   },
 });
+
+export const generateWaitlistPage = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brandIdentity || !startup.missionVision || !startup.marketingCopy) {
+      throw new Error("Brand Identity, Mission/Vision, and Marketing Copy must be completed first.");
+    }
+
+    const fullContext = {
+      brandIdentity: JSON.parse(startup.brandIdentity),
+      missionVision: JSON.parse(startup.missionVision),
+      marketingCopy: JSON.parse(startup.marketingCopy),
+    };
+
+    const result = await ctx.runAction(internal.gemini.generateWaitlistPageWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updatePreLaunchWaitlist, {
+      startupId,
+      preLaunchWaitlist: result,
+    });
+
+    return result;
+  },
+});

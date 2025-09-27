@@ -52,30 +52,3 @@
     max-width: 600px;
     margin: 0 auto 2.5rem;
 }
-
-.cta-section .cta-button {
-    background-color: white;
-    color: black;
-    font-size: 1rem;
-    font-weight: 600;
-    padding: 1rem 2.5rem;
-    border-radius: 9999px;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    white-space: nowrap;
-}
-
-.cta-section .cta-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-}
-
-[data-theme='light'] .cta-section .cta-button {
-    background-color: var(--text-color);
-    color: var(--background-color);
-}
-
-[data-theme='light'] .cta-section .cta-button:hover {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-}

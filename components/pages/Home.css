@@ -72,22 +72,6 @@ body {
     gap: 1rem;
 }
 
-.cta-button {
-    background-color: white;
-    color: black;
-    padding: 1rem 2.5rem;
-    border-radius: 9999px;
-    font-size: 1.125rem; /* 18px */
-    font-weight: 600;
-    text-decoration: none;
-    transition: transform 0.2s;
-    display: inline-block;
-}
-
-.cta-button:hover {
-    transform: scale(1.05);
-}
-
 .cta-note {
     display: flex;
     align-items: center;

@@ -36,6 +36,7 @@ export default defineSchema({
     costEstimate: v.optional(v.string()),
     pricingStrategy: v.optional(v.string()),
     marketingCopy: v.optional(v.string()),
+    preLaunchWaitlist: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),
 });

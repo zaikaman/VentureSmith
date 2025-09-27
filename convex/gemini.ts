@@ -1872,3 +1872,77 @@ export const generateMarketingCopyWithAI = internalAction(
     }
   }
 );
+
+export const generateWaitlistPageWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const pageSchema = {
+      type: "OBJECT",
+      properties: {
+        code: { 
+          type: "STRING", 
+          description: "A single string containing the complete, self-contained React component code for the waitlist page. It should be named WaitlistComponent and use inline style objects for all styling."
+        },
+      },
+      required: ["code"]
+    };
+
+    const prompt = `
+      You are a senior frontend developer and UI/UX designer creating a pre-launch waitlist page.
+      Based on the provided marketing context, generate the code for a beautiful, modern, and effective waitlist page.
+
+      **Marketing Context:**
+      - **Brand Identity:** ${JSON.stringify(fullContext.brandIdentity, null, 2)}
+      - **Mission & Vision:** ${JSON.stringify(fullContext.missionVision, null, 2)}
+      - **Key Tagline:** ${fullContext.marketingCopy.taglines[0]}
+
+      **Your Task:**
+      Generate a single, self-contained React component named 'WaitlistComponent'.
+
+      **Requirements:**
+      1.  **Format:** A single React component in a string. Use inline style objects for all styling. Do not use CSS classes.
+      2.  **No Modules:** Do NOT include any \`import\` or \`export\` statements.
+      3.  **Styling:** Create a visually appealing, modern design. Use a clean layout, good typography, and a professional color scheme derived from the brand context. The page should build anticipation and trust.
+      4.  **Structure:** The component must include:
+          - A strong, catchy headline (using the brand name and tagline).
+          - A brief, persuasive paragraph explaining the product's value (derived from the mission/vision).
+          - An email input field.
+          - A prominent call-to-action button (e.g., "Join the Waitlist", "Get Early Access").
+      5.  **Content:** Use the actual startup name and marketing copy from the context.
+
+      Your output MUST conform to the provided JSON schema, returning a single JSON object with the 'code' field containing the entire React component as a string.
+    `;
+
+    try {
+      console.log("--- Requesting Waitlist Page Code from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: pageSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No waitlist page code received from Gemini API");
+      }
+
+      console.log("Waitlist page code received successfully.");
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get waitlist page code:", error.message);
+      throw new Error(`Failed to get waitlist page code from Gemini API. Error: ${error.message}`);
+    }
+  }
+);

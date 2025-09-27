@@ -9,6 +9,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { IdeaInputForm } from './IdeaInputForm';
+import { SkeletonLoader } from './SkeletonLoader';
 import './BlueprintBuilder.css';
 
 export const BlueprintBuilder: React.FC = () => {
@@ -138,7 +139,9 @@ export const BlueprintBuilder: React.FC = () => {
                     {showHistory && (
                         <div className="startups-section">
                             <h2>My Startups</h2>
-                            {startups && startups.length > 0 ? (
+                            {startups === undefined ? (
+                                <SkeletonLoader />
+                            ) : startups.length > 0 ? (
                                 <ul className="startup-list">
                                     {startups.map((startup) => (
                                         <li key={startup._id} className="startup-item">
