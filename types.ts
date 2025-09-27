@@ -68,12 +68,12 @@ export type TaskID =
   | 'userFlowDiagrams'
   | 'aiWireframing'
   | 'website'
-  // Phase 6
-  | 'defineDataModels'
-  | 'configureBackend'
-  | 'designFrontend'
-  | 'connectFrontendBackend'
-  | 'oneClickDeployment'
+  // Phase 6: Technical Blueprint & Planning
+  | 'generateTechStack'
+  | 'generateDatabaseSchema'
+  | 'generateAPIEndpoints'
+  | 'generateDevelopmentRoadmap'
+  | 'estimateCosts'
   // Phase 7
   | 'alphaTesting'
   | 'betaTesterRecruitment'
@@ -93,7 +93,6 @@ export type TaskID =
   // Phase 11
   | 'processAutomation'
   | 'draftJobDescriptions'
-  | 'cloudCostEstimation'
   // Phase 12
   | 'investorMatching'
   | 'dueDiligenceChecklist'

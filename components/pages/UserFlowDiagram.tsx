@@ -16,6 +16,7 @@ interface UserFlowDiagramProps {
     userFlowDiagram?: string;
     brainstormResult?: string;
     customerPersonas?: string;
+    name?: string;
   };
 }
 

@@ -58,7 +58,6 @@ export const VentureWorkspace: React.FC = () => {
     );
 
     const phases: Phase[] = useMemo(() => [
-        // ... (all phase definitions remain the same)
         {
             id: 'phase-1', name: 'Phase 1: Ideation & Discovery',
             tasks: [
@@ -70,9 +69,9 @@ export const VentureWorkspace: React.FC = () => {
         {
             id: 'phase-2', name: 'Phase 2: Foundation & Blueprint',
             tasks: [
-                { id: 'generateNameIdentity', name: 'Generate Business Name & Identity', isCompleted: !!startup?.brandIdentity },
-                { id: 'scorecard', name: 'AI-Powered Scorecard Analysis', isCompleted: !!startup?.dashboard },
-                { id: 'businessPlan', name: 'Develop Initial Business Plan', isCompleted: !!startup?.businessPlan },
+                { id: 'generateNameIdentity', name: 'Generate Brand Identity', isCompleted: !!startup?.brandIdentity },
+                { id: 'scorecard', name: 'AI Scorecard Analysis', isCompleted: !!startup?.dashboard },
+                { id: 'businessPlan', name: 'Develop Business Plan', isCompleted: !!startup?.businessPlan },
                 { id: 'pitchDeck', name: 'Create Pitch Deck Outline', isCompleted: !!startup?.pitchDeck },
             ]
         },
@@ -80,8 +79,8 @@ export const VentureWorkspace: React.FC = () => {
             id: 'phase-3', name: 'Phase 3: Market & Customer Research',
             tasks: [
                 { id: 'marketResearch', name: 'Deep Dive Market Analysis', isCompleted: !!startup?.marketResearch },
-                { id: 'competitorMatrix', name: 'Competitor Landscape Matrix', isCompleted: !!startup?.competitorMatrix },
-                { id: 'generateCustomerPersonas', name: 'Generate Ideal Customer Personas', isCompleted: !!startup?.customerPersonas },
+                { id: 'competitorMatrix', name: 'Competitor Matrix', isCompleted: !!startup?.competitorMatrix },
+                { id: 'generateCustomerPersonas', name: 'Generate Customer Personas', isCompleted: !!startup?.customerPersonas },
             ]
         },
         {
@@ -97,17 +96,17 @@ export const VentureWorkspace: React.FC = () => {
             tasks: [
                 { id: 'userFlowDiagrams', name: 'Generate User Flow Diagram', isCompleted: !!startup?.userFlowDiagram },
                 { id: 'aiWireframing', name: 'AI-Powered Wireframing', isCompleted: !!startup?.aiWireframe },
-                { id: 'website', name: 'Build Interactive Website Prototype', isCompleted: !!startup?.website },
+                { id: 'website', name: 'Build Website Prototype', isCompleted: !!startup?.website },
             ]
         },
         {
-            id: 'phase-6', name: 'Phase 6: MVP Development & Deployment',
+            id: 'phase-6', name: 'Phase 6: Technical Blueprint & Planning',
             tasks: [
-                { id: 'defineDataModels', name: 'Define Data Models & Database Schema', isCompleted: false },
-                { id: 'configureBackend', name: 'Configure Backend Functions & Logic', isCompleted: false },
-                { id: 'designFrontend', name: 'Design Frontend UI & Component Library', isCompleted: false },
-                { id: 'connectFrontendBackend', name: 'Connect Frontend to Backend', isCompleted: false },
-                { id: 'oneClickDeployment', name: 'One-Click Deployment', isCompleted: false },
+                { id: 'generateTechStack', name: 'Generate Technology Stack', isCompleted: false },
+                { id: 'generateDatabaseSchema', name: 'Generate Database Schema', isCompleted: false },
+                { id: 'generateAPIEndpoints', name: 'Generate API Endpoints', isCompleted: false },
+                { id: 'generateDevelopmentRoadmap', name: 'Generate Dev Roadmap', isCompleted: false },
+                { id: 'estimateCosts', name: 'Estimate Initial Cloud Costs', isCompleted: false },
             ]
         },
         {
@@ -115,29 +114,29 @@ export const VentureWorkspace: React.FC = () => {
             tasks: [
                 { id: 'alphaTesting', name: 'Internal Alpha Testing', isCompleted: false },
                 { id: 'betaTesterRecruitment', name: 'Recruit Beta Testers', isCompleted: false },
-                { id: 'feedbackAnalysis', name: 'AI-Powered Feedback Analysis', isCompleted: false },
+                { id: 'feedbackAnalysis', name: 'AI Feedback Analysis', isCompleted: false },
             ]
         },
         {
             id: 'phase-8', name: 'Phase 8: Go-to-Market Strategy',
             tasks: [
-                { id: 'pricingStrategy', name: 'AI-Assisted Pricing Strategy', isCompleted: false },
-                { id: 'marketingCopy', name: 'Generate Marketing & Sales Copy', isCompleted: false },
-                { id: 'preLaunchWaitlist', name: 'Build Pre-Launch Waitlist Page', isCompleted: false },
+                { id: 'pricingStrategy', name: 'AI Pricing Strategy', isCompleted: false },
+                { id: 'marketingCopy', name: 'Generate Marketing Copy', isCompleted: false },
+                { id: 'preLaunchWaitlist', name: 'Build Waitlist Page', isCompleted: false },
             ]
         },
         {
             id: 'phase-9', name: 'Phase 9: Launch & Promotion',
             tasks: [
                 { id: 'productHuntKit', name: 'Product Hunt Launch Kit', isCompleted: false },
-                { id: 'pressRelease', name: 'Draft Press Release & Media Outreach', isCompleted: false },
+                { id: 'pressRelease', name: 'Draft Press Release', isCompleted: false },
                 { id: 'launchMonitoring', name: 'Real-time Launch Monitoring', isCompleted: false },
             ]
         },
         {
             id: 'phase-10', name: 'Phase 10: Growth Hacking & Analytics',
             tasks: [
-                { id: 'growthMetrics', name: 'Identify Key Growth Metrics (AARRR)', isCompleted: false },
+                { id: 'growthMetrics', name: 'Identify Growth Metrics', isCompleted: false },
                 { id: 'abTestIdeas', name: 'Brainstorm A/B Test Ideas', isCompleted: false },
                 { id: 'seoStrategy', name: 'Generate SEO Keyword Strategy', isCompleted: false },
             ]
@@ -146,8 +145,7 @@ export const VentureWorkspace: React.FC = () => {
             id: 'phase-11', name: 'Phase 11: Scaling & Operations',
             tasks: [
                 { id: 'processAutomation', name: 'Map Processes for Automation', isCompleted: false },
-                { id: 'draftJobDescriptions', name: 'Draft Job Descriptions for Key Hires', isCompleted: false },
-                { id: 'cloudCostEstimation', name: 'Cloud Cost Estimation', isCompleted: false },
+                { id: 'draftJobDescriptions', name: 'Draft Job Descriptions', isCompleted: false },
             ]
         },
         {
@@ -273,6 +271,11 @@ export const VentureWorkspace: React.FC = () => {
                 return <UserFlowDiagram startup={startup} />;
             case 'aiWireframing':
                 return <AIWireframeGenerator startup={startup} />;
+            case 'generateTechStack':
+            case 'generateDatabaseSchema':
+            case 'generateAPIEndpoints':
+            case 'generateDevelopmentRoadmap':
+            case 'estimateCosts':
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;

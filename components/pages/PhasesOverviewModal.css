@@ -128,11 +128,10 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    align-items: flex-start;
 }
 
-.modal-task-item {
-    display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
     padding: 10px;
     border-radius: 8px;
