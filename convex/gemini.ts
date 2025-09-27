@@ -230,38 +230,120 @@ export const generateScorecardWithAI = internalAction(
 export const generateBusinessPlanWithAI = internalAction(
   async (
     _,
-    { idea }: { idea: string }
+    { fullContext }: { fullContext: any }
   ) => {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables.");
+      throw new Error("GEMINI_API_KEY is not set.");
     }
     const ai = new GoogleGenAI({ apiKey });
 
+    const businessPlanSchema = {
+      type: "OBJECT",
+      properties: {
+        executiveSummary: { type: "STRING", description: "A compelling, high-level overview of the entire business plan." },
+        companyDescription: {
+          type: "OBJECT",
+          description: "Details about the company.",
+          properties: {
+            description: { type: "STRING" },
+            mission: { type: "STRING" },
+            vision: { type: "STRING" },
+            coreValues: { type: "ARRAY", items: { type: "STRING" } },
+          },
+          required: ["description", "mission", "vision", "coreValues"],
+        },
+        productsAndServices: {
+          type: "OBJECT",
+          description: "Details about the products and services.",
+          properties: {
+            description: { type: "STRING" },
+            keyFeatures: { type: "ARRAY", items: { type: "STRING" } },
+            uniqueValueProposition: { type: "STRING" },
+          },
+          required: ["description", "keyFeatures", "uniqueValueProposition"],
+        },
+        marketAnalysis: {
+          type: "OBJECT",
+          description: "Analysis of the market.",
+          properties: {
+            industryOverview: { type: "STRING" },
+            targetMarket: { type: "STRING" },
+            competitiveLandscape: { type: "STRING" },
+          },
+          required: ["industryOverview", "targetMarket", "competitiveLandscape"],
+        },
+        marketingAndSalesStrategy: {
+          type: "OBJECT",
+          description: "Go-to-market strategy.",
+          properties: {
+            digitalMarketingStrategy: { type: "ARRAY", items: { type: "STRING" } },
+            salesFunnel: { type: "ARRAY", items: { type: "STRING" } },
+          },
+          required: ["digitalMarketingStrategy", "salesFunnel"],
+        },
+        organizationAndManagement: {
+          type: "OBJECT",
+          description: "Team and structure.",
+          properties: {
+            teamStructure: { type: "STRING" },
+            keyRoles: {
+              type: "ARRAY",
+              items: {
+                type: "OBJECT",
+                properties: {
+                  role: { type: "STRING" },
+                  responsibilities: { type: "STRING" },
+                },
+                required: ["role", "responsibilities"],
+              },
+            },
+          },
+          required: ["teamStructure", "keyRoles"],
+        },
+        financialProjections: {
+          type: "OBJECT",
+          description: "Financial forecast.",
+          properties: {
+            summary: { type: "STRING" },
+            forecast: {
+              type: "ARRAY",
+              items: {
+                type: "OBJECT",
+                properties: {
+                  year: { type: "NUMBER" },
+                  revenue: { type: "STRING" },
+                  cogs: { type: "STRING" },
+                  netProfit: { type: "STRING" },
+                },
+                required: ["year", "revenue", "cogs", "netProfit"],
+              },
+            },
+          },
+          required: ["summary", "forecast"],
+        },
+      },
+      required: ["executiveSummary", "companyDescription", "productsAndServices", "marketAnalysis", "marketingAndSalesStrategy", "organizationAndManagement", "financialProjections"],
+    };
+
     const prompt = `
-      You are a business strategist. Based on the following startup idea, generate a comprehensive 7-part business plan.
+      You are a top-tier business strategist drafting a comprehensive business plan.
+      Analyze the provided startup data and generate the 7-part business plan.
+      
+      **Startup Data Package:**
+      ${JSON.stringify(fullContext, null, 2)}
 
-      Idea: "${idea}"
-
-      Generate the following sections:
-      1.  Executive Summary
-      2.  Company Description
-      3.  Market Analysis (Industry Overview, Target Market, Competitive Analysis)
-      4.  Organization and Management
-      5.  Products or Services
-      6.  Marketing and Sales Strategy
-      7.  Financial Projections (Summary and a 3-year forecast table)
-
-      Return the output as a JSON object.
+      Your output MUST conform to the provided JSON schema.
     `;
 
     try {
-      console.log("--- Requesting Business Plan from Gemini ---");
+      console.log("--- Requesting Business Plan from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.5-flash",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
+          responseSchema: businessPlanSchema,
         },
       });
       const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
@@ -306,7 +388,7 @@ export const generatePitchDeckWithAI = internalAction(
     try {
       console.log("--- Requesting Pitch Deck from Gemini ---");
       const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.5-flash",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",

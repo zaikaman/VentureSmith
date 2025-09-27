@@ -54,13 +54,23 @@ export const generateScorecard = action({
 });
 
 export const generateBusinessPlan = action({
-  args: {
-    startupId: v.id("startups"),
-    idea: v.string(),
-  },
-  handler: async (ctx, { startupId, idea }) => {
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.marketPulse || !startup.missionVision || !startup.brandIdentity) {
+      throw new Error("Previous steps must be completed to generate a business plan.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      refinedIdea: JSON.parse(startup.brainstormResult).refinedIdea,
+      marketPulse: JSON.parse(startup.marketPulse),
+      missionVision: JSON.parse(startup.missionVision),
+      brandIdentity: JSON.parse(startup.brandIdentity),
+    };
+
     const result = await ctx.runAction(internal.gemini.generateBusinessPlanWithAI, {
-      idea,
+      fullContext,
     });
 
     await ctx.runMutation(api.startups.updateBusinessPlan, {

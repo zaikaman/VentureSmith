@@ -12,7 +12,6 @@ import { PhasesOverviewModal } from './PhasesOverviewModal';
 import { StartupData, TaskID } from '../../types'; // Import StartupData and TaskID
 
 import { Scorecard } from './Scorecard';
-import { BusinessPlan } from './BusinessPlan';
 import PitchDeck from './PitchDeck';
 import { WebsitePrototype } from './WebsitePrototype';
 import { MarketResearchDisplay } from './MarketResearchDisplay';
@@ -23,6 +22,7 @@ import BrainstormIdea from './BrainstormIdea';
 import { MarketPulseCheck } from './MarketPulseCheck';
 import { MissionVision } from './MissionVision';
 import { BrandIdentity } from './BrandIdentity';
+import { BusinessPlan } from './BusinessPlan';
 
 import { getMentorFeedback } from '../../services/geminiService';
 import './VentureWorkspace.css';
