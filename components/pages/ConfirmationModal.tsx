@@ -13,13 +13,13 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, on
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <h2 className="modal-title">{title}</h2>
-        <p className="modal-message">{message}</p>
-        <div className="modal-actions">
-          <button onClick={onClose} className="modal-button cancel-button">Cancel</button>
-          <button onClick={onConfirm} className="modal-button confirm-button">Confirm</button>
+    <div className="confirm-modal-overlay" onClick={onClose}>
+      <div className="confirm-modal-content" onClick={(e) => e.stopPropagation()}>
+        <h2 className="confirm-modal-title">{title}</h2>
+        <p className="confirm-modal-message">{message}</p>
+        <div className="confirm-modal-actions">
+          <button onClick={onClose} className="confirm-modal-button cancel-button">Cancel</button>
+          <button onClick={onConfirm} className="confirm-modal-button confirm-button">Confirm</button>
         </div>
       </div>
     </div>

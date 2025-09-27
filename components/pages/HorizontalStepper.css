@@ -1,0 +1,109 @@
+/* HorizontalStepper.css */
+.stepper-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: rgba(17, 24, 39, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 900px;
+    margin: 24px auto;
+    position: relative;
+    z-index: 10;
+}
+
+.stepper-content {
+    flex-grow: 1;
+    text-align: center;
+    padding: 0 24px;
+}
+
+.phase-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.phase-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #9ca3af; /* text-gray-400 */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.step-name {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 700;
+    color: #f9fafb; /* text-gray-50 */
+    margin: 0;
+    line-height: 1.2;
+}
+
+.stepper-arrow {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: #e5e7eb; /* text-gray-200 */
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.stepper-arrow svg {
+    width: 24px;
+    height: 24px;
+}
+
+.stepper-arrow:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(192, 219, 255, 0.3);
+}
+
+.stepper-arrow:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.overview-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #d1d5db; /* text-gray-300 */
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    margin-left: 24px;
+}
+
+.overview-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.overview-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #f9fafb; /* text-gray-50 */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}

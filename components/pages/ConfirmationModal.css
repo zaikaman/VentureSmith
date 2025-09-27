@@ -1,4 +1,4 @@
-.modal-overlay {
+.confirm-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +11,7 @@
     z-index: 1000;
 }
 
-.modal-content {
+.confirm-modal-content {
     background-color: var(--bg-slate-900);
     padding: 2rem;
     border-radius: 8px;
@@ -21,24 +21,24 @@
     text-align: center;
 }
 
-.modal-title {
+.confirm-modal-title {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
 }
 
-.modal-message {
+.confirm-modal-message {
     color: var(--text-slate-300);
     margin-bottom: 2rem;
 }
 
-.modal-actions {
+.confirm-modal-actions {
     display: flex;
     justify-content: center;
     gap: 1rem;
 }
 
-.modal-button {
+.confirm-modal-button {
     padding: 0.75rem 1.5rem;
     border-radius: 4px;
     border: none;

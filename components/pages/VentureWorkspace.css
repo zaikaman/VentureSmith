@@ -1,97 +1,35 @@
 .venture-workspace-container {
-    padding: 8rem 2rem 2rem;
-    max-width: 1400px; /* Increase max-width for wider layout */
-    margin: 0 auto;
-    position: relative; /* Needed for absolute positioning of the button */
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 3rem auto 0;
+}
+
+.workspace-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
 
 .venture-title {
     font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--text-color);
-    margin-bottom: 1rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, #a5b4fc, #fbcfe8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .venture-subtitle {
-    font-size: 1.125rem;
-    color: var(--text-slate-300);
-    margin-bottom: 3rem;
-}
-
-.sidebar-toggle-button {
-    position: absolute;
-    top: 15rem; /* Adjust to align with the top of the cards */
-    left: -1.25rem; /* Position based on sidebar width */
-    z-index: 10;
-    background-color: var(--bg-slate-700);
-    border: 1px solid var(--border-slate-700);
-    color: var(--text-slate-200);
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-}
-
-.sidebar-toggle-button:hover {
-    background-color: var(--bg-slate-600);
-    transform: scale(1.1);
-}
-
-.sidebar-toggle-button svg {
-    transition: transform 0.3s ease-in-out;
-}
-
-.sidebar-toggle-button.collapsed {
-    left: -1.25rem;
-}
-
-.sidebar-toggle-button.collapsed svg {
-    transform: rotate(180deg);
-}
-
-.workspace-layout {
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
-    align-items: flex-start; /* Align items to the top */
-}
-
-.workspace-sidebar {
-    flex: 0 0 auto; /* Let it grow and shrink, with a base width */
-    width: fit-content;
-    transition: all 0.3s ease-in-out;
-    position: relative;
-}
-
-.workspace-sidebar.collapsed {
-    flex: 0 0 0; /* Do not grow, do not shrink, basis of 0 */
-    min-width: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
-.workspace-sidebar.collapsed .phase-checklist-container {
-    opacity: 0;
+    font-size: 1.1rem;
+    color: #9ca3af; /* text-gray-400 */
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .workspace-content {
-    flex: 2 1 0;
-    min-width: 0; /* Crucial for preventing overflow in flex children */
-    background-color: var(--bg-slate-900);
-    border: 1px solid var(--border-slate-700);
-    border-radius: 1rem;
+    margin-top: 2rem;
+    background: rgba(17, 24, 39, 0.5); /* gray-900 with opacity */
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 2rem;
-}
-
-@media (max-width: 1023px) {
-    .workspace-layout {
-        flex-direction: column; /* Stack on mobile */
-    }
-    .workspace-sidebar {
-        flex-basis: auto; /* Reset basis on mobile */
-    }
+    min-height: 500px; /* Ensure content area has some height */
 }

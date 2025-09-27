@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { authClient } from '../../lib/auth-client';
+import { toast } from 'sonner';
+
 import { LoadingIndicator } from './LoadingIndicator';
-import { PhaseChecklist, TaskID } from './PhaseChecklist';
+import { HorizontalStepper } from './HorizontalStepper';
+import { PhasesOverviewModal } from './PhasesOverviewModal';
+import { StartupData, TaskID } from '../../types'; // Import StartupData and TaskID
+
 import { Scorecard } from './Scorecard';
 import { BusinessPlan } from './BusinessPlan';
 import PitchDeck from './PitchDeck';
@@ -15,14 +20,29 @@ import { MentorFeedbackDisplay } from './MentorFeedbackDisplay';
 import CustomerValidation from './CustomerValidation';
 import Placeholder from './Placeholder';
 import BrainstormIdea from './BrainstormIdea';
+
 import { getMentorFeedback } from '../../services/geminiService';
 import './VentureWorkspace.css';
+
+// Define the shape of a task and phase for clarity
+interface Task {
+    id: TaskID;
+    name: string;
+    isCompleted: boolean;
+}
+
+interface Phase {
+    id: string;
+    name: string;
+    tasks: Task[];
+}
 
 export const VentureWorkspace: React.FC = () => {
     const { id } = useParams<{ id: Id<"startups"> }>();
     const { data: session, isPending: isSessionPending } = authClient.useSession();
+    
     const [activeView, setActiveView] = useState<TaskID>('brainstormIdea');
-    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+    const [isOverviewModalOpen, setOverviewModalOpen] = useState(false);
     const [mentorFeedback, setMentorFeedback] = useState<string | null>(null);
     const [isMentorLoading, setIsMentorLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -34,7 +54,122 @@ export const VentureWorkspace: React.FC = () => {
         session && id ? { id } : 'skip'
     );
 
-    // Initialize mentorFeedback state when startup data loads
+    // Explicitly type the phases constant
+    const phases: Phase[] = useMemo(() => [
+        {
+            id: 'phase-1', name: 'Phase 1: Ideation & Discovery',
+            tasks: [
+                { id: 'brainstormIdea', name: 'Brainstorm & Refine Idea', isCompleted: !!startup?.brainstormResult },
+                { id: 'marketPulseCheck', name: 'Initial Market Pulse Check', isCompleted: false },
+                { id: 'defineMissionVision', name: 'Define Mission & Vision', isCompleted: false },
+            ]
+        },
+        {
+            id: 'phase-2', name: 'Phase 2: Foundation & Blueprint',
+            tasks: [
+                { id: 'generateNameIdentity', name: 'Generate Business Name & Identity', isCompleted: false },
+                { id: 'scorecard', name: 'AI-Powered Scorecard Analysis', isCompleted: !!startup?.dashboard },
+                { id: 'businessPlan', name: 'Develop Initial Business Plan', isCompleted: !!startup?.businessPlan },
+                { id: 'pitchDeck', name: 'Create Pitch Deck Outline', isCompleted: !!startup?.pitchDeck },
+            ]
+        },
+        {
+            id: 'phase-3', name: 'Phase 3: Market & Customer Research',
+            tasks: [
+                { id: 'marketResearch', name: 'Deep Dive Market Analysis', isCompleted: !!startup?.marketResearch },
+                { id: 'competitorMatrix', name: 'Competitor Landscape Matrix', isCompleted: false },
+                { id: 'generateCustomerPersonas', name: 'Generate Ideal Customer Personas', isCompleted: false },
+            ]
+        },
+        {
+            id: 'phase-4', name: 'Phase 4: Problem & Solution Validation',
+            tasks: [
+                { id: 'generateInterviewScripts', name: 'Generate Interview Scripts', isCompleted: false },
+                { id: 'validateProblem', name: 'Simulate Customer Interviews', isCompleted: !!startup?.customerValidation },
+                { id: 'aiMentor', name: 'Get Feedback from AI Mentor', isCompleted: !!mentorFeedback },
+            ]
+        },
+        {
+            id: 'phase-5', name: 'Phase 5: Prototyping & UX/UI',
+            tasks: [
+                { id: 'userFlowDiagrams', name: 'Generate User Flow Diagram', isCompleted: false },
+                { id: 'aiWireframing', name: 'AI-Powered Wireframing', isCompleted: false },
+                { id: 'website', name: 'Build Interactive Website Prototype', isCompleted: !!startup?.website },
+            ]
+        },
+        {
+            id: 'phase-6', name: 'Phase 6: MVP Development & Deployment',
+            tasks: [
+                { id: 'defineDataModels', name: 'Define Data Models & Database Schema', isCompleted: false },
+                { id: 'configureBackend', name: 'Configure Backend Functions & Logic', isCompleted: false },
+                { id: 'designFrontend', name: 'Design Frontend UI & Component Library', isCompleted: false },
+                { id: 'connectFrontendBackend', name: 'Connect Frontend to Backend', isCompleted: false },
+                { id: 'oneClickDeployment', name: 'One-Click Deployment', isCompleted: false },
+            ]
+        },
+        {
+            id: 'phase-7', name: 'Phase 7: Alpha & Beta Testing',
+            tasks: [
+                { id: 'alphaTesting', name: 'Internal Alpha Testing', isCompleted: false },
+                { id: 'betaTesterRecruitment', name: 'Recruit Beta Testers', isCompleted: false },
+                { id: 'feedbackAnalysis', name: 'AI-Powered Feedback Analysis', isCompleted: false },
+            ]
+        },
+        {
+            id: 'phase-8', name: 'Phase 8: Go-to-Market Strategy',
+            tasks: [
+                { id: 'pricingStrategy', name: 'AI-Assisted Pricing Strategy', isCompleted: false },
+                { id: 'marketingCopy', name: 'Generate Marketing & Sales Copy', isCompleted: false },
+                { id: 'preLaunchWaitlist', name: 'Build Pre-Launch Waitlist Page', isCompleted: false },
+            ]
+        },
+        {
+            id: 'phase-9', name: 'Phase 9: Launch & Promotion',
+            tasks: [
+                { id: 'productHuntKit', name: 'Product Hunt Launch Kit', isCompleted: false },
+                { id: 'pressRelease', name: 'Draft Press Release & Media Outreach', isCompleted: false },
+                { id: 'launchMonitoring', name: 'Real-time Launch Monitoring', isCompleted: false },
+            ]
+        },
+        {
+            id: 'phase-10', name: 'Phase 10: Growth Hacking & Analytics',
+            tasks: [
+                { id: 'growthMetrics', name: 'Identify Key Growth Metrics (AARRR)', isCompleted: false },
+                { id: 'abTestIdeas', name: 'Brainstorm A/B Test Ideas', isCompleted: false },
+                { id: 'seoStrategy', name: 'Generate SEO Keyword Strategy', isCompleted: false },
+            ]
+        },
+        {
+            id: 'phase-11', name: 'Phase 11: Scaling & Operations',
+            tasks: [
+                { id: 'processAutomation', name: 'Map Processes for Automation', isCompleted: false },
+                { id: 'draftJobDescriptions', name: 'Draft Job Descriptions for Key Hires', isCompleted: false },
+                { id: 'cloudCostEstimation', name: 'Cloud Cost Estimation', isCompleted: false },
+            ]
+        },
+        {
+            id: 'phase-12', name: 'Phase 12: Fundraising & Investor Relations',
+            tasks: [
+                { id: 'investorMatching', name: 'AI Investor Matching', isCompleted: false },
+                { id: 'dueDiligenceChecklist', name: 'Due Diligence Checklist', isCompleted: false },
+                { id: 'aiPitchCoach', name: 'AI Pitch Coach', isCompleted: false },
+            ]
+        },
+    ], [startup, mentorFeedback]);
+
+    const allTasks = useMemo(() => phases.flatMap(p => p.tasks), [phases]);
+
+    const { currentPhaseIndex, currentStepIndex } = useMemo(() => {
+        for (let i = 0; i < phases.length; i++) {
+            for (let j = 0; j < phases[i].tasks.length; j++) {
+                if (phases[i].tasks[j].id === activeView) {
+                    return { currentPhaseIndex: i, currentStepIndex: j };
+                }
+            }
+        }
+        return { currentPhaseIndex: 0, currentStepIndex: 0 };
+    }, [activeView, phases]);
+    
     React.useEffect(() => {
         if (startup?.aiMentor) {
             setMentorFeedback(startup.aiMentor);
@@ -42,11 +177,34 @@ export const VentureWorkspace: React.FC = () => {
     }, [startup]);
 
     const handleTaskClick = (taskId: TaskID) => {
+        const taskIndex = allTasks.findIndex(t => t.id === taskId);
+        if (taskIndex > 0) {
+            const prevTask = allTasks[taskIndex - 1];
+            if (!prevTask.isCompleted) {
+                toast.info("Please complete the previous step first.");
+                return;
+            }
+        }
         setActiveView(taskId);
     };
 
-    const toggleSidebar = () => {
-        setIsSidebarCollapsed(!isSidebarCollapsed);
+    const handleNext = () => {
+        const nextStepIndex = currentStepIndex + 1;
+        if (nextStepIndex < phases[currentPhaseIndex].tasks.length) {
+            handleTaskClick(phases[currentPhaseIndex].tasks[nextStepIndex].id);
+        } else if (currentPhaseIndex + 1 < phases.length) {
+            handleTaskClick(phases[currentPhaseIndex + 1].tasks[0].id);
+        }
+    };
+
+    const handlePrev = () => {
+        const prevStepIndex = currentStepIndex - 1;
+        if (prevStepIndex >= 0) {
+            setActiveView(phases[currentPhaseIndex].tasks[prevStepIndex].id);
+        } else if (currentPhaseIndex - 1 >= 0) {
+            const prevPhase = phases[currentPhaseIndex - 1];
+            setActiveView(prevPhase.tasks[prevPhase.tasks.length - 1].id);
+        }
     };
 
     const handleGetMentorFeedback = async () => {
@@ -55,19 +213,21 @@ export const VentureWorkspace: React.FC = () => {
         setIsMentorLoading(true);
         setError(null);
         try {
-            const results = {
+            // Create a complete StartupData object for the first argument
+            const startupData: StartupData = {
                 name: startup.name || '',
                 scorecard: startup.dashboard ? JSON.parse(startup.dashboard) : {},
                 businessPlan: startup.businessPlan ? JSON.parse(startup.businessPlan) : {},
                 websitePrototype: startup.website ? JSON.parse(startup.website) : {},
                 pitchDeck: startup.pitchDeck ? JSON.parse(startup.pitchDeck) : {},
+                marketResearch: startup.marketResearch ? JSON.parse(startup.marketResearch) : {},
             };
-            const marketResearch = startup.marketResearch ? JSON.parse(startup.marketResearch) : {};
+            // The second argument is just the market research part, as per the function signature
+            const marketResearchForArg = startup.marketResearch ? JSON.parse(startup.marketResearch) : {};
 
-            const feedback = await getMentorFeedback(results, marketResearch);
+            const feedback = await getMentorFeedback(startupData, marketResearchForArg);
             setMentorFeedback(feedback);
 
-            // Save feedback to the database
             await updateMentorFeedbackInDB({ startupId: startup._id, feedback });
             toast.success("AI Mentor feedback saved!");
 
@@ -83,56 +243,16 @@ export const VentureWorkspace: React.FC = () => {
     const renderActiveView = () => {
         if (!startup) return null;
 
-        // Data parsing
         const websitePrototype = startup.website ? JSON.parse(startup.website) : {};
-
-        // Task name mapping
-        const taskNames: { [key in TaskID]: string } = {
-            brainstormIdea: 'Brainstorm & Refine Idea',
-            marketPulseCheck: 'Initial Market Pulse Check',
-            defineMissionVision: 'Define Mission & Vision',
-            generateNameIdentity: 'Generate Business Name & Identity',
-            scorecard: 'AI-Powered Scorecard Analysis',
-            businessPlan: 'Develop Initial Business Plan',
-            pitchDeck: 'Create Pitch Deck Outline',
-            marketResearch: 'Deep Dive Market Analysis',
-            competitorMatrix: 'Competitor Landscape Matrix',
-            generateCustomerPersonas: 'Generate Ideal Customer Personas',
-            generateInterviewScripts: 'Generate Interview Scripts',
-            validateProblem: 'Simulate Customer Interviews',
-            aiMentor: 'Get Feedback from AI Mentor',
-            userFlowDiagrams: 'Generate User Flow Diagram',
-            aiWireframing: 'AI-Powered Wireframing',
-            website: 'Build Interactive Website Prototype',
-            defineDataModels: 'Define Data Models & Database Schema',
-            configureBackend: 'Configure Backend Functions & Logic',
-            designFrontend: 'Design Frontend UI & Component Library',
-            connectFrontendBackend: 'Connect Frontend to Backend',
-            oneClickDeployment: 'One-Click Deployment',
-            alphaTesting: 'Internal Alpha Testing',
-            betaTesterRecruitment: 'Recruit Beta Testers',
-            feedbackAnalysis: 'AI-Powered Feedback Analysis',
-            pricingStrategy: 'AI-Assisted Pricing Strategy',
-            marketingCopy: 'Generate Marketing & Sales Copy',
-            preLaunchWaitlist: 'Build Pre-Launch Waitlist Page',
-            productHuntKit: 'Product Hunt Launch Kit',
-            pressRelease: 'Draft Press Release & Media Outreach',
-            launchMonitoring: 'Real-time Launch Monitoring',
-            growthMetrics: 'Identify Key Growth Metrics (AARRR)',
-            abTestIdeas: 'Brainstorm A/B Test Ideas',
-            seoStrategy: 'Generate SEO Keyword Strategy',
-            processAutomation: 'Map Processes for Automation',
-            draftJobDescriptions: 'Draft Job Descriptions for Key Hires',
-            cloudCostEstimation: 'Cloud Cost Estimation',
-            investorMatching: 'AI Investor Matching',
-            dueDiligenceChecklist: 'Due Diligence Checklist',
-            aiPitchCoach: 'AI Pitch Coach',
-        };
+        // Properly type the initial value for the reducer
+        const taskNames = allTasks.reduce((acc, task) => {
+            acc[task.id] = task.name;
+            return acc;
+        }, {} as { [key in TaskID]: string });
 
         switch (activeView) {
             case 'brainstormIdea':
                 return <BrainstormIdea startup={startup} />;
-            // Existing implemented views
             case 'scorecard':
                 return <Scorecard startup={startup} />;
             case 'businessPlan':
@@ -172,8 +292,6 @@ export const VentureWorkspace: React.FC = () => {
                 );
             case 'validateProblem':
                 return <CustomerValidation startup={startup} />;
-
-            // Placeholder for all new tasks
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;
@@ -204,23 +322,34 @@ export const VentureWorkspace: React.FC = () => {
 
     return (
         <div className="venture-workspace-container">
-            <h1 className="venture-title">{startup.name}</h1>
-            <p className="venture-subtitle">This is your dedicated workspace. Follow the steps below to turn your idea into a reality.</p>
-
-            <button onClick={toggleSidebar} className={`sidebar-toggle-button ${isSidebarCollapsed ? 'collapsed' : ''}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                </svg>
-            </button>
-            
-            <div className={`workspace-layout ${isSidebarCollapsed ? 'collapsed' : ''}`}>
-                <aside className={`workspace-sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
-                    <PhaseChecklist startup={startup} onTaskClick={handleTaskClick} activeTask={activeView} mentorFeedback={mentorFeedback} />
-                </aside>
-                <main className="workspace-content">
-                    {renderActiveView()}
-                </main>
+            <div className="workspace-header">
+                <h1 className="venture-title">{startup.name}</h1>
+                <p className="venture-subtitle">This is your dedicated workspace. Follow the steps below to turn your idea into a reality.</p>
             </div>
+
+            <HorizontalStepper
+                phases={phases}
+                currentPhaseIndex={currentPhaseIndex}
+                currentStepIndex={currentStepIndex}
+                onNext={handleNext}
+                onPrev={handlePrev}
+                onShowOverview={() => setOverviewModalOpen(true)}
+            />
+            
+            <main className="workspace-content">
+                {renderActiveView()}
+            </main>
+
+            <PhasesOverviewModal
+                isOpen={isOverviewModalOpen}
+                onClose={() => setOverviewModalOpen(false)}
+                phases={phases}
+                activeTask={activeView}
+                onTaskClick={(taskId) => {
+                    handleTaskClick(taskId);
+                    setOverviewModalOpen(false);
+                }}
+            />
         </div>
     );
 };

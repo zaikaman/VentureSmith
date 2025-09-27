@@ -131,9 +131,10 @@ export const brainstormIdeaWithAI = internalAction(
       2.  **Key Features (Top 3):** List the three most important features or aspects of this product/service.
       3.  **Potential Angles (Top 2):** Suggest two unique angles or target niches for this idea that the founder might not have considered.
       4.  **Initial Concerns (Top 2):** Raise two immediate questions or concerns that need to be addressed.
+      5.  **Competitive Advantage (Top 2):** List two key competitive advantages or unique selling propositions.
 
-      Present the output as a JSON object with the fields: "refinedIdea", "keyFeatures", "potentialAngles", and "initialConcerns".
-      "keyFeatures", "potentialAngles", and "initialConcerns" should be arrays of strings.
+      Present the output as a JSON object with the fields: "refinedIdea", "keyFeatures", "potentialAngles", "initialConcerns", and "competitiveAdvantage".
+      "keyFeatures", "potentialAngles", "initialConcerns", and "competitiveAdvantage" should be arrays of strings.
     `;
 
     try {

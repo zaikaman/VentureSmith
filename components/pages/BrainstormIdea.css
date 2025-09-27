@@ -1,24 +1,137 @@
 .brainstorm-idea-container {
-  padding: 2rem;
+  padding: 1rem 0;
 }
 
-.initial-idea-box, .result-box {
-  background-color: var(--bg-slate-800);
-  border: 1px solid var(--border-slate-700);
-  border-radius: 0.75rem;
+.initial-idea-box {
+  background: rgba(10, 10, 20, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
   padding: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-.result-section {
-  margin-bottom: 1.5rem;
+.initial-idea-box h3 {
+  color: #a5b4fc;
 }
 
-.result-section ul {
-  list-style-position: inside;
-  padding-left: 1rem;
+.initial-idea-box p {
+  font-size: 1.1rem;
+  color: #e5e7eb;
 }
 
-.result-section li {
-  margin-bottom: 0.5rem;
+/* Grid for the result cards */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.refined-idea-card {
+  grid-column: 1 / -1; /* Make this card span full width */
+  background: linear-gradient(145deg, rgba(79, 70, 229, 0.15), rgba(165, 180, 252, 0.05));
+  border-color: rgba(129, 140, 248, 0.3);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.card-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.refined-idea-card .card-icon {
+  background-color: rgba(165, 180, 252, 0.1);
+  color: #c7d2fe;
+}
+
+.info-card:nth-child(2) .card-icon { /* Key Features */
+  background-color: rgba(52, 211, 153, 0.1);
+  color: #6ee7b7;
+}
+
+.info-card:nth-child(3) .card-icon { /* Potential Angles */
+  background-color: rgba(251, 191, 36, 0.1);
+  color: #fcd34d;
+}
+
+.info-card:nth-child(4) .card-icon { /* Initial Concerns */
+  background-color: rgba(248, 113, 113, 0.1);
+  color: #fca5a5;
+}
+
+.info-card:nth-child(5) .card-icon { /* Competitive Advantage */
+  background-color: rgba(96, 165, 250, 0.1);
+  color: #93c5fd;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: #f3f4f6;
+}
+
+.card-content {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #d1d5db;
+}
+
+.card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.card-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: #d1d5db;
+  line-height: 1.6;
+}
+
+.card-list li::before {
+  content: '\2713'; /* Checkmark character */
+  color: #a5b4fc;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-top: 4px; /* Align with text */
 }

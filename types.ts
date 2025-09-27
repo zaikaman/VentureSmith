@@ -45,3 +45,56 @@ export interface StartupData {
   pitchDeck: PitchDeckData;
   marketResearch: MarketResearchData;
 }
+
+export type TaskID =
+  // Phase 1
+  | 'brainstormIdea'
+  | 'marketPulseCheck'
+  | 'defineMissionVision'
+  // Phase 2
+  | 'generateNameIdentity'
+  | 'scorecard'
+  | 'businessPlan'
+  | 'pitchDeck'
+  // Phase 3
+  | 'marketResearch'
+  | 'competitorMatrix'
+  | 'generateCustomerPersonas'
+  // Phase 4
+  | 'generateInterviewScripts'
+  | 'validateProblem'
+  | 'aiMentor'
+  // Phase 5
+  | 'userFlowDiagrams'
+  | 'aiWireframing'
+  | 'website'
+  // Phase 6
+  | 'defineDataModels'
+  | 'configureBackend'
+  | 'designFrontend'
+  | 'connectFrontendBackend'
+  | 'oneClickDeployment'
+  // Phase 7
+  | 'alphaTesting'
+  | 'betaTesterRecruitment'
+  | 'feedbackAnalysis'
+  // Phase 8
+  | 'pricingStrategy'
+  | 'marketingCopy'
+  | 'preLaunchWaitlist'
+  // Phase 9
+  | 'productHuntKit'
+  | 'pressRelease'
+  | 'launchMonitoring'
+  // Phase 10
+  | 'growthMetrics'
+  | 'abTestIdeas'
+  | 'seoStrategy'
+  // Phase 11
+  | 'processAutomation'
+  | 'draftJobDescriptions'
+  | 'cloudCostEstimation'
+  // Phase 12
+  | 'investorMatching'
+  | 'dueDiligenceChecklist'
+  | 'aiPitchCoach';

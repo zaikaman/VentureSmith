@@ -236,6 +236,10 @@ export const updateBrainstormResult = mutation({
       throw new Error("Not authorized to update this startup");
     }
 
+    await ctx.db.patch(args.startupId, {
+      brainstormResult: args.brainstormResult,
+    });
+
     return { success: true };
   },
 });
