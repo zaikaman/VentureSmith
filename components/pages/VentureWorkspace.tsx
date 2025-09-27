@@ -16,7 +16,7 @@ import PitchDeck from './PitchDeck';
 import { WebsitePrototype } from './WebsitePrototype';
 import { MarketResearchDisplay } from './MarketResearchDisplay';
 import { CompetitorMatrix } from './CompetitorMatrix';
-import { MentorFeedbackDisplay } from './MentorFeedbackDisplay';
+import MentorFeedbackDisplay from './MentorFeedbackDisplay';
 import CustomerValidation from './CustomerValidation';
 import Placeholder from './Placeholder';
 import BrainstormIdea from './BrainstormIdea';
@@ -27,7 +27,6 @@ import { BusinessPlan } from './BusinessPlan';
 import { CustomerPersonas } from './CustomerPersonas';
 import { InterviewScripts } from './InterviewScripts';
 
-import { getMentorFeedback } from '../../services/geminiService';
 import './VentureWorkspace.css';
 
 // Define the shape of a task and phase for clarity
@@ -49,11 +48,6 @@ export const VentureWorkspace: React.FC = () => {
     
     const [activeView, setActiveView] = useState<TaskID>('brainstormIdea');
     const [isOverviewModalOpen, setOverviewModalOpen] = useState(false);
-    const [mentorFeedback, setMentorFeedback] = useState<string | null>(null);
-    const [isMentorLoading, setIsMentorLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
-
-    const updateMentorFeedbackInDB = useMutation(api.startups.updateMentorFeedback);
 
     const startup = useQuery(
         api.startups.getStartupById, 
@@ -92,7 +86,7 @@ export const VentureWorkspace: React.FC = () => {
             tasks: [
                 { id: 'generateInterviewScripts', name: 'Generate Interview Scripts', isCompleted: !!startup?.interviewScripts },
                 { id: 'validateProblem', name: 'Simulate Customer Interviews', isCompleted: !!startup?.customerValidation },
-                { id: 'aiMentor', name: 'Get Feedback from AI Mentor', isCompleted: !!mentorFeedback },
+                { id: 'aiMentor', name: 'Get Feedback from AI Mentor', isCompleted: !!startup?.aiMentor },
             ]
         },
         {
@@ -161,7 +155,7 @@ export const VentureWorkspace: React.FC = () => {
                 { id: 'aiPitchCoach', name: 'AI Pitch Coach', isCompleted: false },
             ]
         },
-    ], [startup, mentorFeedback]);
+    ], [startup]);
 
     const allTasks = useMemo(() => phases.flatMap(p => p.tasks), [phases]);
 
@@ -176,12 +170,6 @@ export const VentureWorkspace: React.FC = () => {
         return { currentPhaseIndex: 0, currentStepIndex: 0 };
     }, [activeView, phases]);
     
-    React.useEffect(() => {
-        if (startup?.aiMentor) {
-            setMentorFeedback(startup.aiMentor);
-        }
-    }, [startup]);
-
     const handleTaskClick = (taskId: TaskID) => {
         const taskIndex = allTasks.findIndex(t => t.id === taskId);
         if (taskIndex > 0) {
@@ -210,37 +198,6 @@ export const VentureWorkspace: React.FC = () => {
         } else if (currentPhaseIndex - 1 >= 0) {
             const prevPhase = phases[currentPhaseIndex - 1];
             setActiveView(prevPhase.tasks[prevPhase.tasks.length - 1].id);
-        }
-    };
-
-    const handleGetMentorFeedback = async () => {
-        if (!startup) return;
-
-        setIsMentorLoading(true);
-        setError(null);
-        try {
-            const startupData: StartupData = {
-                name: startup.name || '',
-                scorecard: startup.dashboard ? JSON.parse(startup.dashboard) : {},
-                businessPlan: startup.businessPlan ? JSON.parse(startup.businessPlan) : {},
-                websitePrototype: startup.website ? JSON.parse(startup.website) : {},
-                pitchDeck: startup.pitchDeck ? JSON.parse(startup.pitchDeck) : {},
-                marketResearch: startup.marketResearch ? JSON.parse(startup.marketResearch) : {},
-            };
-            const marketResearchForArg = startup.marketResearch ? JSON.parse(startup.marketResearch) : {};
-
-            const feedback = await getMentorFeedback(startupData, marketResearchForArg);
-            setMentorFeedback(feedback);
-
-            await updateMentorFeedbackInDB({ startupId: startup._id, feedback });
-            toast.success("AI Mentor feedback saved!");
-
-        } catch (err: any) {
-            console.error("Error getting mentor feedback:", err);
-            setError("Failed to get feedback from AI Mentor. Please try again.");
-            setMentorFeedback(null);
-        } finally {
-            setIsMentorLoading(false);
         }
     };
 
@@ -279,32 +236,7 @@ export const VentureWorkspace: React.FC = () => {
             case 'generateInterviewScripts':
                 return <InterviewScripts startup={startup} />;
             case 'aiMentor':
-                if (isMentorLoading) {
-                    return (
-                        <div className="flex flex-col items-center justify-center p-10 text-center">
-                            <div className="spinner"></div>
-                            <p className="mt-6 text-xl font-semibold animate-pulse">Our AI Mentor is analyzing your venture...</p>
-                        </div>
-                    );
-                }
-                if (mentorFeedback) {
-                    return <MentorFeedbackDisplay feedback={mentorFeedback} />;
-                }
-                return (
-                    <div className="text-center p-12">
-                        <h3 className="text-3xl font-bold mb-4">Unlock Expert AI Analysis</h3>
-                        <p className="text-slate-300 mb-8 max-w-3xl mx-auto">
-                            Let our AI Mentor, modeled after a seasoned venture capitalist, analyze your generated assets. It will provide critical feedback on strengths, weaknesses, and investor questions to help you strengthen your business case.
-                        </p>
-                        <button
-                            onClick={handleGetMentorFeedback}
-                            className="cta-button"
-                        >
-                            Analyze & Get Feedback
-                        </button>
-                        {error && <p className="text-red-500 mt-4">{error}</p>}
-                    </div>
-                );
+                return <MentorFeedbackDisplay startup={startup} />;
             case 'validateProblem':
                 return <CustomerValidation startup={startup} />;
             default:

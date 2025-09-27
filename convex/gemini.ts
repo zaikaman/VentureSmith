@@ -892,3 +892,86 @@ export const runInterviewSimulationsWithAI = internalAction(
     }
   }
 );
+
+export const getMentorFeedbackWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const feedbackSchema = {
+      type: "OBJECT",
+      properties: {
+        strengths: {
+          type: "ARRAY",
+          description: "A list of 2-3 key strengths of the business idea and plan.",
+          items: { type: "STRING" }
+        },
+        weaknesses: {
+          type: "ARRAY",
+          description: "A list of 2-3 critical weaknesses or blind spots in the current plan.",
+          items: { type: "STRING" }
+        },
+        suggestions: {
+          type: "ARRAY",
+          description: "A list of 2-3 actionable suggestions for improvement.",
+          items: { type: "STRING" }
+        }
+      },
+      required: ["strengths", "weaknesses", "suggestions"]
+    };
+
+    const prompt = `
+      You are a top-tier venture capital partner at a firm like Andreessen Horowitz or Sequoia Capital. You have decades of experience evaluating startups.
+      You are reviewing a complete data package for a new venture.
+
+      **Startup Data Package:**
+      ${JSON.stringify(
+        fullContext,
+        null,
+        2
+      )}
+
+      **Your Task:**
+      Provide a brutally honest, sharp, and insightful critique of this venture as if you were deciding whether to invest. Your feedback is invaluable.
+      Based on the **entire** data package, analyze the business and provide your feedback, focusing on the most critical points an investor would care about.
+
+      Structure your feedback into three sections:
+      1.  **Strengths:** What are the most compelling parts of this plan? What makes it potentially a billion-dollar company?
+      2.  **Weaknesses:** What are the most glaring holes? What are the biggest risks that could kill this company?
+      3.  **Suggestions:** What are the most important, actionable things the founders should do right now to de-risk the venture and strengthen their position?
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Mentor Feedback from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: feedbackSchema
+        }
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No mentor feedback data received from Gemini API");
+      }
+
+      console.log("Mentor feedback data received successfully.");
+      return JSON.parse(resultText);
+    } catch (error: any) {
+      console.error("Failed to get mentor feedback data:", error.message);
+      throw new Error(
+        `Failed to get mentor feedback data from Gemini API. Error: ${error.message}`
+      );
+    }
+  }
+);

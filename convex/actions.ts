@@ -331,3 +331,38 @@ export const runInterviewSimulations = action({
     return result;
   },
 });
+
+export const getMentorFeedback = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.businessPlan) {
+      throw new Error("Business Plan must be completed to get mentor feedback.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      brainstormResult: startup.brainstormResult ? JSON.parse(startup.brainstormResult) : undefined,
+      marketPulse: startup.marketPulse ? JSON.parse(startup.marketPulse) : undefined,
+      missionVision: startup.missionVision ? JSON.parse(startup.missionVision) : undefined,
+      brandIdentity: startup.brandIdentity ? JSON.parse(startup.brandIdentity) : undefined,
+      scorecard: startup.dashboard ? JSON.parse(startup.dashboard) : undefined,
+      businessPlan: startup.businessPlan ? JSON.parse(startup.businessPlan) : undefined,
+      pitchDeck: startup.pitchDeck ? JSON.parse(startup.pitchDeck) : undefined,
+      marketResearch: startup.marketResearch ? JSON.parse(startup.marketResearch) : undefined,
+      competitorMatrix: startup.competitorMatrix ? JSON.parse(startup.competitorMatrix) : undefined,
+      customerPersonas: startup.customerPersonas ? JSON.parse(startup.customerPersonas) : undefined,
+    };
+
+    const result = await ctx.runAction(internal.gemini.getMentorFeedbackWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateMentorFeedback, {
+      startupId,
+      feedback: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});
