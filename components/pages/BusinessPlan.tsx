@@ -104,7 +104,115 @@ export const BusinessPlan: React.FC<BusinessPlanProps> = ({ startup }) => {
     }
   };
 
-  const handleDownloadPDF = () => { /* PDF logic can be reused */ };
+  const handleDownloadPDF = () => {
+    if (!result) return;
+
+    const doc = new jsPDF();
+    const page_width = doc.internal.pageSize.getWidth();
+    const margin = 14;
+    let current_y = 40;
+
+    const checkPageBreak = (margin = 40) => {
+        if (current_y > doc.internal.pageSize.getHeight() - margin) {
+            doc.addPage();
+            current_y = 20;
+        }
+    };
+
+    doc.setFontSize(20);
+    doc.text("Business Plan", page_width / 2, 20, { align: "center" });
+    doc.setFontSize(12);
+    doc.text(startup.name || '', page_width / 2, 30, { align: "center" });
+
+    const addSectionTitle = (title: string) => {
+        checkPageBreak();
+        doc.setFontSize(16);
+        doc.text(title, margin, current_y);
+        current_y += 10;
+    };
+
+    const addSubheading = (title: string) => {
+        checkPageBreak();
+        doc.setFontSize(14);
+        doc.setTextColor(100);
+        doc.text(title, margin, current_y);
+        current_y += 8;
+        doc.setTextColor(0);
+    };
+
+    const addParagraph = (text: string | undefined) => {
+        checkPageBreak();
+        doc.setFontSize(12);
+        const splitText = doc.splitTextToSize(cleanText(text), page_width - margin * 2);
+        doc.text(splitText, margin, current_y);
+        current_y += (splitText.length * 7) + 7;
+    };
+
+    const addList = (items: string[] | undefined) => {
+        checkPageBreak();
+        doc.setFontSize(12);
+        (items || []).forEach(item => {
+            checkPageBreak(20);
+            const splitItem = doc.splitTextToSize(`- ${cleanText(item)}`, page_width - margin * 2 - 5);
+            doc.text(splitItem, margin + 5, current_y);
+            current_y += (splitItem.length * 7) + 3;
+        });
+        current_y += 7;
+    };
+
+    // Building the PDF
+    addSectionTitle("1. Executive Summary");
+    addParagraph(result.executiveSummary);
+
+    addSectionTitle("2. Company Description");
+    addParagraph(result.companyDescription?.description);
+    addSubheading("Core Values");
+    addList(result.companyDescription?.coreValues);
+
+    addSectionTitle("3. Products & Services");
+    addParagraph(result.productsAndServices?.description);
+    addSubheading("Key Features");
+    addList(result.productsAndServices?.keyFeatures);
+    addSubheading("Unique Value Proposition");
+    addParagraph(result.productsAndServices?.uniqueValueProposition);
+
+    addSectionTitle("4. Market Analysis");
+    addSubheading("Industry Overview");
+    addParagraph(result.marketAnalysis?.industryOverview);
+    addSubheading("Target Market");
+    addParagraph(result.marketAnalysis?.targetMarket);
+    addSubheading("Competitive Landscape");
+    addParagraph(result.marketAnalysis?.competitiveLandscape);
+
+    addSectionTitle("5. Marketing & Sales Strategy");
+    addSubheading("Digital Marketing Strategy");
+    addList(result.marketingAndSalesStrategy?.digitalMarketingStrategy);
+    addSubheading("Sales Funnel");
+    addList(result.marketingAndSalesStrategy?.salesFunnel);
+
+    addSectionTitle("6. Organization & Management");
+    addParagraph(result.organizationAndManagement?.teamStructure);
+    // You could add a table for key roles here if desired
+
+    addSectionTitle("7. Financial Projections");
+    addParagraph(result.financialProjections?.summary);
+    current_y += 5;
+
+    autoTable(doc, {
+        startY: current_y,
+        head: [['Year', 'Revenue', 'COGS', 'Net Profit']],
+        body: result.financialProjections?.forecast.map(item => [
+            `Year ${item.year}`,
+            item.revenue,
+            item.cogs,
+            item.netProfit
+        ]),
+        theme: 'grid',
+        headStyles: { fillColor: [22, 160, 133] },
+    });
+
+    doc.save(`${startup.name || 'Business-Plan'}.pdf`);
+  };
 
   const sections = [
     { id: 'executiveSummary', title: 'Executive Summary' },
