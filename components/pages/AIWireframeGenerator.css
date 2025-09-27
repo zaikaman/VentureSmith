@@ -89,11 +89,14 @@
 }
 
 /* --- Results View --- */
-.uf-header {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    z-index: 10;
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.button-group {
     display: flex;
     gap: 0.5rem;
 }
