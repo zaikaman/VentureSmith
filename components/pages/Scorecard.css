@@ -1,128 +1,132 @@
+/* Scorecard.css - Refactored for "Analysis Core" */
 
-.scorecard-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    align-items: center;
+.scorecard-initial-view, .scorecard-results-container {
+    padding: 2rem;
+    text-align: center;
 }
 
-@media (min-width: 1024px) { /* lg breakpoint */
-    .scorecard-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 4rem;
+.scorecard-initial-view .cta-button:disabled {
+    background-color: var(--bg-slate-700);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* --- Analysis Core Animation --- */
+.analysis-core-container {
+    height: 600px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #020617;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.core-rings {
+    position: relative;
+    width: 250px;
+    height: 250px;
+}
+
+.ring {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    animation: spin 4s linear infinite;
+}
+
+.ring:nth-child(1) { border-top-color: #60a5fa; animation-duration: 2s; }
+.ring:nth-child(2) { border-left-color: #facc15; animation-duration: 3s; animation-direction: reverse; }
+.ring:nth-child(3) { border-bottom-color: #4ade80; animation-duration: 4s; }
+
+.data-packet {
+    position: absolute;
+    padding: 0.5rem 1rem;
+    background: var(--bg-slate-800);
+    border: 1px solid var(--border-slate-600);
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    animation: fly-to-core 2s ease-in-out forwards;
+}
+
+.packet-1 { top: 10%; left: 10%; animation-delay: 0s; }
+.packet-2 { top: 10%; right: 10%; animation-delay: 0.5s; }
+.packet-3 { bottom: 10%; left: 10%; animation-delay: 1s; }
+.packet-4 { bottom: 10%; right: 10%; animation-delay: 1.5s; }
+
+@keyframes fly-to-core {
+    to {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
     }
 }
 
-.overall-score-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--bg-slate-800);
-    padding: 2rem;
-    border-radius: 1.5rem;
-    border: 1px solid var(--border-slate-700);
-}
-
-.overall-score-title {
-    font-size: 1.5rem; /* 24px */
+.analysis-status-text {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #94a3b8;
+    font-size: 1rem;
     font-weight: 600;
-    color: var(--text-slate-300);
-    margin-bottom: 1.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: pulseText 2s infinite;
 }
 
-.score-circle-container {
-    position: relative;
-    width: 12rem; /* 192px */
-    height: 12rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* --- Results View --- */
+.scorecard-results-container { animation: fadeInResults 1s forwards; }
 
-.score-circle-bg {
-    stroke: var(--border-slate-700);
-}
+.header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
 
-.score-circle-fg {
-    stroke: var(--primary-color);
-    transform: rotate(-90deg);
-    transform-origin: 50% 50%;
-    transition: stroke-dashoffset 1s ease-out;
-}
-
-.overall-score-text {
-    font-size: 4rem; /* 64px */
-    font-weight: 700;
-    color: var(--text-color);
-}
-
-.radar-chart-container {
-    margin-top: 2rem;
-    width: 100%;
-    max-width: 24rem; /* 384px */
-}
-
-.score-details-container {
+.overall-score-card {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 3rem auto;
+    border-radius: 50%;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-slate-800);
+    border: 4px solid var(--glow-color);
+    box-shadow: 0 0 30px var(--glow-color), inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.overall-title { color: var(--text-slate-300); font-weight: 600; }
+.overall-score { color: white; font-size: 4rem; font-weight: 800; line-height: 1; }
+
+.score-details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 1.5rem;
 }
 
-.score-info-card {
-    background-color: var(--bg-slate-800);
-    padding: 1.5rem;
-    border-radius: 1rem; /* 16px */
+@media (min-width: 768px) {
+    .score-details-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.score-detail-card {
+    background: var(--bg-slate-800);
     border: 1px solid var(--border-slate-700);
+    padding: 1.5rem;
+    border-radius: 12px;
+    position: relative; /* This is the fix */
 }
 
-.score-info-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 0.5rem;
-}
+.score-detail-card h4 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+.score-bar-container { width: 100%; height: 10px; background: var(--bg-slate-700); border-radius: 5px; margin-bottom: 0.5rem; position: relative; }
+.score-bar { height: 100%; border-radius: 5px; }
+.score-number { position: absolute; right: 0; top: -25px; font-weight: 700; font-size: 1rem; }
+.justification { color: var(--text-slate-400); font-size: 0.9rem; margin-top: 1rem; }
 
-.score-info-title {
-    font-size: 1.125rem; /* 18px */
-    font-weight: 600;
-    color: var(--text-color);
-}
-
-.score-info-value {
-    font-size: 1.25rem; /* 20px */
-    font-weight: 700;
-    color: var(--primary-color);
-}
-
-.score-info-justification {
-    font-size: 0.95rem;
-    color: var(--text-slate-400);
-}
-
-@media (max-width: 768px) {
-    .scorecard-grid {
-        gap: 2rem;
-    }
-
-    .overall-score-container {
-        padding: 1.5rem;
-    }
-
-    .score-circle-container {
-        width: 10rem; /* 160px */
-        height: 10rem;
-    }
-
-    .overall-score-text {
-        font-size: 3rem; /* 48px */
-    }
-
-    .overall-score-title {
-        font-size: 1.25rem;
-    }
-
-    .score-info-card {
-        padding: 1rem;
-    }
-}
+/* Regenerate Button */
+.regenerate-button { display: flex; align-items: center; gap: 0.5rem; background-color: var(--bg-slate-800); color: var(--text-slate-200); padding: 0.75rem 1.5rem; border-radius: 9999px; font-size: 0.95rem; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.2s; }
+.regenerate-button:hover { background-color: var(--bg-slate-700); color: white; }
+.regenerate-button svg { width: 1.25rem; height: 1.25rem; }

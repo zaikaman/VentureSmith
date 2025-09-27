@@ -25,13 +25,23 @@ export const getCustomerValidation = action({
 });
 
 export const generateScorecard = action({
-  args: {
-    startupId: v.id("startups"),
-    idea: v.string(),
-  },
-  handler: async (ctx, { startupId, idea }) => {
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.marketPulse || !startup.missionVision || !startup.brandIdentity) {
+      throw new Error("Previous steps must be completed to generate a scorecard.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      refinedIdea: JSON.parse(startup.brainstormResult).refinedIdea,
+      marketPulse: JSON.parse(startup.marketPulse),
+      missionVision: JSON.parse(startup.missionVision),
+      brandIdentity: JSON.parse(startup.brandIdentity),
+    };
+
     const result = await ctx.runAction(internal.gemini.generateScorecardWithAI, {
-      idea,
+      fullContext,
     });
 
     await ctx.runMutation(api.startups.updateScorecard, {
@@ -131,6 +141,59 @@ export const getMarketPulse = action({
     await ctx.runMutation(api.startups.updateMarketPulse, {
       startupId,
       marketPulse: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});
+
+export const defineMissionVision = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.marketPulse) {
+      throw new Error("Previous steps are not completed.");
+    }
+
+    const refinedIdea = JSON.parse(startup.brainstormResult).refinedIdea;
+    const marketPulse = JSON.parse(startup.marketPulse);
+
+    const result = await ctx.runAction(internal.gemini.defineMissionVisionWithAI, {
+      refinedIdea,
+      marketPulse,
+    });
+
+    await ctx.runMutation(api.startups.updateMissionVision, {
+      startupId,
+      missionVision: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});
+
+export const generateBrandIdentity = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.marketPulse || !startup.missionVision) {
+      throw new Error("Previous steps must be completed to generate a brand identity.");
+    }
+
+    const refinedIdea = JSON.parse(startup.brainstormResult).refinedIdea;
+    const keywords = JSON.parse(startup.marketPulse).relatedKeywords;
+    const { mission, vision } = JSON.parse(startup.missionVision);
+
+    const result = await ctx.runAction(internal.gemini.generateBrandIdentityWithAI, {
+      refinedIdea,
+      keywords,
+      mission,
+      vision,
+    });
+
+    await ctx.runMutation(api.startups.updateBrandIdentity, {
+      startupId,
+      brandIdentity: JSON.stringify(result),
     });
 
     return result;

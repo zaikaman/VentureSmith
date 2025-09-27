@@ -1,0 +1,165 @@
+/* MissionVision.css */
+.mission-vision-container {
+    padding: 2rem;
+    text-align: center;
+}
+
+.pre-forge-content .forge-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.pre-forge-content .forge-button svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Genesis Block Animation Styles */
+.genesis-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 400px;
+    padding: 2rem;
+}
+
+.input-data-side, .output-data-side {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.data-node, .output-field {
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-slate-700);
+    background: var(--bg-slate-800);
+    color: var(--text-slate-300);
+    font-weight: 500;
+    text-align: left;
+}
+
+.core-animation {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.core-ring {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #a5b4fc;
+    border-bottom-color: #a5b4fc;
+    animation: spin 2s linear infinite;
+}
+
+.core-ring::before {
+    content: '';
+    position: absolute;
+    top: 10px; left: 10px; right: 10px; bottom: 10px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-left-color: #fbcfe8;
+    border-right-color: #fbcfe8;
+    animation: spin 1.5s linear reverse infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Forging animation specifics */
+.genesis-block.forging .data-node {
+    animation: pulseNode 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseNode {
+    0%, 100% { box-shadow: 0 0 5px rgba(165, 180, 252, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(165, 180, 252, 0.7); }
+}
+
+.genesis-block.forging .output-field {
+    background: var(--bg-slate-900);
+    animation: flicker 2s infinite;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+/* Result Display Styles */
+.genesis-block.complete {
+    flex-direction: column;
+    height: auto;
+    animation: fadeInResults 1s forwards;
+}
+
+.result-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.result-card {
+    width: 100%;
+    background: var(--bg-slate-800);
+    border: 1px solid var(--border-slate-700);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.result-card h3 {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #a5b4fc;
+    margin-bottom: 1rem;
+}
+
+.result-card p {
+    font-size: 1.5rem;
+    font-style: italic;
+    line-height: 1.6;
+    color: #e5e7eb;
+    margin: 0;
+}
+
+/* Regenerate button styles */
+.regenerate-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--bg-slate-800);
+  color: var(--text-slate-200);
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.regenerate-button:hover {
+  background-color: var(--bg-slate-700);
+  color: white;
+}
+
+.regenerate-button svg {
+  width: 1.25rem; /* 20px */
+  height: 1.25rem; /* 20px */
+}

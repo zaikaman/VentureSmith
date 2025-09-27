@@ -165,27 +165,41 @@ export const brainstormIdeaWithAI = internalAction(
 export const generateScorecardWithAI = internalAction(
   async (
     _,
-    { idea }: { idea: string }
+    { fullContext }: { fullContext: any }
   ) => {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables.");
+      throw new Error("GEMINI_API_KEY is not set.");
     }
     const ai = new GoogleGenAI({ apiKey });
 
     const prompt = `
-      You are a startup analyst. Based on the following startup idea, generate a scorecard rating the idea on market size, feasibility, and innovation.
+      You are a meticulous, data-driven venture capital analyst from a top-tier firm like Sequoia or a16z.
+      You have been provided with a comprehensive data package for a startup.
+      Your task is to generate a critical scorecard rating the venture's potential.
 
-      Idea: "${idea}"
+      **Startup Data Package:**
+      - **Official Name:** ${fullContext.name}
+      - **Refined Idea:** ${fullContext.refinedIdea}
+      - **Market Pulse:** ${JSON.stringify(fullContext.marketPulse, null, 2)}
+      - **Mission/Vision:** ${JSON.stringify(fullContext.missionVision, null, 2)}
+      - **Branding Options:** ${JSON.stringify(fullContext.brandIdentity, null, 2)}
 
-      Return the output as a JSON object with the following structure:
+      Based on the **entire** data package, generate a scorecard rating the idea on three core metrics:
+      1.  **Market Size & Demand:** Based on the idea, keywords, and market pulse, how large and receptive is the target market?
+      2.  **Feasibility & Execution:** Based on the idea's complexity and the stated mission, how feasible is it to build and succeed with this venture?
+      3.  **Innovation & Defensibility:** Based on the competitive landscape and the idea's unique selling propositions, how innovative and defensible is it?
+
+      For each metric, provide a score from 0-100 and a concise but sharp justification for your rating.
+      Finally, calculate a weighted **Overall Score** (40% Market, 30% Feasibility, 30% Innovation).
+
+      Return the output as a valid JSON object with the structure:
       {
         "marketSize": { "score": number, "justification": string },
         "feasibility": { "score": number, "justification": string },
         "innovation": { "score": number, "justification": string },
         "overallScore": number
       }
-      The overallScore should be a weighted average of the other three scores.
     `;
 
     try {
@@ -362,6 +376,110 @@ export const getMarketPulseWithAI = internalAction(
     } catch (error: any) {
       console.error("Failed to get market pulse data:", error.message);
       throw new Error(`Failed to get market pulse data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+export const defineMissionVisionWithAI = internalAction(
+  async (
+    _,
+    { refinedIdea, marketPulse }: { refinedIdea: string, marketPulse: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const prompt = `
+      You are a world-class brand strategist and storyteller, an expert at distilling complex ideas into powerful, resonant messages.
+      You are tasked with creating the foundational "Genesis Block" for a new startup: its Mission and Vision.
+
+      Here is the core data:
+      - **Refined Idea:** "${refinedIdea}"
+      - **Market Pulse Analysis:** ${JSON.stringify(marketPulse, null, 2)}
+
+      Based on this data, please generate:
+      1.  **Mission Statement:** A concise, powerful sentence explaining the company's core purpose and **why** it exists. It should be inspiring and focused on the problem it solves or the value it creates.
+      2.  **Vision Statement:** A short, ambitious sentence describing the future the company aims to create. It should paint a picture of the long-term impact and **where** the company is going.
+
+      Present the output as a single, valid JSON object with the fields: "mission" and "vision".
+    `;
+
+    try {
+      console.log("--- Requesting Mission & Vision from Gemini ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No Mission/Vision data received from Gemini API");
+      }
+
+      console.log("Mission/Vision data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get Mission/Vision data:", error.message);
+      throw new Error(`Failed to get Mission/Vision data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+export const generateBrandIdentityWithAI = internalAction(
+  async (
+    _,
+    { refinedIdea, keywords, mission, vision }: { refinedIdea: string, keywords: string[], mission: string, vision: string }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const prompt = `
+      You are a world-class branding expert (think David Aaker, Marty Neumeier).
+      You are tasked with forging a brand identity for a new startup.
+
+      Here is the core DNA of the venture:
+      - **Refined Idea:** "${refinedIdea}"
+      - **Core Keywords:** ${keywords.join(", ")}
+      - **Mission (The Why):** "${mission}"
+      - **Vision (The Where):** "${vision}"
+
+      Based on this complete context, generate:
+      1.  **Names**: A list of 5 creative, memorable, and professional business names. The names should be diverse in style (e.g., evocative, descriptive, abstract, modern, classic).
+      2.  **Slogan**: One powerful, concise slogan that captures the essence of the brand.
+
+      Return the output as a single, valid JSON object with the fields: "names" (an array of strings) and "slogan" (a string).
+    `;
+
+    try {
+      console.log("--- Requesting Brand Identity from Gemini ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No Brand Identity data received from Gemini API");
+      }
+
+      console.log("Brand Identity data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get Brand Identity data:", error.message);
+      throw new Error(`Failed to get Brand Identity data from Gemini API. Error: ${error.message}`);
     }
   }
 );

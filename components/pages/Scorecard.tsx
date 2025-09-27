@@ -3,144 +3,127 @@ import { useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { ScorecardData } from '../../types';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { toast } from 'sonner';
 import './Scorecard.css';
 
 interface ScorecardProps {
   startup: {
     _id: Id<"startups">;
-    idea?: string | undefined;
     dashboard?: string | undefined; // This holds the scorecard data
+    // Data from previous steps for the action
+    brainstormResult?: string | undefined;
+    marketPulse?: string | undefined;
+    missionVision?: string | undefined;
+    brandIdentity?: string | undefined;
   };
 }
 
-const ChartCard: React.FC<{ data: ScorecardData }> = ({ data }) => {
-    const chartData = [
-        { subject: 'Market Size', A: data.marketSize.score, fullMark: 100 },
-        { subject: 'Feasibility', A: data.feasibility.score, fullMark: 100 },
-        { subject: 'Innovation', A: data.innovation.score, fullMark: 100 },
-    ];
-
-    return (
-        <div className="radar-chart-container">
-            <ResponsiveContainer width="100%" height={320}>
-                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-                    <PolarGrid stroke="var(--border-slate-700)" />
-                    <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-slate-400)', fontSize: 14 }} />
-                    <Radar name="Score" dataKey="A" stroke="var(--primary-color)" fill="var(--primary-color)" fillOpacity={0.6} />
-                    <Tooltip contentStyle={{ backgroundColor: 'var(--bg-slate-800)', border: '1px solid var(--border-slate-700)', color: 'var(--text-slate-200)' }} />
-                </RadarChart>
-            </ResponsiveContainer>
-        </div>
-    );
-};
-
-const ScoreInfoCard: React.FC<{ title: string; score: number; justification: string }> = ({ title, score, justification }) => (
-    <div className="score-info-card">
-        <div className="score-info-header">
-            <h3 className="score-info-title">{title}</h3>
-            <span className="score-info-value">{score}/100</span>
-        </div>
-        <p className="score-info-justification">{justification}</p>
-    </div>
-);
-
 export const Scorecard: React.FC<ScorecardProps> = ({ startup }) => {
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [scorecardData, setScorecardData] = useState<ScorecardData | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [result, setResult] = useState<ScorecardData | null>(null);
   const generateScorecard = useAction(api.actions.generateScorecard);
+
+  const canAnalyze = startup.brainstormResult && startup.marketPulse && startup.missionVision && startup.brandIdentity;
 
   useEffect(() => {
     if (startup.dashboard) {
-      try {
-        setScorecardData(JSON.parse(startup.dashboard));
-      } catch (e) {
-        console.error("Failed to parse scorecard data:", e);
-        setError("Failed to load existing scorecard data.");
-      }
+      setResult(JSON.parse(startup.dashboard));
     }
   }, [startup.dashboard]);
 
-  const handleGenerate = async () => {
-    if (!startup.idea) {
-      setError("Initial idea is missing.");
+  const handleAnalyze = async () => {
+    if (!canAnalyze) {
+      toast.error("Previous steps must be completed first.");
       return;
     }
-    setIsGenerating(true);
-    setError(null);
+    setIsAnalyzing(true);
+    setResult(null);
+
     try {
-      const result = await generateScorecard({
-        startupId: startup._id,
-        idea: startup.idea,
-      });
-      setScorecardData(result);
+      const analysisResult = await generateScorecard({ startupId: startup._id });
+      // Delay for animation
+      setTimeout(() => {
+        setResult(analysisResult);
+        setIsAnalyzing(false);
+      }, 4000); 
     } catch (err: any) {
-      setError("Failed to generate scorecard. Please try again.");
-      console.error("Error generating scorecard:", err);
-    } finally {
-      setIsGenerating(false);
+      toast.error("Failed to analyze scorecard. Please try again.");
+      console.error("Error analyzing data:", err);
+      setIsAnalyzing(false);
     }
   };
 
-  if (isGenerating) {
+  if (isAnalyzing) {
     return (
-      <div className="flex flex-col items-center justify-center p-10 text-center">
-        <div className="spinner"></div>
-        <p className="mt-6 text-xl font-semibold animate-pulse">
-          AI is analyzing your idea and generating a scorecard...
-        </p>
-      </div>
+        <div className="analysis-core-container">
+            <div className="core-rings">
+                <div className="ring"></div>
+                <div className="ring"></div>
+                <div className="ring"></div>
+            </div>
+            <div className="data-packet packet-1">Ideation</div>
+            <div className="data-packet packet-2">Market Pulse</div>
+            <div className="data-packet packet-3">Mission/Vision</div>
+            <div className="data-packet packet-4">Brand Identity</div>
+            <div className="analysis-status-text">ANALYZING VENTURE DNA...</div>
+        </div>
     );
   }
 
-  if (!scorecardData) {
+  if (result) {
     return (
-      <div className="text-center p-12">
-        <h3 className="text-3xl font-bold mb-4">Generate Your Startup Scorecard</h3>
-        <p className="text-slate-300 mb-8 max-w-3xl mx-auto">
-          Let our AI analyze your idea's potential based on market size, feasibility, and innovation to give you a comprehensive score.
-        </p>
-        <button onClick={handleGenerate} className="cta-button">
-          Generate Scorecard
-        </button>
-        {error && <p className="text-red-500 mt-4">{error}</p>}
-      </div>
+        <div className="scorecard-results-container">
+            <div className="header-section">
+                <h2 className="text-3xl font-bold">Scorecard Analysis</h2>
+                <button onClick={handleAnalyze} className="regenerate-button" title="Regenerate">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" /></svg>
+                    <span>Regenerate</span>
+                </button>
+            </div>
+            <div className="overall-score-card" style={{'--glow-color': result.overallScore > 75 ? '#4ade80' : result.overallScore > 50 ? '#facc15' : '#f87171'}}>
+                <span className="overall-title">Overall Score</span>
+                <span className="overall-score">{result.overallScore}</span>
+            </div>
+            <div className="score-details-grid">
+                <div className="score-detail-card">
+                    <h4>Market Size & Demand</h4>
+                    <div className="score-bar-container">
+                        <div className="score-bar" style={{width: `${result.marketSize.score}%`, backgroundColor: '#60a5fa'}}></div>
+                    </div>
+                    <span className="score-number">{result.marketSize.score}</span>
+                    <p className="justification">{result.marketSize.justification}</p>
+                </div>
+                <div className="score-detail-card">
+                    <h4>Feasibility & Execution</h4>
+                    <div className="score-bar-container">
+                        <div className="score-bar" style={{width: `${result.feasibility.score}%`, backgroundColor: '#facc15'}}></div>
+                    </div>
+                    <span className="score-number">{result.feasibility.score}</span>
+                    <p className="justification">{result.feasibility.justification}</p>
+                </div>
+                <div className="score-detail-card">
+                    <h4>Innovation & Defensibility</h4>
+                    <div className="score-bar-container">
+                        <div className="score-bar" style={{width: `${result.innovation.score}%`, backgroundColor: '#4ade80'}}></div>
+                    </div>
+                    <span className="score-number">{result.innovation.score}</span>
+                    <p className="justification">{result.innovation.justification}</p>
+                </div>
+            </div>
+        </div>
     );
   }
-
-  const data = scorecardData;
-  const circumference = 2 * Math.PI * 45;
 
   return (
-    <div className="scorecard-grid">
-      <div className="overall-score-container">
-        <h2 className="overall-score-title">Overall Startup Score</h2>
-        <div className="score-circle-container">
-          <svg className="absolute w-full h-full" viewBox="0 0 100 100">
-            <circle className="score-circle-bg" strokeWidth="8" stroke="currentColor" fill="transparent" r="45" cx="50" cy="50" />
-            <circle
-              className="score-circle-fg"
-              strokeWidth="8"
-              strokeDasharray={circumference}
-              strokeDashoffset={circumference * (1 - data.overallScore / 100)}
-              strokeLinecap="round"
-              stroke="currentColor"
-              fill="transparent"
-              r="45"
-              cx="50"
-              cy="50"
-            />
-          </svg>
-          <span className="overall-score-text">{data.overallScore}</span>
-        </div>
-        <ChartCard data={data} />
-      </div>
-      <div className="score-details-container">
-        <ScoreInfoCard title="Market Size" score={data.marketSize.score} justification={data.marketSize.justification} />
-        <ScoreInfoCard title="Feasibility" score={data.feasibility.score} justification={data.feasibility.justification} />
-        <ScoreInfoCard title="Innovation" score={data.innovation.score} justification={data.innovation.justification} />
-      </div>
+    <div className="scorecard-initial-view">
+        <h2 className="text-3xl font-bold mb-4">AI-Powered Scorecard Analysis</h2>
+        <p className="text-slate-400 mb-8 max-w-2xl mx-auto">
+            Initiate the Analysis Core to process all your venture data. The AI will generate a comprehensive scorecard on market potential, feasibility, and innovation.
+        </p>
+        <button onClick={handleAnalyze} disabled={!canAnalyze} className="cta-button">
+            Activate Analysis Core
+        </button>
+        {!canAnalyze && <p className="text-sm text-slate-500 mt-4">Please complete all previous steps first.</p>}
     </div>
   );
 };

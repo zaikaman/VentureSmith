@@ -21,6 +21,8 @@ import CustomerValidation from './CustomerValidation';
 import Placeholder from './Placeholder';
 import BrainstormIdea from './BrainstormIdea';
 import { MarketPulseCheck } from './MarketPulseCheck';
+import { MissionVision } from './MissionVision';
+import { BrandIdentity } from './BrandIdentity';
 
 import { getMentorFeedback } from '../../services/geminiService';
 import './VentureWorkspace.css';
@@ -62,13 +64,13 @@ export const VentureWorkspace: React.FC = () => {
             tasks: [
                 { id: 'brainstormIdea', name: 'Brainstorm & Refine Idea', isCompleted: !!startup?.brainstormResult },
                 { id: 'marketPulseCheck', name: 'Initial Market Pulse Check', isCompleted: !!startup?.marketPulse },
-                { id: 'defineMissionVision', name: 'Define Mission & Vision', isCompleted: false },
+                { id: 'defineMissionVision', name: 'Define Mission & Vision', isCompleted: !!startup?.missionVision },
             ]
         },
         {
             id: 'phase-2', name: 'Phase 2: Foundation & Blueprint',
             tasks: [
-                { id: 'generateNameIdentity', name: 'Generate Business Name & Identity', isCompleted: false },
+                { id: 'generateNameIdentity', name: 'Generate Business Name & Identity', isCompleted: !!startup?.brandIdentity },
                 { id: 'scorecard', name: 'AI-Powered Scorecard Analysis', isCompleted: !!startup?.dashboard },
                 { id: 'businessPlan', name: 'Develop Initial Business Plan', isCompleted: !!startup?.businessPlan },
                 { id: 'pitchDeck', name: 'Create Pitch Deck Outline', isCompleted: !!startup?.pitchDeck },
@@ -256,6 +258,12 @@ export const VentureWorkspace: React.FC = () => {
                 return <BrainstormIdea startup={startup} />;
             case 'marketPulseCheck':
                 return <MarketPulseCheck startup={startup} />;
+            case 'defineMissionVision':
+                return <MissionVision startup={startup} />;
+            case 'generateNameIdentity':
+                return <BrandIdentity startup={startup} />;
+            case 'scorecard':
+                return <Scorecard startup={startup} />;
             case 'scorecard':
                 return <Scorecard startup={startup} />;
             case 'businessPlan':
