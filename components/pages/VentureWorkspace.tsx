@@ -15,6 +15,7 @@ import { Scorecard } from './Scorecard';
 import PitchDeck from './PitchDeck';
 import { WebsitePrototype } from './WebsitePrototype';
 import { MarketResearchDisplay } from './MarketResearchDisplay';
+import { CompetitorMatrix } from './CompetitorMatrix';
 import { MentorFeedbackDisplay } from './MentorFeedbackDisplay';
 import CustomerValidation from './CustomerValidation';
 import Placeholder from './Placeholder';
@@ -23,6 +24,7 @@ import { MarketPulseCheck } from './MarketPulseCheck';
 import { MissionVision } from './MissionVision';
 import { BrandIdentity } from './BrandIdentity';
 import { BusinessPlan } from './BusinessPlan';
+import { CustomerPersonas } from './CustomerPersonas';
 
 import { getMentorFeedback } from '../../services/geminiService';
 import './VentureWorkspace.css';
@@ -80,8 +82,8 @@ export const VentureWorkspace: React.FC = () => {
             id: 'phase-3', name: 'Phase 3: Market & Customer Research',
             tasks: [
                 { id: 'marketResearch', name: 'Deep Dive Market Analysis', isCompleted: !!startup?.marketResearch },
-                { id: 'competitorMatrix', name: 'Competitor Landscape Matrix', isCompleted: false },
-                { id: 'generateCustomerPersonas', name: 'Generate Ideal Customer Personas', isCompleted: false },
+                { id: 'competitorMatrix', name: 'Competitor Landscape Matrix', isCompleted: !!startup?.competitorMatrix },
+                { id: 'generateCustomerPersonas', name: 'Generate Ideal Customer Personas', isCompleted: !!startup?.customerPersonas },
             ]
         },
         {
@@ -276,6 +278,10 @@ export const VentureWorkspace: React.FC = () => {
                 return <WebsitePrototype data={websitePrototype} idea={startup.name || ''} startupId={startup._id} />;
             case 'marketResearch':
                 return <MarketResearchDisplay startup={startup} />;
+            case 'competitorMatrix':
+                return <CompetitorMatrix startup={startup} />;
+            case 'generateCustomerPersonas':
+                return <CustomerPersonas startup={startup} />;
             case 'aiMentor':
                 if (isMentorLoading) {
                     return (

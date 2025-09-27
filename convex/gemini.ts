@@ -591,3 +591,147 @@ export const generateBrandIdentityWithAI = internalAction(
     }
   }
 );
+
+export const generateCompetitorMatrixWithAI = internalAction(
+  async (
+    _,
+    { marketResearchSummary }: { marketResearchSummary: string }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const matrixSchema = {
+      type: "OBJECT",
+      properties: {
+        matrix: {
+          type: "ARRAY",
+          description: "An array representing the competitor matrix. Each object is a competitor.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              competitor: { type: "STRING", description: "Name of the competitor." },
+              keyFeatures: { type: "STRING", description: "Their most important features." },
+              targetAudience: { type: "STRING", description: "Their primary target audience." },
+              strengths: { type: "STRING", description: "What they do well." },
+              weaknesses: { type: "STRING", description: "Where they are lacking." },
+            },
+            required: ["competitor", "keyFeatures", "targetAudience", "strengths", "weaknesses"],
+          }
+        }
+      },
+      required: ["matrix"]
+    };
+
+    const prompt = `
+      You are a strategic analyst. You have been provided with a market research summary.
+      Your task is to extract the information about competitors and structure it into a competitor landscape matrix.
+
+      **Market Research Summary:**
+      ${marketResearchSummary}
+
+      Based on the summary, identify 3-4 key competitors and fill out the matrix with details for each.
+      The output MUST be a JSON object that conforms to the provided schema.
+    `;
+
+    try {
+      console.log("--- Requesting Competitor Matrix from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: matrixSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No competitor matrix data received from Gemini API");
+      }
+
+      console.log("Competitor matrix data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get competitor matrix data:", error.message);
+      throw new Error(`Failed to get competitor matrix data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+export const generateCustomerPersonasWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const personasSchema = {
+      type: "OBJECT",
+      properties: {
+        personas: {
+          type: "ARRAY",
+          description: "An array of 4 ideal customer personas.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              name: { type: "STRING", description: "A memorable, alliterative name for the persona (e.g., 'Marketing Mary')." },
+              avatar: { type: "STRING", description: "A single, relevant emoji for the persona." },
+              demographics: { type: "STRING", description: "A short description of their age, role, and location." },
+              goals: { type: "ARRAY", items: { type: "STRING" }, description: "A list of their primary goals." },
+              painPoints: { type: "ARRAY", items: { type: "STRING" }, description: "A list of their key frustrations." },
+              motivations: { type: "ARRAY", items: { type: "STRING" }, description: "A list of what drives them." },
+            },
+            required: ["name", "avatar", "demographics", "goals", "painPoints", "motivations"],
+          }
+        }
+      },
+      required: ["personas"]
+    };
+
+    const prompt = `
+      You are a senior User Experience (UX) researcher and strategist.
+      You are tasked with creating a set of ideal customer personas based on a comprehensive startup data package.
+
+      **Startup Data Package:**
+      ${JSON.stringify(fullContext, null, 2)}
+
+      Based on the **entire** data package (idea, market, mission, brand), generate 4 distinct customer personas that would be the most likely early adopters and champions of this product.
+      For each persona, provide the details as specified in the schema. Make the details specific and actionable.
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Customer Personas from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: personasSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No customer persona data received from Gemini API");
+      }
+
+      console.log("Customer persona data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get customer persona data:", error.message);
+      throw new Error(`Failed to get customer persona data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+

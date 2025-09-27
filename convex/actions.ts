@@ -223,3 +223,55 @@ export const generateBrandIdentity = action({
     return result;
   },
 });
+
+export const generateCompetitorMatrix = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.marketResearch) {
+      throw new Error("Market Research step must be completed first.");
+    }
+
+    const marketResearchSummary = JSON.parse(startup.marketResearch).summary;
+
+    const result = await ctx.runAction(internal.gemini.generateCompetitorMatrixWithAI, {
+      marketResearchSummary,
+    });
+
+    await ctx.runMutation(api.startups.updateCompetitorMatrix, {
+      startupId,
+      competitorMatrix: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});
+
+export const generateCustomerPersonas = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.marketResearch || !startup.missionVision || !startup.brandIdentity) {
+      throw new Error("Previous steps must be completed to generate customer personas.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      refinedIdea: JSON.parse(startup.brainstormResult).refinedIdea,
+      marketResearch: JSON.parse(startup.marketResearch),
+      missionVision: JSON.parse(startup.missionVision),
+      brandIdentity: JSON.parse(startup.brandIdentity),
+    };
+
+    const result = await ctx.runAction(internal.gemini.generateCustomerPersonasWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateCustomerPersonas, {
+      startupId,
+      customerPersonas: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});
