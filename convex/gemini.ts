@@ -1476,3 +1476,94 @@ export const generateApiEndpointsWithAI = internalAction(
     }
   }
 );
+
+export const generateDevelopmentRoadmapWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const roadmapSchema = {
+      type: "OBJECT",
+      properties: {
+        roadmap: {
+          type: "ARRAY",
+          description: "The development roadmap, broken into phases.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              phase: { type: "STRING", description: "The title of the phase (e.g., 'Phase 1: MVP Foundation')." },
+              epics: {
+                type: "ARRAY",
+                description: "A list of epics within this phase.",
+                items: {
+                  type: "OBJECT",
+                  properties: {
+                    title: { type: "STRING", description: "The title of the epic." },
+                    icon: { type: "STRING", description: "A relevant Font Awesome 5 free icon class name (e.g., 'fas fa-users')." },
+                    tasks: { type: "ARRAY", items: { type: "STRING" }, description: "A list of user stories or tasks for this epic." },
+                  },
+                  required: ["title", "icon", "tasks"],
+                }
+              }
+            },
+            required: ["phase", "epics"],
+          }
+        }
+      },
+      required: ["roadmap"]
+    };
+
+    const prompt = `
+      You are a senior Project Manager and Tech Lead creating a development roadmap for a new application.
+      Based on the provided context, generate a clear, phased roadmap as a JSON object.
+
+      **Application Context:**
+      - **Core Idea & Features:** ${JSON.stringify(fullContext.brainstormResult, null, 2)}
+      - **Technology Stack:** ${JSON.stringify(fullContext.techStack, null, 2)}
+      - **Database Schema:** ${JSON.stringify(fullContext.databaseSchema, null, 2)}
+      - **API Endpoints:** ${fullContext.apiEndpoints}
+
+      **Your Task:**
+      Generate a JSON object that represents the development roadmap. The roadmap should be structured into 3-4 logical phases.
+
+      **JSON Schema Requirements:**
+      1.  The root object must have a key "roadmap" which is an array of phase objects.
+      2.  Each phase object must have a "phase" title and an array of "epics".
+      3.  Each epic object must have a "title", a suggested Font Awesome 5 free icon class name in the "icon" field (e.g., "fas fa-users", "fas fa-database", "fas fa-credit-card"), and an array of "tasks" (user stories).
+      4.  Prioritize features logically, starting with foundational elements.
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Development Roadmap from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: roadmapSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No roadmap data received from Gemini API");
+      }
+
+      console.log("Roadmap data received successfully.");
+      // The result is already a stringified JSON from the API
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get roadmap data:", error.message);
+      throw new Error(`Failed to get roadmap data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);

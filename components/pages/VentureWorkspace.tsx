@@ -31,6 +31,7 @@ import AIWireframeGenerator from './AIWireframeGenerator';
 import GenerateTechStack from './GenerateTechStack';
 import GenerateDatabaseSchema from './GenerateDatabaseSchema';
 import GenerateApiEndpoints from './GenerateApiEndpoints';
+import GenerateDevelopmentRoadmap from './GenerateDevelopmentRoadmap';
 
 import './VentureWorkspace.css';
 
@@ -281,6 +282,7 @@ export const VentureWorkspace: React.FC = () => {
             case 'generateAPIEndpoints':
                 return <GenerateApiEndpoints startup={startup} />;
             case 'generateDevelopmentRoadmap':
+                return <GenerateDevelopmentRoadmap startup={startup} />;
             case 'estimateCosts':
             default:
                 const taskName = taskNames[activeView] || "Selected Task";

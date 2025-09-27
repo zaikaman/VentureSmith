@@ -1,0 +1,250 @@
+.roadmap-container {
+    background-color: #0f172a; /* bg-slate-900 */
+    padding: 2rem;
+    border-radius: 0.5rem;
+    color: white;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.regenerate-button {
+    background-color: #1e293b; /* bg-slate-800 */
+    color: #94a3b8; /* text-slate-400 */
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #334155; /* border-slate-700 */
+    transition: all 0.2s ease-in-out;
+}
+
+.regenerate-button:hover {
+    background-color: #334155; /* bg-slate-700 */
+    color: white;
+}
+
+.regenerate-button svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.initial-view, .loading-container {
+    text-align: center;
+    padding: 3rem;
+    background-color: #1e293b; /* bg-slate-800 */
+    border-radius: 0.5rem;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cta-button {
+    background-color: #4f46e5; /* bg-indigo-600 */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.cta-button:hover {
+    background-color: #4338ca; /* bg-indigo-700 */
+}
+
+.cta-button:disabled {
+    background-color: #374151; /* bg-gray-700 */
+    cursor: not-allowed;
+}
+
+/* --- Loading Animation --- */
+.gantt-animation-container {
+    width: 90%;
+    max-width: 450px;
+    height: 200px;
+    padding: 1rem;
+    border-left: 2px solid #334155;
+    border-bottom: 2px solid #334155;
+    position: relative;
+}
+
+.gantt-bar {
+    height: 25px;
+    background-color: #4f46e5;
+    border-radius: 4px;
+    position: absolute;
+    left: 0;
+    width: 0;
+    opacity: 0;
+    animation: build-bar 2s ease-out forwards infinite;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.bar-1 { top: 20px; background-color: #6366f1; animation-duration: 3s; animation-delay: 0s; }
+.bar-2 { top: 65px; background-color: #818cf8; animation-duration: 4s; animation-delay: 0.5s; }
+.bar-3 { top: 110px; background-color: #a5b4fc; animation-duration: 3.5s; animation-delay: 1s; }
+
+.gantt-milestone {
+    position: absolute;
+    bottom: -20px;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.milestone-1 { left: 0%; }
+.milestone-2 { left: 25%; }
+.milestone-3 { left: 50%; }
+.milestone-4 { left: 75%; }
+.milestone-5 { left: 100%; transform: translateX(-50%); }
+
+@keyframes build-bar {
+    from { width: 0; opacity: 0.5; }
+    to { width: var(--final-width, 80%); opacity: 1; }
+}
+
+.loading-status-text {
+    margin-top: 2.5rem;
+    font-size: 1.1rem;
+    color: #94a3b8; /* slate-400 */
+    letter-spacing: 1px;
+}
+
+/* --- Results View --- */
+.roadmap-results-container {
+    padding: 2rem 1rem;
+    position: relative;
+}
+
+.roadmap-path {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #1e293b; /* slate-800 */
+    border-radius: 2px;
+}
+
+.phase-container {
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.phase-title {
+    background-color: #334155;
+    color: #cbd5e1;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    display: inline-block;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.epics-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.epic-card {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    width: 45%;
+    position: relative;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.epic-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Position cards left and right of the path */
+.epic-card.left { align-self: flex-start; }
+.epic-card.right { align-self: flex-end; }
+
+/* Connector line from card to path */
+.epic-card::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    height: 2px;
+    width: 5%;
+    background-color: #334155;
+}
+
+.epic-card.left::before {
+    right: -5%;
+}
+
+.epic-card.right::before {
+    left: -5%;
+}
+
+.epic-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.epic-icon {
+    background-color: #334155;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.epic-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.epic-tasks {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.epic-tasks li {
+    color: #94a3b8;
+    padding: 0.25rem 0;
+    display: flex;
+    align-items: flex-start;
+    /* Fix for long text overflowing the card */
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.epic-tasks li::before {
+    content: '\2713'; /* Checkmark */
+    color: #4f46e5;
+    margin-right: 0.75rem;
+    font-weight: bold;
+}

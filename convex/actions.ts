@@ -559,3 +559,31 @@ export const generateApiEndpoints = action({
     return result;
   },
 });
+
+export const generateDevelopmentRoadmap = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.techStack || !startup.databaseSchema || !startup.apiEndpoints) {
+      throw new Error("Brainstorming, Tech Stack, Database Schema, and API Endpoints must be completed first.");
+    }
+
+    const fullContext = {
+      brainstormResult: JSON.parse(startup.brainstormResult),
+      techStack: JSON.parse(startup.techStack),
+      databaseSchema: JSON.parse(startup.databaseSchema),
+      apiEndpoints: startup.apiEndpoints,
+    };
+
+    const result = await ctx.runAction(internal.gemini.generateDevelopmentRoadmapWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateDevelopmentRoadmap, {
+      startupId,
+      developmentRoadmap: result,
+    });
+
+    return result;
+  },
+});
