@@ -366,3 +366,30 @@ export const getMentorFeedback = action({
     return result;
   },
 });
+
+export const generateUserFlow = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.customerPersonas) {
+      throw new Error("Brainstorming and Customer Personas must be completed first.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      refinedIdea: JSON.parse(startup.brainstormResult).refinedIdea,
+      personas: JSON.parse(startup.customerPersonas).personas,
+    };
+
+    const result = await ctx.runAction(internal.gemini.generateUserFlowWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateUserFlowDiagram, {
+      startupId,
+      userFlowDiagram: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});

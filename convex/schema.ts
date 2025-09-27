@@ -26,6 +26,7 @@ export default defineSchema({
     customerPersonas: v.optional(v.string()),
     interviewScripts: v.optional(v.string()),
     customerValidation: v.optional(v.string()),
+    userFlowDiagram: v.optional(v.string()),
     aiMentor: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),

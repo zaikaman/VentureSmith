@@ -975,3 +975,104 @@ export const getMentorFeedbackWithAI = internalAction(
     }
   }
 );
+
+export const generateUserFlowWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const userFlowSchema = {
+      type: "OBJECT",
+      properties: {
+        nodes: {
+          type: "ARRAY",
+          description: "An array of nodes in the user flow diagram.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              id: { type: "STRING", description: "Unique identifier for the node." },
+              type: { type: "STRING", description: "Type of the node (e.g., 'input', 'default', 'output')." },
+              data: { 
+                type: "OBJECT",
+                properties: { 
+                  label: { type: "STRING", description: "The display text on the node." }
+                },
+                required: ["label"]
+              },
+              position: { 
+                type: "OBJECT",
+                properties: { 
+                  x: { type: "NUMBER", description: "X coordinate for the node's position." },
+                  y: { type: "NUMBER", description: "Y coordinate for the node's position." }
+                },
+                required: ["x", "y"]
+              },
+            },
+            required: ["id", "type", "data", "position"],
+          },
+        },
+        edges: {
+          type: "ARRAY",
+          description: "An array of edges connecting the nodes.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              id: { type: "STRING", description: "Unique identifier for the edge." },
+              source: { type: "STRING", description: "The ID of the source node." },
+              target: { type: "STRING", description: "The ID of the target node." },
+            },
+            required: ["id", "source", "target"],
+          },
+        },
+      },
+      required: ["nodes", "edges"],
+    };
+
+    const prompt = `
+      You are a senior UX designer tasked with creating a primary user flow diagram for a new startup.
+      Based on the provided data, map out the most common and critical path a user would take from discovery to achieving the core value proposition.
+
+      **Startup Data Package:**
+      ${JSON.stringify(fullContext, null, 2)}
+
+      **Your Task:**
+      Generate a user flow diagram with 5-7 key steps (nodes).
+      1.  Start with an entry point (e.g., 'Visits Landing Page').
+      2.  Map out the key actions and decisions a user makes (e.g., 'Signs Up', 'Completes Onboarding', 'Uses Core Feature').
+      3.  End with the user achieving the primary goal or outcome.
+      4.  Arrange the nodes logically on a 2D plane by setting their x and y positions. The flow should generally move from left to right.
+
+      Your output MUST conform to the provided JSON schema, containing an array of 'nodes' and an array of 'edges'.
+    `;
+
+    try {
+      console.log("--- Requesting User Flow Diagram from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: userFlowSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No user flow data received from Gemini API");
+      }
+
+      console.log("User flow data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get user flow data:", error.message);
+      throw new Error(`Failed to get user flow data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);

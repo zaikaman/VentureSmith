@@ -26,6 +26,7 @@ import { BrandIdentity } from './BrandIdentity';
 import { BusinessPlan } from './BusinessPlan';
 import { CustomerPersonas } from './CustomerPersonas';
 import { InterviewScripts } from './InterviewScripts';
+import UserFlowDiagram from './UserFlowDiagram';
 
 import './VentureWorkspace.css';
 
@@ -48,6 +49,7 @@ export const VentureWorkspace: React.FC = () => {
     
     const [activeView, setActiveView] = useState<TaskID>('brainstormIdea');
     const [isOverviewModalOpen, setOverviewModalOpen] = useState(false);
+    const hasSetInitialView = React.useRef(false);
 
     const startup = useQuery(
         api.startups.getStartupById, 
@@ -92,7 +94,7 @@ export const VentureWorkspace: React.FC = () => {
         {
             id: 'phase-5', name: 'Phase 5: Prototyping & UX/UI',
             tasks: [
-                { id: 'userFlowDiagrams', name: 'Generate User Flow Diagram', isCompleted: false },
+                { id: 'userFlowDiagrams', name: 'Generate User Flow Diagram', isCompleted: !!startup?.userFlowDiagram },
                 { id: 'aiWireframing', name: 'AI-Powered Wireframing', isCompleted: false },
                 { id: 'website', name: 'Build Interactive Website Prototype', isCompleted: !!startup?.website },
             ]
@@ -169,6 +171,33 @@ export const VentureWorkspace: React.FC = () => {
         }
         return { currentPhaseIndex: 0, currentStepIndex: 0 };
     }, [activeView, phases]);
+
+    React.useEffect(() => {
+        if (startup && phases.length > 0 && !hasSetInitialView.current) {
+            let latestUnfinishedStepId: TaskID | null = null;
+
+            for (const phase of phases) {
+                for (const task of phase.tasks) {
+                    if (!task.isCompleted) {
+                        latestUnfinishedStepId = task.id;
+                        break;
+                    }
+                }
+                if (latestUnfinishedStepId) {
+                    break;
+                }
+            }
+
+            if (latestUnfinishedStepId) {
+                setActiveView(latestUnfinishedStepId);
+            } else {
+                const lastPhase = phases[phases.length - 1];
+                const lastTask = lastPhase.tasks[lastPhase.tasks.length - 1];
+                setActiveView(lastTask.id);
+            }
+            hasSetInitialView.current = true;
+        }
+    }, [startup, phases]);
     
     const handleTaskClick = (taskId: TaskID) => {
         const taskIndex = allTasks.findIndex(t => t.id === taskId);
@@ -239,6 +268,8 @@ export const VentureWorkspace: React.FC = () => {
                 return <MentorFeedbackDisplay startup={startup} />;
             case 'validateProblem':
                 return <CustomerValidation startup={startup} />;
+            case 'userFlowDiagrams':
+                return <UserFlowDiagram startup={startup} />;
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;
