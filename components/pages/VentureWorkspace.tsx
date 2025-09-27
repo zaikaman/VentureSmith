@@ -20,6 +20,7 @@ import { MentorFeedbackDisplay } from './MentorFeedbackDisplay';
 import CustomerValidation from './CustomerValidation';
 import Placeholder from './Placeholder';
 import BrainstormIdea from './BrainstormIdea';
+import { MarketPulseCheck } from './MarketPulseCheck';
 
 import { getMentorFeedback } from '../../services/geminiService';
 import './VentureWorkspace.css';
@@ -60,7 +61,7 @@ export const VentureWorkspace: React.FC = () => {
             id: 'phase-1', name: 'Phase 1: Ideation & Discovery',
             tasks: [
                 { id: 'brainstormIdea', name: 'Brainstorm & Refine Idea', isCompleted: !!startup?.brainstormResult },
-                { id: 'marketPulseCheck', name: 'Initial Market Pulse Check', isCompleted: false },
+                { id: 'marketPulseCheck', name: 'Initial Market Pulse Check', isCompleted: !!startup?.marketPulse },
                 { id: 'defineMissionVision', name: 'Define Mission & Vision', isCompleted: false },
             ]
         },
@@ -253,6 +254,8 @@ export const VentureWorkspace: React.FC = () => {
         switch (activeView) {
             case 'brainstormIdea':
                 return <BrainstormIdea startup={startup} />;
+            case 'marketPulseCheck':
+                return <MarketPulseCheck startup={startup} />;
             case 'scorecard':
                 return <Scorecard startup={startup} />;
             case 'businessPlan':

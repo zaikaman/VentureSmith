@@ -117,3 +117,22 @@ export const generateBrainstormIdea = action({
     return result;
   },
 });
+
+export const getMarketPulse = action({
+  args: {
+    startupId: v.id("startups"),
+    idea: v.string(),
+  },
+  handler: async (ctx, { startupId, idea }) => {
+    const result = await ctx.runAction(internal.gemini.getMarketPulseWithAI, {
+      idea,
+    });
+
+    await ctx.runMutation(api.startups.updateMarketPulse, {
+      startupId,
+      marketPulse: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});

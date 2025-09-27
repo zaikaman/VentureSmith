@@ -1,5 +1,43 @@
 .brainstorm-idea-container {
   padding: 1rem 0;
+  position: relative; /* Add for positioning the button */
+}
+
+.brainstorm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.regenerate-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--bg-slate-800);
+  color: var(--text-slate-200);
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.regenerate-button:hover {
+  background-color: var(--bg-slate-700);
+  color: white;
+}
+
+.regenerate-button svg {
+  width: 1.25rem; /* 20px */
+  height: 1.25rem; /* 20px */
+}
+
+.regenerate-button svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .initial-idea-box {

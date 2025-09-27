@@ -313,3 +313,55 @@ export const generatePitchDeckWithAI = internalAction(
     }
   }
 );
+
+export const getMarketPulseWithAI = internalAction(
+  async (
+    _,
+    { idea }: { idea: string }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const prompt = `
+      You are a sharp and fast market analyst providing a quick "pulse check" on a startup idea.
+      Based on the idea, provide a high-level analysis.
+
+      Initial Idea: "${idea}"
+
+      Please provide the following as a JSON object:
+      1.  **marketDemand**: A score from 0 to 100 representing the potential market demand for this idea.
+      2.  **competitionLevel**: A score from 0 to 100 representing how crowded the market is.
+      3.  **growthPotential**: A score from 0 to 100 representing the potential for future growth.
+      4.  **relatedKeywords**: An array of 5-6 related search keywords or topics that are relevant to this idea.
+      5.  **summary**: A single, concise sentence summarizing the market pulse.
+
+      Ensure the output is a valid JSON object with the fields: "marketDemand", "competitionLevel", "growthPotential", "relatedKeywords", and "summary".
+    `;
+
+    try {
+      console.log("--- Requesting Market Pulse from Gemini ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No market pulse data received from Gemini API");
+      }
+
+      console.log("Market pulse data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get market pulse data:", error.message);
+      throw new Error(`Failed to get market pulse data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
