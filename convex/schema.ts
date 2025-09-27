@@ -24,6 +24,7 @@ export default defineSchema({
     brandIdentity: v.optional(v.string()),
     competitorMatrix: v.optional(v.string()),
     customerPersonas: v.optional(v.string()),
+    interviewScripts: v.optional(v.string()),
     customerValidation: v.optional(v.string()),
     aiMentor: v.optional(v.string()),
     createdAt: v.number(),

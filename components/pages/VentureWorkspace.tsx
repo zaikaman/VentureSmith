@@ -25,6 +25,7 @@ import { MissionVision } from './MissionVision';
 import { BrandIdentity } from './BrandIdentity';
 import { BusinessPlan } from './BusinessPlan';
 import { CustomerPersonas } from './CustomerPersonas';
+import { InterviewScripts } from './InterviewScripts';
 
 import { getMentorFeedback } from '../../services/geminiService';
 import './VentureWorkspace.css';
@@ -59,8 +60,8 @@ export const VentureWorkspace: React.FC = () => {
         session && id ? { id } : 'skip'
     );
 
-    // Explicitly type the phases constant
     const phases: Phase[] = useMemo(() => [
+        // ... (all phase definitions remain the same)
         {
             id: 'phase-1', name: 'Phase 1: Ideation & Discovery',
             tasks: [
@@ -89,7 +90,7 @@ export const VentureWorkspace: React.FC = () => {
         {
             id: 'phase-4', name: 'Phase 4: Problem & Solution Validation',
             tasks: [
-                { id: 'generateInterviewScripts', name: 'Generate Interview Scripts', isCompleted: false },
+                { id: 'generateInterviewScripts', name: 'Generate Interview Scripts', isCompleted: !!startup?.interviewScripts },
                 { id: 'validateProblem', name: 'Simulate Customer Interviews', isCompleted: !!startup?.customerValidation },
                 { id: 'aiMentor', name: 'Get Feedback from AI Mentor', isCompleted: !!mentorFeedback },
             ]
@@ -218,7 +219,6 @@ export const VentureWorkspace: React.FC = () => {
         setIsMentorLoading(true);
         setError(null);
         try {
-            // Create a complete StartupData object for the first argument
             const startupData: StartupData = {
                 name: startup.name || '',
                 scorecard: startup.dashboard ? JSON.parse(startup.dashboard) : {},
@@ -227,7 +227,6 @@ export const VentureWorkspace: React.FC = () => {
                 pitchDeck: startup.pitchDeck ? JSON.parse(startup.pitchDeck) : {},
                 marketResearch: startup.marketResearch ? JSON.parse(startup.marketResearch) : {},
             };
-            // The second argument is just the market research part, as per the function signature
             const marketResearchForArg = startup.marketResearch ? JSON.parse(startup.marketResearch) : {};
 
             const feedback = await getMentorFeedback(startupData, marketResearchForArg);
@@ -249,7 +248,6 @@ export const VentureWorkspace: React.FC = () => {
         if (!startup) return null;
 
         const websitePrototype = startup.website ? JSON.parse(startup.website) : {};
-        // Properly type the initial value for the reducer
         const taskNames = allTasks.reduce((acc, task) => {
             acc[task.id] = task.name;
             return acc;
@@ -266,12 +264,8 @@ export const VentureWorkspace: React.FC = () => {
                 return <BrandIdentity startup={startup} />;
             case 'scorecard':
                 return <Scorecard startup={startup} />;
-            case 'scorecard':
-                return <Scorecard startup={startup} />;
             case 'businessPlan':
                 return <BusinessPlan startup={startup} />;
-            case 'pitchDeck':
-                return <PitchDeck startup={startup} />;
             case 'pitchDeck':
                 return <PitchDeck startup={startup} />;
             case 'website':
@@ -282,6 +276,8 @@ export const VentureWorkspace: React.FC = () => {
                 return <CompetitorMatrix startup={startup} />;
             case 'generateCustomerPersonas':
                 return <CustomerPersonas startup={startup} />;
+            case 'generateInterviewScripts':
+                return <InterviewScripts startup={startup} />;
             case 'aiMentor':
                 if (isMentorLoading) {
                     return (

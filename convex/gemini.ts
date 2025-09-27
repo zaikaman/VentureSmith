@@ -14,7 +14,9 @@ export const summarizeMarketContent = internalAction(
     const ai = new GoogleGenAI({ apiKey });
 
     const contentString = scrapedContent
-      .map(page => `--- Source: ${page.title} (${page.url}) ---\n\n${page.markdown}`)
+      .map(page => `--- Source: ${page.title} (${page.url}) ---
+
+${page.markdown}`)
       .join("\n\n");
 
     const prompt = `
@@ -685,6 +687,7 @@ export const generateCustomerPersonasWithAI = internalAction(
               name: { type: "STRING", description: "A memorable, alliterative name for the persona (e.g., 'Marketing Mary')." },
               avatar: { type: "STRING", description: "A single, relevant emoji for the persona." },
               demographics: { type: "STRING", description: "A short description of their age, role, and location." },
+              gender: { type: "STRING", description: "The gender of the persona ('male' or 'female')." },
               goals: { type: "ARRAY", items: { type: "STRING" }, description: "A list of their primary goals." },
               painPoints: { type: "ARRAY", items: { type: "STRING" }, description: "A list of their key frustrations." },
               motivations: { type: "ARRAY", items: { type: "STRING" }, description: "A list of what drives them." },
@@ -703,8 +706,8 @@ export const generateCustomerPersonasWithAI = internalAction(
       **Startup Data Package:**
       ${JSON.stringify(fullContext, null, 2)}
 
-      Based on the **entire** data package (idea, market, mission, brand), generate 4 distinct customer personas that would be the most likely early adopters and champions of this product.
-      For each persona, provide the details as specified in the schema. Make the details specific and actionable.
+      Based on the **entire** data package (idea, market, mission, brand), generate 4 distinct customer personas that would be the most likely early adopters and champions of this product. It is crucial that you generate exactly 2 male personas and 2 female personas.
+      For each persona, provide the details as specified in the schema, including their gender ('male' or 'female'). Make the details specific and actionable.
 
       Your output MUST conform to the provided JSON schema.
     `;
@@ -735,3 +738,157 @@ export const generateCustomerPersonasWithAI = internalAction(
   }
 );
 
+export const generateInterviewScriptsWithAI = internalAction(
+  async (
+    _,
+    { refinedIdea, personas }: { refinedIdea: string, personas: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const scriptsSchema = {
+      type: "OBJECT",
+      properties: {
+        scripts: {
+          type: "ARRAY",
+          description: "An array of interview scripts, one for each customer persona.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              personaName: { type: "STRING", description: "The name of the persona this script targets." },
+              introduction: { type: "ARRAY", items: { type: "STRING" }, description: "Opening lines to build rapport." },
+              problemDiscovery: { type: "ARRAY", items: { type: "STRING" }, description: "Questions to validate the persona's problems." },
+              solutionValidation: { type: "ARRAY", items: { type: "STRING" }, description: "Questions to get feedback on the proposed solution." },
+              wrapUp: { type: "ARRAY", items: { type: "STRING" }, description: "Closing lines for the interview." },
+            },
+            required: ["personaName", "introduction", "problemDiscovery", "solutionValidation", "wrapUp"],
+          }
+        }
+      },
+      required: ["scripts"]
+    };
+
+    const prompt = `
+      You are a professional UX researcher creating scripts for customer interviews.
+      Your goal is to validate the problems and proposed solution for a new startup.
+
+      **Startup Idea:** "${refinedIdea}"
+
+      **Target Personas:**
+      ${JSON.stringify(personas, null, 2)}
+
+      Based on the startup idea and the specific personas provided, generate a detailed interview script for EACH persona.
+      The questions should be open-ended and designed to elicit detailed stories and feedback, not just yes/no answers.
+      Tailor the language and questions to be appropriate for each specific persona.
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Interview Scripts from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: scriptsSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No interview script data received from Gemini API");
+      }
+
+      console.log("Interview script data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get interview script data:", error.message);
+      throw new Error(`Failed to get interview script data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+export const runInterviewSimulationsWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const simulationSchema = {
+      type: "OBJECT",
+      properties: {
+        simulations: {
+          type: "ARRAY",
+          description: "An array of feedback simulations, one for each customer persona.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              personaName: { type: "STRING", description: "The name of the persona providing feedback." },
+              keyPositiveFeedback: { type: "ARRAY", items: { type: "STRING" }, description: "A list of 2-3 key positive points the persona loved." },
+              criticalConcerns: { type: "ARRAY", items: { type: "STRING" }, description: "A list of 2-3 critical concerns or things they disliked." },
+              unansweredQuestions: { type: "ARRAY", items: { type: "STRING" }, description: "A list of 2-3 lingering questions they have." },
+            },
+            required: ["personaName", "keyPositiveFeedback", "criticalConcerns", "unansweredQuestions"],
+          }
+        }
+      },
+      required: ["simulations"]
+    };
+
+    const prompt = `
+      You are an AI acting as a virtual focus group. You will embody the 4 customer personas provided and give feedback on a startup idea.
+      You have been given a complete data package for the startup, including the personas you need to simulate.
+
+      **Startup Data Package:**
+      ${JSON.stringify(fullContext, null, 2)}
+
+      **Your Task:**
+      Carefully review the ENTIRE data package (the idea, market, mission, brand, etc.).
+      Then, for EACH of the 4 personas listed in the 'customerPersonas' section, provide their simulated feedback on the startup concept.
+      Imagine you have just been pitched the idea. What is your gut reaction as that specific persona?
+
+      The personas to simulate are: ${fullContext.customerPersonas.personas.map((p: any) => p.name).join(", ")}.
+
+      Provide the feedback for all 4 personas. For each one, detail:
+      1.  **Key Positive Feedback:** What aspects of the idea excite them the most? What makes them say "Wow, I need this"?
+      2.  **Critical Concerns:** What are their biggest worries or objections? What would stop them from using this product?
+      3.  **Unanswered Questions:** What do they still need to know before they are convinced?
+
+      Your output MUST conform to the provided JSON schema. Ensure the feedback is distinct and believable for each persona.
+    `;
+
+    try {
+      console.log("--- Requesting Interview Simulations from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: simulationSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No simulation data received from Gemini API");
+      }
+
+      console.log("Simulation data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get simulation data:", error.message);
+      throw new Error(`Failed to get simulation data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);

@@ -275,3 +275,59 @@ export const generateCustomerPersonas = action({
     return result;
   },
 });
+
+export const generateInterviewScripts = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.customerPersonas) {
+      throw new Error("Customer Personas must be generated first.");
+    }
+
+    const refinedIdea = JSON.parse(startup.brainstormResult).refinedIdea;
+    const personas = JSON.parse(startup.customerPersonas).personas;
+
+    const result = await ctx.runAction(internal.gemini.generateInterviewScriptsWithAI, {
+      refinedIdea,
+      personas,
+    });
+
+    await ctx.runMutation(api.startups.updateInterviewScripts, {
+      startupId,
+      interviewScripts: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});
+
+export const runInterviewSimulations = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.marketPulse || !startup.missionVision || !startup.brandIdentity || !startup.customerPersonas || !startup.interviewScripts) {
+      throw new Error("All previous steps must be completed to run interview simulations.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      refinedIdea: JSON.parse(startup.brainstormResult).refinedIdea,
+      marketPulse: JSON.parse(startup.marketPulse),
+      missionVision: JSON.parse(startup.missionVision),
+      brandIdentity: JSON.parse(startup.brandIdentity),
+      customerPersonas: JSON.parse(startup.customerPersonas),
+      interviewScripts: JSON.parse(startup.interviewScripts),
+    };
+
+    const result = await ctx.runAction(internal.gemini.runInterviewSimulationsWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateCustomerValidation, {
+      startupId,
+      customerValidation: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});

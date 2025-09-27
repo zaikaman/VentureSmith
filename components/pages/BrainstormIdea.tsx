@@ -89,23 +89,23 @@ const BrainstormIdea: React.FC<BrainstormIdeaProps> = ({ startup }) => {
     <div className={`results-grid visible ${hasJustSynthesized ? 'with-delay' : ''}`}>
         {/* Cards with icons will be rendered here */}
         <div className="info-card refined-idea-card">
-            <div className="card-header"><div className="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" /></svg></div><h3 className="card-title">Refined Idea</h3></div>
+            <div className="card-header"><div className="card-icon"><i className="fa-solid fa-user-check"></i></div><h3 className="card-title">Refined Idea</h3></div>
             <p className="card-content">{cleanText(result!.refinedIdea)}</p>
         </div>
         <div className="info-card">
-            <div className="card-header"><div className="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div><h3 className="card-title">Key Features</h3></div>
+            <div className="card-header"><div className="card-icon"><i className="fa-solid fa-check-circle"></i></div><h3 className="card-title">Key Features</h3></div>
             <ul className="card-list">{(result!.keyFeatures || []).map((feature, i) => <li key={i}>{cleanText(feature)}</li>)}</ul>
         </div>
         <div className="info-card">
-            <div className="card-header"><div className="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503-8.495l.928.928M3.75 9.75l.928-.928M15.75 9.75l-.928-.928M5.625 19.125l-.928.928M18.375 19.125l.928.928M12 21a9 9 0 110-18 9 9 0 010 18z" /></svg></div><h3 className="card-title">Potential Angles</h3></div>
+            <div className="card-header"><div className="card-icon"><i className="fa-solid fa-lightbulb"></i></div><h3 className="card-title">Potential Angles</h3></div>
             <ul className="card-list">{(result!.potentialAngles || []).map((angle, i) => <li key={i}>{cleanText(angle)}</li>)}</ul>
         </div>
         <div className="info-card">
-            <div className="card-header"><div className="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z" /></svg></div><h3 className="card-title">Initial Concerns</h3></div>
+            <div className="card-header"><div className="card-icon"><i className="fa-solid fa-triangle-exclamation"></i></div><h3 className="card-title">Initial Concerns</h3></div>
             <ul className="card-list">{(result!.initialConcerns || []).map((concern, i) => <li key={i}>{cleanText(concern)}</li>)}</ul>
         </div>
         <div className="info-card">
-            <div className="card-header"><div className="card-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div><h3 className="card-title">Competitive Advantage</h3></div>
+            <div className="card-header"><div className="card-icon"><i className="fa-solid fa-shield-halved"></i></div><h3 className="card-title">Competitive Advantage</h3></div>
             <ul className="card-list">{(result!.competitiveAdvantage || []).map((advantage, i) => <li key={i}>{cleanText(advantage)}</li>)}</ul>
         </div>
     </div>
