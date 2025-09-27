@@ -1,102 +1,84 @@
+/* MarketResearchDisplay.css - Refactored for "Data Stream" */
 
-.market-research-container {
-    /* Main container styles are handled by workspace-content */
+.mr-initial-view, .dossier-container {
+    padding: 2rem;
 }
 
-.mr-header {
-    padding-bottom: 1.5rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border-slate-700);
+.mr-initial-view { text-align: center; }
+.mr-initial-view .cta-button:disabled { background-color: var(--bg-slate-700); cursor: not-allowed; opacity: 0.6; }
+
+/* --- Data Stream Animation --- */
+.data-stream-container {
+    height: 600px;
+    width: 100%;
+    position: relative;
+    background-color: #020617;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.mr-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-color);
-    margin-bottom: 0.5rem;
+.stream-core {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.5) 0%, rgba(56, 189, 248, 0) 70%);
+    animation: pulseCore 2s infinite ease-in-out;
 }
 
-.mr-topic {
-    font-size: 1.125rem;
-    color: var(--text-slate-400);
+.stream-line {
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, #60a5fa, transparent);
+    left: calc(var(--index) * 2%);
+    animation: flow-down 3s linear infinite;
+    animation-delay: calc(var(--index) * 0.1s);
 }
 
-.mr-summary {
+@keyframes flow-down {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(100%); }
+}
+
+.stream-status-text { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: #94a3b8; font-size: 1rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; animation: pulseText 2s infinite; }
+
+/* --- Dossier Results View --- */
+.dossier-container { animation: fadeInResults 1s forwards; }
+.header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+
+.dossier-content {
+    background: var(--bg-slate-800);
+    border: 1px solid var(--border-slate-700);
+    border-radius: 12px;
+    padding: 2rem;
     color: var(--text-slate-300);
     line-height: 1.7;
 }
 
-/* Markdown Component Styles */
-.md-h3 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: var(--primary-color);
+.md-h3 { font-size: 1.75rem; font-weight: 600; color: #a5b4fc; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-slate-700); padding-bottom: 0.5rem; }
+.md-h4 { font-size: 1.5rem; font-weight: 600; color: var(--text-slate-200); margin-top: 1.5rem; margin-bottom: 1rem; }
+.md-p { margin-bottom: 1rem; }
+.md-ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+.md-li { margin-bottom: 0.5rem; }
+.md-strong { color: var(--text-slate-200); font-weight: 700; }
+
+.dossier-sources {
     margin-top: 2rem;
-    margin-bottom: 1rem;
+    padding: 1.5rem;
+    background: var(--bg-slate-800);
+    border: 1px solid var(--border-slate-700);
+    border-radius: 12px;
 }
 
-.md-h4 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-slate-200);
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-}
+.dossier-sources h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; }
+.dossier-sources ul { list-style: none; padding: 0; }
+.dossier-sources li a { color: #60a5fa; text-decoration: none; transition: color 0.2s; }
+.dossier-sources li a:hover { text-decoration: underline; }
 
-.md-h5 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--text-slate-200);
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-}
-
-.md-p {
-    margin-bottom: 1rem;
-}
-
-.md-ul {
-    list-style-type: disc;
-    padding-left: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.md-li {
-    margin-bottom: 0.5rem;
-}
-
-.md-strong {
-    color: var(--text-slate-200);
-}
-
-.mr-sources {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border-slate-700);
-}
-
-.mr-sources-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--text-slate-200);
-    margin-bottom: 1rem;
-}
-
-.mr-sources-list {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.mr-sources-list a {
-    color: var(--primary-color);
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.mr-sources-list a:hover {
-    color: var(--primary-color);
-    text-decoration: underline;
-}
+/* Regenerate Button */
+.regenerate-button { display: flex; align-items: center; gap: 0.5rem; background-color: var(--bg-slate-800); color: var(--text-slate-200); padding: 0.75rem 1.5rem; border-radius: 9999px; font-size: 0.95rem; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.2s; }
+.regenerate-button:hover { background-color: var(--bg-slate-700); color: white; }
+.regenerate-button svg { width: 1.25rem; height: 1.25rem; }

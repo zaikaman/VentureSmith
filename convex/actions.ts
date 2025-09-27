@@ -112,13 +112,17 @@ export const generatePitchDeck = action({
 });
 
 export const generateMarketResearch = action({
-  args: {
-    startupId: v.id("startups"),
-    idea: v.string(),
-  },
-  handler: async (ctx, { startupId, idea }) => {
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult) {
+      throw new Error("Brainstorm step must be completed first.");
+    }
+
+    const refinedIdea = JSON.parse(startup.brainstormResult).refinedIdea;
+
     const result = await ctx.runAction(api.firecrawl.performMarketAnalysis, {
-      keyword: idea,
+      keyword: refinedIdea,
     });
 
     await ctx.runMutation(api.startups.updateMarketResearch, {
