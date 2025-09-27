@@ -393,3 +393,41 @@ export const generateUserFlow = action({
     return result;
   },
 });
+
+export const generateAIWireframe = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+
+    if (
+      !startup ||
+      !startup.brainstormResult ||
+      !startup.brandIdentity ||
+      !startup.missionVision ||
+      !startup.customerPersonas ||
+      !startup.userFlowDiagram
+    ) {
+      throw new Error("Not all prerequisite steps have been completed. Please generate the Idea, Brand Identity, Mission/Vision, Customer Personas, and User Flow Diagram first.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      refinedIdea: JSON.parse(startup.brainstormResult).refinedIdea,
+      brandIdentity: JSON.parse(startup.brandIdentity),
+      missionVision: JSON.parse(startup.missionVision),
+      customerPersonas: JSON.parse(startup.customerPersonas).personas,
+      userFlow: JSON.parse(startup.userFlowDiagram),
+    };
+
+    const result = await ctx.runAction(internal.gemini.generateAIWireframeWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateAIWireframe, {
+      startupId,
+      aiWireframe: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});

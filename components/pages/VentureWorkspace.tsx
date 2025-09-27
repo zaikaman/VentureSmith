@@ -27,6 +27,7 @@ import { BusinessPlan } from './BusinessPlan';
 import { CustomerPersonas } from './CustomerPersonas';
 import { InterviewScripts } from './InterviewScripts';
 import UserFlowDiagram from './UserFlowDiagram';
+import AIWireframeGenerator from './AIWireframeGenerator';
 
 import './VentureWorkspace.css';
 
@@ -95,7 +96,7 @@ export const VentureWorkspace: React.FC = () => {
             id: 'phase-5', name: 'Phase 5: Prototyping & UX/UI',
             tasks: [
                 { id: 'userFlowDiagrams', name: 'Generate User Flow Diagram', isCompleted: !!startup?.userFlowDiagram },
-                { id: 'aiWireframing', name: 'AI-Powered Wireframing', isCompleted: false },
+                { id: 'aiWireframing', name: 'AI-Powered Wireframing', isCompleted: !!startup?.aiWireframe },
                 { id: 'website', name: 'Build Interactive Website Prototype', isCompleted: !!startup?.website },
             ]
         },
@@ -270,6 +271,8 @@ export const VentureWorkspace: React.FC = () => {
                 return <CustomerValidation startup={startup} />;
             case 'userFlowDiagrams':
                 return <UserFlowDiagram startup={startup} />;
+            case 'aiWireframing':
+                return <AIWireframeGenerator startup={startup} />;
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;

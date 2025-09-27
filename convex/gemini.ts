@@ -1072,7 +1072,153 @@ export const generateUserFlowWithAI = internalAction(
 
     } catch (error: any) {
       console.error("Failed to get user flow data:", error.message);
-      throw new Error(`Failed to get user flow data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+export const generateAIWireframeWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const wireframeSchema = {
+      type: "OBJECT",
+      properties: {
+        code: { 
+          type: "STRING", 
+          description: "A single string containing the complete, self-contained React component code for the wireframe. It should be named WireframeComponent and use inline style objects for all styling."
+        },
+      },
+      required: ["code"]
+    };
+
+    const prompt = `
+      You are a skilled UX/UI designer specializing in rapid, low-fidelity wireframing using React.
+      You are tasked with creating a clean, simple wireframe component for a startup's main landing page based on its core data.
+
+      **Startup Data Package:**
+      ${JSON.stringify(fullContext, null, 2)}
+
+      **Your Task:**
+      Generate a single, self-contained React component named 'WireframeComponent'. This is NOT a full website design; it is a structural blueprint.
+
+      **Requirements:**
+      1.  **Format:** A single React component. Use inline style objects for all styling. Do not use CSS classes.
+      2.  **No Modules:** Do NOT include any \`import\` or \`export\` statements. The code must be a single, self-contained component definition.
+      3.  **Simplicity:** Use only basic JSX elements (div, header, footer, p, h1, etc.). Represent images and complex elements with simple placeholder boxes.
+      4.  **Styling:** Use a monochrome color scheme (e.g., shades of gray like '#ccc', '#eee', '#333'). Use dashed borders for placeholder elements. Keep it clean and minimal.
+      5.  **Structure:** The wireframe must include placeholders for:
+          - A main navigation bar.
+          - A hero section with a headline and a call-to-action button.
+          - Three feature boxes below the hero section.
+          - A footer.
+      6.  **Content:** Use placeholder text (e.g., "[Headline]", "[Feature 1 Description]") for content, but use the actual startup name from the context data.
+
+      Your output MUST conform to the provided JSON schema, returning a single JSON object with the 'code' field containing the entire React component as a string.
+    `;
+
+    try {
+      console.log("--- Requesting AI Wireframe from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: wireframeSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No wireframe data received from Gemini API");
+      }
+
+      console.log("AI Wireframe data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get AI wireframe data:", error.message);
+      throw new Error(`Failed to get AI wireframe data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+export const generateWebsitePrototypeWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const prototypeSchema = {
+      type: "OBJECT",
+      properties: {
+        code: { 
+          type: "STRING", 
+          description: "A single string containing the complete, self-contained React component code for the landing page. It should be named LandingPageComponent and use inline style objects for all styling."
+        },
+      },
+      required: ["code"]
+    };
+
+    const prompt = `
+      You are a senior frontend developer tasked with building a beautiful, modern, and complete landing page for a new startup.
+      You will be given the full context of the startup and must generate a single, self-contained React component.
+
+      **Startup Data Package:**
+      ${JSON.stringify(fullContext, null, 2)}
+
+      **Your Task:**
+      Generate a single, self-contained React component named 'LandingPageComponent'. This is a fully designed prototype, not just a wireframe.
+
+      **Requirements:**
+      1.  **Format:** A single React component. Use inline style objects for all styling. Do not use CSS classes.
+      2.  **No Modules:** Do NOT include any \`import\` or \`export\` statements.
+      3.  **Styling:** Use a professional and aesthetically pleasing color palette. Use a modern, clean font. Ensure proper spacing and layout. This should look like a real, polished website.
+      4.  **Structure:** The component must include:
+          - A navigation bar with the startup's name.
+          - A compelling hero section with a strong headline, a sub-headline, and a primary call-to-action (CTA) button.
+          - A 'Features' section highlighting 3 key features from the data package. Each feature should have an icon (use a relevant emoji), a title, and a brief description.
+          - A 'Testimonials' section with 2-3 sample testimonials. Each testimonial should include a quote, an author name, and their title.
+          - A final CTA section with a headline and another button.
+          - A simple footer with the company name and copyright.
+      5.  **Content:** Use the actual startup name, slogan, features, and other relevant information from the provided data package. Make the copy engaging and persuasive.
+
+      Your output MUST conform to the provided JSON schema, returning a single JSON object with the 'code' field containing the entire React component as a string.
+    `;
+
+    try {
+      console.log("--- Requesting Website Prototype from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: prototypeSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No website prototype data received from Gemini API");
+      }
+
+      console.log("Website prototype data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get website prototype data:", error.message);
+      throw new Error(`Failed to get website prototype data from Gemini API. Error: ${error.message}`);
     }
   }
 );
