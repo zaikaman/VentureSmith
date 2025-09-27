@@ -92,7 +92,7 @@ export const getStartupById = query({
 export const updateWebsitePrototype = mutation({
   args: { 
     startupId: v.id("startups"), 
-    newCode: v.string(),
+    website: v.string(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -111,12 +111,9 @@ export const updateWebsitePrototype = mutation({
       throw new Error("Not authorized to update this startup");
     }
 
-    // Create the new website object
-    const newWebsiteData = { code: args.newCode };
-
     // Update the startup document
     await ctx.db.patch(args.startupId, {
-      website: JSON.stringify(newWebsiteData, null, 2),
+      website: args.website,
     });
 
     return { success: true };

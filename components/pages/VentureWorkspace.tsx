@@ -256,7 +256,7 @@ export const VentureWorkspace: React.FC = () => {
             case 'pitchDeck':
                 return <PitchDeck startup={startup} />;
             case 'website':
-                return <WebsitePrototype data={websitePrototype} idea={startup.name || ''} startupId={startup._id} />;
+                return <WebsitePrototype startup={startup} />;
             case 'marketResearch':
                 return <MarketResearchDisplay startup={startup} />;
             case 'competitorMatrix':

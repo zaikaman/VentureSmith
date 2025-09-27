@@ -423,9 +423,44 @@ export const generateAIWireframe = action({
       fullContext,
     });
 
-    await ctx.runMutation(api.startups.updateAIWireframe, {
+    return result;
+  },
+});
+
+export const generateWebsitePrototype = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+
+    if (
+      !startup ||
+      !startup.brainstormResult ||
+      !startup.brandIdentity ||
+      !startup.missionVision ||
+      !startup.customerPersonas ||
+      !startup.userFlowDiagram ||
+      !startup.aiWireframe
+    ) {
+      throw new Error("Not all prerequisite steps have been completed. Please ensure all previous generation steps, including the AI Wireframe, are complete.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      refinedIdea: JSON.parse(startup.brainstormResult).refinedIdea,
+      brandIdentity: JSON.parse(startup.brandIdentity),
+      missionVision: JSON.parse(startup.missionVision),
+      customerPersonas: JSON.parse(startup.customerPersonas).personas,
+      userFlow: JSON.parse(startup.userFlowDiagram),
+      aiWireframe: JSON.parse(startup.aiWireframe).code,
+    };
+
+    const result = await ctx.runAction(internal.gemini.generateWebsitePrototypeWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateWebsitePrototype, {
       startupId,
-      aiWireframe: JSON.stringify(result),
+      website: JSON.stringify(result),
     });
 
     return result;
