@@ -30,6 +30,10 @@ export default defineSchema({
     aiWireframe: v.optional(v.string()),
     aiMentor: v.optional(v.string()),
     techStack: v.optional(v.string()),
+    databaseSchema: v.optional(v.string()),
+    apiEndpoints: v.optional(v.string()),
+    developmentRoadmap: v.optional(v.string()),
+    costEstimate: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),
 });

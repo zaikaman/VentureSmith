@@ -29,6 +29,7 @@ import { InterviewScripts } from './InterviewScripts';
 import UserFlowDiagram from './UserFlowDiagram';
 import AIWireframeGenerator from './AIWireframeGenerator';
 import GenerateTechStack from './GenerateTechStack';
+import GenerateDatabaseSchema from './GenerateDatabaseSchema';
 
 import './VentureWorkspace.css';
 
@@ -275,6 +276,7 @@ export const VentureWorkspace: React.FC = () => {
             case 'generateTechStack':
                 return <GenerateTechStack startup={startup} />;
             case 'generateDatabaseSchema':
+                return <GenerateDatabaseSchema startup={startup} />;
             case 'generateAPIEndpoints':
             case 'generateDevelopmentRoadmap':
             case 'estimateCosts':

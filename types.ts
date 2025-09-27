@@ -44,6 +44,7 @@ export interface StartupData {
   websitePrototype: WebsitePrototypeData;
   pitchDeck: PitchDeckData;
   marketResearch: MarketResearchData;
+  databaseSchema?: string;
 }
 
 export type TaskID =

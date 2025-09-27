@@ -1307,3 +1307,106 @@ export const generateTechStackWithAI = internalAction(
     }
   }
 );
+
+export const generateDatabaseSchema = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const reactFlowSchema = {
+        type: "OBJECT",
+        properties: {
+            nodes: {
+                type: "ARRAY",
+                description: "An array of nodes representing database tables.",
+                items: {
+                    type: "OBJECT",
+                    properties: {
+                        id: { type: "STRING", description: "Unique identifier for the node (table name)." },
+                        type: { type: "STRING", description: "Type of the node, should be 'default'." },
+                        data: { 
+                            type: "OBJECT",
+                            properties: { 
+                                label: { type: "STRING", description: "The table definition, including name, columns, types, and keys (PK, FK). Format as a multi-line string." }
+                            },
+                            required: ["label"]
+                        },
+                        position: { 
+                            type: "OBJECT",
+                            properties: { 
+                                x: { type: "NUMBER", description: "X coordinate for the node's position." },
+                                y: { type: "NUMBER", description: "Y coordinate for the node's position." }
+                            },
+                            required: ["x", "y"]
+                        },
+                    },
+                    required: ["id", "type", "data", "position"],
+                },
+            },
+            edges: {
+                type: "ARRAY",
+                description: "An array of edges representing relationships between tables.",
+                items: {
+                    type: "OBJECT",
+                    properties: {
+                        id: { type: "STRING", description: "Unique identifier for the edge (e.g., 'users-user_profiles')." },
+                        source: { type: "STRING", description: "The ID of the source table node." },
+                        target: { type: "STRING", description: "The ID of the target table node." },
+                        label: { type: "STRING", description: "Label for the relationship (e.g., 'has one', 'has many')." },
+                    },
+                    required: ["id", "source", "target", "label"],
+                },
+            },
+        },
+        required: ["nodes", "edges"],
+    };
+
+    const prompt = `
+      You are a senior database architect creating a visual schema for a new application.
+      Based on the provided application context, generate a database schema as a JSON object suitable for the React Flow library.
+
+      **Startup Context:**
+      - **Core Idea & Features:** ${JSON.stringify(fullContext.brainstormResult, null, 2)}
+      - **Primary User Flow:** ${JSON.stringify(fullContext.userFlowDiagram, null, 2)}
+
+      **Your Task:**
+      Generate a JSON object containing 'nodes' and 'edges' to represent the database schema.
+
+      **Requirements:**
+      1.  **Nodes:** Each node represents a database table. The 'id' should be the table name. The 'data.label' should be a multi-line string containing the full table definition (name, columns with types, and PK/FK designations).
+      2.  **Edges:** Each edge represents a relationship between two tables. The 'label' should describe the relationship (e.g., '1-to-many').
+      3.  **Layout:** Arrange the nodes logically on a 2D plane by setting their x and y positions. The flow should be clear and minimize overlapping edges.
+      4.  **Schema:** The output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Database Schema (React Flow format) from Gemini ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: reactFlowSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No schema data received from Gemini API");
+      }
+
+      console.log("Database Schema data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get Database Schema data:", error.message);
+      throw new Error(`Failed to get Database Schema data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);

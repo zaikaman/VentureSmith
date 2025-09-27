@@ -467,6 +467,32 @@ export const generateTechStack = action({
   },
 });
 
+export const createDatabaseSchema = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.userFlowDiagram) {
+      throw new Error("Brainstorming and User Flow must be completed first.");
+    }
+
+    const fullContext = {
+      brainstormResult: JSON.parse(startup.brainstormResult),
+      userFlowDiagram: JSON.parse(startup.userFlowDiagram),
+    };
+
+    const result = await ctx.runAction(internal.gemini.generateDatabaseSchema, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateDatabaseSchema, {
+      startupId,
+      databaseSchema: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});
+
 export const generateWebsitePrototype = action({
   args: { startupId: v.id("startups") },
   handler: async (ctx, { startupId }) => {
