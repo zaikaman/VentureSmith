@@ -1222,3 +1222,88 @@ export const generateWebsitePrototypeWithAI = internalAction(
     }
   }
 );
+
+export const generateTechStackWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const techStackSchema = {
+      type: "OBJECT",
+      properties: {
+        stack: {
+          type: "ARRAY",
+          description: "An array of technology categories.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              category: { type: "STRING", description: "The category name (e.g., Frontend, Backend, Database)." },
+              technologies: {
+                type: "ARRAY",
+                description: "An array of recommended technologies in this category.",
+                items: {
+                  type: "OBJECT",
+                  properties: {
+                    name: { type: "STRING", description: "The name of the technology." },
+                    justification: { type: "STRING", description: "A concise reason for choosing this technology for this specific startup." },
+                  },
+                  required: ["name", "justification"],
+                }
+              }
+            },
+            required: ["category", "technologies"],
+          }
+        }
+      },
+      required: ["stack"]
+    };
+
+    const prompt = `
+      You are a seasoned Chief Technology Officer (CTO) and startup architect.
+      You are tasked with recommending a complete, modern, and scalable technology stack for a new venture based on its full context.
+
+      **Startup Data Package:**
+      ${JSON.stringify(fullContext, null, 2)}
+
+      **Your Task:**
+      Based on the **entire** data package, recommend a technology stack. The stack should be divided into four categories: 'Frontend', 'Backend', 'Database', and 'Deployment'.
+
+      **Requirements:**
+      1.  For each category, recommend exactly 2 primary technologies.
+      2.  For each technology, provide a concise **justification** explaining why it's a good fit for this specific startup idea.
+      3.  The choices should be modern, widely-used, and suitable for a startup aiming for rapid development and scalability.
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Tech Stack from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: techStackSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No tech stack data received from Gemini API");
+      }
+
+      console.log("Tech stack data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to get tech stack data:", error.message);
+      throw new Error(`Failed to get tech stack data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);

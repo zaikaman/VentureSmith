@@ -423,6 +423,46 @@ export const generateAIWireframe = action({
       fullContext,
     });
 
+    await ctx.runMutation(api.startups.updateAIWireframe, {
+      startupId,
+      aiWireframe: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});
+
+export const generateTechStack = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+
+    // Consolidate all necessary data into fullContext
+    const fullContext = {
+      name: startup?.name,
+      idea: startup?.idea,
+      brainstormResult: startup?.brainstormResult ? JSON.parse(startup.brainstormResult) : undefined,
+      marketPulse: startup?.marketPulse ? JSON.parse(startup.marketPulse) : undefined,
+      missionVision: startup?.missionVision ? JSON.parse(startup.missionVision) : undefined,
+      brandIdentity: startup?.brandIdentity ? JSON.parse(startup.brandIdentity) : undefined,
+      customerPersonas: startup?.customerPersonas ? JSON.parse(startup.customerPersonas) : undefined,
+      userFlow: startup?.userFlowDiagram ? JSON.parse(startup.userFlowDiagram) : undefined,
+      aiWireframe: startup?.aiWireframe ? JSON.parse(startup.aiWireframe).code : undefined,
+    };
+
+    if (!fullContext.brainstormResult) {
+      throw new Error("Please complete the initial brainstorming step first.");
+    }
+
+    const result = await ctx.runAction(internal.gemini.generateTechStackWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateTechStack, {
+      startupId,
+      techStack: JSON.stringify(result),
+    });
+
     return result;
   },
 });

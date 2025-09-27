@@ -29,6 +29,7 @@ export default defineSchema({
     userFlowDiagram: v.optional(v.string()),
     aiWireframe: v.optional(v.string()),
     aiMentor: v.optional(v.string()),
+    techStack: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),
 });

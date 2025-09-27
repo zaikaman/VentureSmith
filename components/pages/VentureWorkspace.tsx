@@ -28,6 +28,7 @@ import { CustomerPersonas } from './CustomerPersonas';
 import { InterviewScripts } from './InterviewScripts';
 import UserFlowDiagram from './UserFlowDiagram';
 import AIWireframeGenerator from './AIWireframeGenerator';
+import GenerateTechStack from './GenerateTechStack';
 
 import './VentureWorkspace.css';
 
@@ -102,11 +103,11 @@ export const VentureWorkspace: React.FC = () => {
         {
             id: 'phase-6', name: 'Phase 6: Technical Blueprint & Planning',
             tasks: [
-                { id: 'generateTechStack', name: 'Generate Technology Stack', isCompleted: false },
-                { id: 'generateDatabaseSchema', name: 'Generate Database Schema', isCompleted: false },
-                { id: 'generateAPIEndpoints', name: 'Generate API Endpoints', isCompleted: false },
-                { id: 'generateDevelopmentRoadmap', name: 'Generate Dev Roadmap', isCompleted: false },
-                { id: 'estimateCosts', name: 'Estimate Initial Cloud Costs', isCompleted: false },
+                { id: 'generateTechStack', name: 'Generate Technology Stack', isCompleted: !!startup?.techStack },
+                { id: 'generateDatabaseSchema', name: 'Generate Database Schema', isCompleted: !!startup?.databaseSchema },
+                { id: 'generateAPIEndpoints', name: 'Generate API Endpoints', isCompleted: !!startup?.apiEndpoints },
+                { id: 'generateDevelopmentRoadmap', name: 'Generate Dev Roadmap', isCompleted: !!startup?.developmentRoadmap },
+                { id: 'estimateCosts', name: 'Estimate Initial Cloud Costs', isCompleted: !!startup?.costEstimate },
             ]
         },
         {
@@ -272,6 +273,7 @@ export const VentureWorkspace: React.FC = () => {
             case 'aiWireframing':
                 return <AIWireframeGenerator startup={startup} />;
             case 'generateTechStack':
+                return <GenerateTechStack startup={startup} />;
             case 'generateDatabaseSchema':
             case 'generateAPIEndpoints':
             case 'generateDevelopmentRoadmap':
