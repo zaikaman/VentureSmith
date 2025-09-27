@@ -1,7 +1,7 @@
-/* BrainstormIdea.css - Refactored for "Idea Prism" Animation */
+/* BrainstormIdea.css - Refactored for "Neural Synthesis" Animation */
 
 .brainstorm-idea-container {
-  padding: 1rem 0;
+    padding: 1rem 0;
 }
 
 .header-section {
@@ -11,191 +11,135 @@
   margin-bottom: 1.5rem;
 }
 
-.initial-view .initial-idea-box {
-  background: rgba(10, 10, 20, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  text-align: center;
+/* --- Neural Animation --- */
+.neural-container {
+    height: 600px;
+    width: 100%;
+    position: relative;
+    background-color: #020617;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* --- Prism Animation Container --- */
-.prism-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 600px; /* Fixed height for animation stability */
-  width: 100%;
-  position: relative;
-  overflow: hidden;
+.neural-grid {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    grid-template-rows: repeat(10, 1fr);
 }
 
-.prism-core {
-  position: relative;
-  width: 250px;
-  height: 250px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fadeInCore 1s ease-out forwards;
+.neuron {
+    border: 1px solid rgba(56, 189, 248, 0.1);
+    transition: background-color 0.3s;
 }
 
-@keyframes fadeInCore {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
+.neural-main-node {
+    position: relative;
+    z-index: 10;
+    padding: 1.5rem;
+    background: rgba(56, 189, 248, 0.2);
+    border: 1px solid #38bdf8;
+    border-radius: 50%;
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    max-width: 200px;
+    box-shadow: 0 0 20px #38bdf8;
+    animation: pulseMainNode 2s infinite;
 }
 
-.prism-text {
-  position: relative;
-  z-index: 2;
-  color: white;
-  font-size: 1.2rem;
-  font-weight: 600;
-  text-align: center;
-  padding: 1rem;
-  animation: pulseText 2s infinite ease-in-out;
+@keyframes pulseMainNode { 50% { transform: scale(1.05); } }
+
+.neural-pulse {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    background: #38bdf8;
+    animation: expandPulse 3s ease-out forwards;
 }
 
-.prism-surface {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle, rgba(165, 180, 252, 0.3) 0%, rgba(165, 180, 252, 0) 70%);
-  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-  animation: spin 10s linear infinite, pulseSurface 2s infinite ease-in-out;
+@keyframes expandPulse {
+    from { width: 50px; height: 50px; opacity: 0.8; }
+    to { width: 1200px; height: 1200px; opacity: 0; }
 }
 
-@keyframes pulseSurface {
-  50% { transform: scale(1.1); }
+.neural-grid .neuron:nth-child(7n) {
+    animation: fireNeuron 4s infinite;
+    animation-delay: calc(var(--i, 1) * 0.1s);
 }
 
-/* --- Beams --- */
-.prism-beam {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 2px;
-  height: 400px; /* Long enough to reach corners */
-  background: linear-gradient(to top, transparent, var(--beam-color), transparent);
-  transform-origin: top center;
-  opacity: 0;
-  animation: shootBeam 1.5s ease-out forwards;
-  animation-delay: var(--beam-delay);
+@keyframes fireNeuron {
+    0%, 100% { background: transparent; }
+    5%, 15% { background: rgba(56, 189, 248, 0.5); }
 }
 
-@keyframes shootBeam {
-  0% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--beam-angle)) scaleY(0); }
-  50% { opacity: 1; transform: translate(-50%, -50%) rotate(var(--beam-angle)) scaleY(1); }
-  100% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--beam-angle)) scaleY(1); }
+.hub-label {
+    position: absolute;
+    color: white;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    opacity: 0;
+    animation: fadeInLabel 1s forwards;
 }
 
-.beam-1 { --beam-color: #a5b4fc; --beam-angle: -30deg; --beam-delay: 0.5s; }
-.beam-2 { --beam-color: #6ee7b7; --beam-angle: 30deg; --beam-delay: 0.7s; }
-.beam-3 { --beam-color: #fcd34d; --beam-angle: 150deg; --beam-delay: 0.9s; }
-.beam-4 { --beam-color: #fca5a5; --beam-angle: -150deg; --beam-delay: 1.1s; }
-.beam-5 { --beam-color: #93c5fd; --beam-angle: 90deg; --beam-delay: 1.3s; }
+.label-1 { top: 10%; left: 50%; transform: translateX(-50%); animation-delay: 1s; }
+.label-2 { top: 30%; left: 15%; animation-delay: 1.3s; }
+.label-3 { top: 30%; right: 15%; animation-delay: 1.6s; }
+.label-4 { bottom: 15%; left: 25%; animation-delay: 1.9s; }
+.label-5 { bottom: 15%; right: 25%; animation-delay: 2.2s; }
 
+@keyframes fadeInLabel { to { opacity: 1; } }
 
-/* --- Result Cards (Post-Animation) --- */
-.results-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 1.5rem;
-  opacity: 0; /* Initially hidden */
+.synthesis-status-text {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #94a3b8;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: pulseText 2s infinite;
 }
 
+/* --- Results View --- */
 .results-grid.visible {
   opacity: 1;
   animation: fadeInGrid 0.5s forwards;
 }
 
 .results-grid.visible.with-delay {
-  animation: fadeInGrid 1s forwards 3.5s; /* Delay matches animation time */
+  opacity: 0;
+  animation: fadeInGrid 1s forwards 5s; /* Delay matches animation time */
 }
 
-@keyframes fadeInGrid {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+@keyframes fadeInGrid { from { opacity: 0; } to { opacity: 1; } }
 
-.info-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 1.5rem;
-}
-
+/* Re-using card styles from previous implementation */
+.info-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 1.5rem; }
 .refined-idea-card { grid-column: 1 / -1; }
-
-.card-header { 
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding-bottom: 0.75rem; 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
-    margin-bottom: 1rem;
-}
+.card-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1rem; }
+.card-icon { width: 2.5rem; height: 2.5rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+.card-icon svg { width: 1.5rem; height: 1.5rem; }
+.refined-idea-card .card-icon { background-color: rgba(165, 180, 252, 0.1); color: #c7d2fe; }
+.info-card:nth-child(2) .card-icon { background-color: rgba(52, 211, 153, 0.1); color: #6ee7b7; }
+.info-card:nth-child(3) .card-icon { background-color: rgba(251, 191, 36, 0.1); color: #fcd34d; }
+.info-card:nth-child(4) .card-icon { background-color: rgba(248, 113, 113, 0.1); color: #fca5a5; }
+.info-card:nth-child(5) .card-icon { background-color: rgba(96, 165, 250, 0.1); color: #93c5fd; }
 .card-title { font-size: 1.25rem; font-weight: 600; color: #f3f4f6; }
 .card-content { font-size: 1rem; line-height: 1.6; color: #d1d5db; }
 .card-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
 .card-list li { display: flex; align-items: flex-start; gap: 0.75rem; color: #d1d5db; line-height: 1.6; }
 .card-list li::before { content: '\2713'; color: #a5b4fc; font-weight: bold; font-size: 0.9rem; margin-top: 4px; }
-
-.card-icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-}
-
-.card-icon svg {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.refined-idea-card .card-icon {
-  background-color: rgba(165, 180, 252, 0.1);
-  color: #c7d2fe;
-}
-
-.info-card:nth-child(2) .card-icon { /* Key Features */
-  background-color: rgba(52, 211, 153, 0.1);
-  color: #6ee7b7;
-}
-
-.info-card:nth-child(3) .card-icon { /* Potential Angles */
-  background-color: rgba(251, 191, 36, 0.1);
-  color: #fcd34d;
-}
-
-.info-card:nth-child(4) .card-icon { /* Initial Concerns */
-  background-color: rgba(248, 113, 113, 0.1);
-  color: #fca5a5;
-}
-
-.info-card:nth-child(5) .card-icon { /* Competitive Advantage */
-  background-color: rgba(96, 165, 250, 0.1);
-  color: #93c5fd;
-}
-
-/* Regenerate Button */
-.regenerate-button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: var(--bg-slate-800);
-  color: var(--text-slate-200);
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
+.regenerate-button { display: flex; align-items: center; gap: 0.5rem; background-color: var(--bg-slate-800); color: var(--text-slate-200); padding: 0.75rem 1.5rem; border-radius: 9999px; font-size: 0.95rem; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.2s; }
 .regenerate-button:hover { background-color: var(--bg-slate-700); color: white; }
 .regenerate-button svg { width: 1.25rem; height: 1.25rem; }
