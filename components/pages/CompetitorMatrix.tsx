@@ -78,9 +78,8 @@ export const CompetitorMatrix: React.FC<CompetitorMatrixProps> = ({ startup }) =
 
   if (result) {
     return (
-        <>
-            <TaskResultHeader title="Competitor Landscape Matrix" onRegenerate={handleAnalyze} />
             <div className="matrix-results-container">
+                <TaskResultHeader title="Competitor Landscape Matrix" onRegenerate={handleAnalyze} />
                 <div className="matrix-table-container">
                     <table className="competitor-table">
                         <thead>
@@ -106,7 +105,6 @@ export const CompetitorMatrix: React.FC<CompetitorMatrixProps> = ({ startup }) =
                     </table>
                 </div>
             </div>
-        </>
     );
   }
 

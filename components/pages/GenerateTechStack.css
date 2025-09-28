@@ -1,7 +1,9 @@
 /* GenerateTechStack.css */
 
 .tech-stack-container {
-    padding: 1rem 0;
+    padding: 2rem;
+    background-color: #0f172a; /* bg-slate-900 */
+    border-radius: 0.5rem;
 }
 
 .header-section {

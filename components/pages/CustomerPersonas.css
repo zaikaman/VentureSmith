@@ -2,6 +2,8 @@
 
 .cp-initial-view, .cp-results-container {
     padding: 2rem;
+    background-color: #0f172a; /* bg-slate-900 */
+    border-radius: 0.5rem;
 }
 
 .cp-initial-view { text-align: center; }

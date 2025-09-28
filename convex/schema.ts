@@ -46,6 +46,7 @@ export default defineSchema({
     draftJobDescriptions: v.optional(v.string()),
     investorMatching: v.optional(v.string()),
     dueDiligenceChecklist: v.optional(v.string()),
+    aiPitchCoach: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),
 });

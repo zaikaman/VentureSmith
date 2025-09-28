@@ -1,7 +1,9 @@
 /* BrainstormIdea.css - Refactored for "Neural Synthesis" Animation */
 
 .brainstorm-idea-container {
-    padding: 1rem 0;
+    background-color: #0f172a; /* bg-slate-900 */
+    padding: 2rem;
+    border-radius: 0.5rem;
 }
 
 .header-section {

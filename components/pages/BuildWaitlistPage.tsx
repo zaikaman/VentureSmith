@@ -131,12 +131,16 @@ const BuildWaitlistPage: React.FC<BuildWaitlistPageProps> = ({ startup }) => {
   const hasContent = waitlistData || isGenerating;
 
   return (
-    <div className="waitlist-page-container">
+    <div>
       {hasContent && (
         <TaskResultHeader title="Waitlist Page Builder" onRegenerate={handleGenerate} />
       )}
 
-      {isGenerating ? renderLoading() : waitlistData ? renderResults() : (
+      {isGenerating ? renderLoading() : waitlistData ? (
+        <div className="waitlist-page-container">
+          {renderResults()}
+        </div>
+      ) : (
         <InitialTaskView
             title="Build Pre-launch Waitlist Page"
             description="Generate a complete, ready-to-use waitlist page to start capturing leads before you even launch your product."

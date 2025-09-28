@@ -125,11 +125,13 @@ export const MarketPulseCheck: React.FC<MarketPulseCheckProps> = ({ startup }) =
                 <Gauge value={result.competitionLevel} label="Competition" color="#f87171" />
                 <Gauge value={result.growthPotential} label="Growth Potential" color="#4ade80" />
             </div>
-            <div className="keywords-wrapper">
-                <h3 className="keywords-title">Related Keywords</h3>
-                <div className="keywords-grid">
-                    {result.relatedKeywords.map((kw, i) => <div key={i} className="keyword-tag">{kw}</div>)}
-                </div>
+            <div className="keywords-panel">
+                <h3 className="keywords-panel-title">Related Keywords</h3>
+                <ul className="keywords-list">
+                    {result.relatedKeywords.map((kw, i) => (
+                        <li key={i} className="keyword-item">{kw}</li>
+                    ))}
+                </ul>
             </div>
         </div>
       )}

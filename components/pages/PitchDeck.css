@@ -2,6 +2,8 @@
 
 .pd-initial-view, .presentation-container {
     padding: 2rem;
+    background-color: #0f172a; /* bg-slate-900 */
+    border-radius: 0.5rem;
 }
 
 .pd-initial-view { text-align: center; }
@@ -76,7 +78,7 @@
 .production-status-text { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: #94a3b8; font-size: 1rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; animation: pulseText 2s infinite; }
 
 /* --- Results View --- */
-.presentation-container { animation: fadeInResults 1s forwards; }
+.presentation-container { animation: fadeInResults 1s forwards; position: relative; overflow: hidden; }
 .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
 
 .presentation-layout {
@@ -97,7 +99,7 @@
 
 .teleprompter { background: var(--bg-slate-900); border: 1px solid var(--border-slate-700); border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column; overflow: hidden; /* Fix for scrollbox */ }
 .teleprompter h4 { font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; color: #e5e7eb; }
-.script-content { flex-grow: 1; overflow-y: auto; background: var(--bg-slate-800); border-radius: 8px; padding: 1rem; min-height: 0; /* Flexbox scroll fix */ }
+.script-content { height: 500px; overflow-y: auto; background: var(--bg-slate-800); border-radius: 8px; padding: 1rem; }
 .script-content p { white-space: pre-line; line-height: 1.8; color: var(--text-slate-300); }
 
 .script-content.transcript p { margin-bottom: 1rem; }
@@ -131,3 +133,58 @@
 .regenerate-button { display: flex; align-items: center; gap: 0.5rem; background-color: var(--bg-slate-800); color: var(--text-slate-200); padding: 0.75rem 1.5rem; border-radius: 9999px; font-size: 0.95rem; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.2s; }
 .regenerate-button:hover { background-color: var(--bg-slate-700); color: white; }
 .regenerate-button svg { width: 1.25rem; height: 1.25rem; }
+
+/* Styles for hidden div used in PDF export */
+.pdf-slide-render-style {
+    width: 1920px;
+    height: 1080px;
+    color: white;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(135deg, #1e293b 0%, #111827 100%);
+}
+
+.pdf-slide-render-style h3 {
+    font-size: 80px;
+    font-weight: 800;
+    color: #e0e7ff;
+    letter-spacing: -2px;
+    margin-bottom: 2rem;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.pdf-slide-render-style div {
+    font-size: 36px;
+    line-height: 1.6;
+    font-weight: 400;
+    color: #c7d2fe;
+    max-width: 1600px;
+}
+
+.pdf-slide-render-style ul {
+    list-style-type: none;
+    padding-left: 0;
+    text-align: left;
+    margin-top: 2rem;
+}
+
+.pdf-slide-render-style li {
+    margin-bottom: 1.5rem;
+    padding-left: 3.5rem;
+    position: relative;
+}
+
+.pdf-slide-render-style li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #818cf8;
+    font-weight: bold;
+    font-size: 36px;
+    top: -2px;
+}

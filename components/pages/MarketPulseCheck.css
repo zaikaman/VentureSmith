@@ -2,6 +2,8 @@
 .market-pulse-container {
   padding: 2rem;
   text-align: center;
+  background-color: #0f172a; /* bg-slate-900 */
+  border-radius: 0.5rem;
 }
 
 .pre-scan-content .scan-button {
@@ -203,37 +205,48 @@
     font-size: 0.9rem;
 }
 
-.keywords-wrapper {
-    margin-top: 2rem;
+.keywords-panel {
+    background-color: #020617;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-top: 3rem;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
 }
 
-.keywords-title {
+.keywords-panel-title {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
+    color: #cbd5e1;
 }
 
-.keywords-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.75rem;
+.keywords-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
 }
 
-.keyword-tag {
-    background: #1e293b; /* slate-800 */
-    color: #93c5fd; /* blue-300 */
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
+.keyword-item {
+    background: #1e293b;
+    color: #93c5fd;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
     font-weight: 500;
-    border: 1px solid #3b82f6; /* blue-500 */
+    border: 1px solid #3b82f6;
+    text-align: center;
     transition: all 0.2s;
 }
 
-.keyword-tag:hover {
+.keyword-item:hover {
     background: #3b82f6;
     color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
 }

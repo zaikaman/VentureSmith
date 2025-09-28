@@ -96,13 +96,6 @@
     60%, 100% { transform: rotateY(180deg); }
 }
 
-/* --- Results View --- */
-.job-results-container {
-    max-height: 600px;
-    overflow-y: auto;
-    padding-right: 1rem;
-}
-
 .job-accordion-item {
     background-color: #1e293b; /* bg-slate-800 */
     border: 1px solid #334155; /* border-slate-700 */

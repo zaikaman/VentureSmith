@@ -3,6 +3,8 @@
 .scorecard-initial-view, .scorecard-results-container {
     padding: 2rem;
     text-align: center;
+    background-color: #0f172a; /* bg-slate-900 */
+    border-radius: 0.5rem;
 }
 
 .scorecard-initial-view .cta-button:disabled {

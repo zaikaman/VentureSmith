@@ -70,9 +70,8 @@ export const MarketResearchDisplay: React.FC<MarketResearchDisplayProps> = ({ st
 
   if (result) {
     return (
-        <>
-            <TaskResultHeader title="Market Research Dossier" onRegenerate={handleScan} />
             <div className="dossier-container">
+                <TaskResultHeader title="Market Research Dossier" onRegenerate={handleScan} />
                 <div className="dossier-content">
                     <ReactMarkdown components={{
                         h1: ({node, ...props}) => <h3 className="md-h3" {...props} />,
@@ -93,7 +92,6 @@ export const MarketResearchDisplay: React.FC<MarketResearchDisplayProps> = ({ st
                     </div>
                 )}
             </div>
-        </>
     );
   }
 

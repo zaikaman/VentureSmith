@@ -164,7 +164,7 @@ const PitchDeck: React.FC<PitchDeckProps> = ({ startup }) => {
             {/* Hidden div for PDF rendering */}
             <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
                 {slides.map((slide, index) => (
-                    <div key={index} className="pdf-slide-render">
+                    <div key={index} className="pdf-slide-render pdf-slide-render-style">
                         <h3>{cleanText(slide.title)}</h3>
                         <div><ReactMarkdown>{cleanText(slide.content)}</ReactMarkdown></div>
                     </div>
@@ -204,7 +204,7 @@ const PitchDeck: React.FC<PitchDeckProps> = ({ startup }) => {
                         {error && <p className="error-message">{error}</p>}
                         <button onClick={handleListen} disabled={isSimulating} className="action-button">{isCallActive && !isSimulating ? 'Stop Listening' : 'Listen to Pitch'}</button>
                         <button onClick={handleSimulation} className="action-button">{isCallActive && isSimulating ? 'Stop Simulation' : 'Start Investor Q&A'}</button>
-                        <button onClick={handleExportPDF} disabled={isExporting || isCallActive} className="action-button">{isExporting ? 'Exporting...' : 'Export to PDF'}</button>
+                        <button onClick={handleExportPDF} disabled={isExporting || isCallActive} className="action-button">{isExporting ? 'Exporting...' : 'Export Slides to PDF'}</button>
                     </div>
                 </div>
             </div>

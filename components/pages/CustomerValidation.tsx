@@ -101,10 +101,9 @@ const CustomerValidation: React.FC<CustomerValidationProps> = ({ startup }) => {
   if (results) {
     const activeResult = results.find(r => r.personaName === activePersona);
     return (
-      <>
+      <div className="cv-results-container">
         <TaskResultHeader title="Simulated Customer Feedback" onRegenerate={handleSimulation} />
-        <div className="cv-results-container">
-          <div className="persona-tabs">
+        <div className="persona-tabs">
             {results.map(result => {
               const persona = personas.find(p => p.name === result.personaName);
               return (
@@ -136,7 +135,6 @@ const CustomerValidation: React.FC<CustomerValidationProps> = ({ startup }) => {
             </div>
           )}
         </div>
-      </>
     );
   }
 

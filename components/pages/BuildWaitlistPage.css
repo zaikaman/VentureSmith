@@ -92,8 +92,6 @@
 }
 
 .preview-content {
-    height: 600px; /* Fixed height for the preview */
-    overflow-y: auto;
     background-color: #fff; /* White background for the page */
 }
 

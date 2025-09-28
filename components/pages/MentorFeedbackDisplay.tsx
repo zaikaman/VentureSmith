@@ -104,10 +104,9 @@ const MentorFeedbackDisplay: React.FC<MentorFeedbackProps> = ({ startup }) => {
     };
 
     return (
-      <>
+      <div className="mf-results-container">
         <TaskResultHeader title="AI Mentor Feedback" onRegenerate={handleGenerate} />
-        <div className="mf-results-container">
-          <div className="mf-tabs">
+        <div className="mf-tabs">
             {(Object.keys(tabContent) as Array<keyof typeof tabContent>).map(tabName => (
               <button 
                 key={tabName} 
@@ -127,7 +126,6 @@ const MentorFeedbackDisplay: React.FC<MentorFeedbackProps> = ({ startup }) => {
           </div>
 
         </div>
-      </>
     );
   }
 

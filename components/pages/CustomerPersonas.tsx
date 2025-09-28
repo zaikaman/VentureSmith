@@ -98,9 +98,8 @@ export const CustomerPersonas: React.FC<CustomerPersonasProps> = ({ startup }) =
 
   if (result) {
     return (
-      <>
-        <TaskResultHeader title="Ideal Customer Personas" onRegenerate={handleGenerate} />
         <div className="cp-results-container">
+          <TaskResultHeader title="Ideal Customer Personas" onRegenerate={handleGenerate} />
           <div className="personas-grid">
             {result.personas.map((persona, i) => (
               <div key={i} className="persona-card">
@@ -127,7 +126,6 @@ export const CustomerPersonas: React.FC<CustomerPersonasProps> = ({ startup }) =
             ))}
           </div>
         </div>
-      </>
     );
   }
 

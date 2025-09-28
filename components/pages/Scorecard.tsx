@@ -74,9 +74,8 @@ export const Scorecard: React.FC<ScorecardProps> = ({ startup }) => {
 
   if (result) {
     return (
-        <>
-            <TaskResultHeader title="Scorecard Analysis" onRegenerate={handleAnalyze} />
             <div className="scorecard-results-container">
+                <TaskResultHeader title="Scorecard Analysis" onRegenerate={handleAnalyze} />
                 <div className="overall-score-card" style={{'--glow-color': result.overallScore > 75 ? '#4ade80' : result.overallScore > 50 ? '#facc15' : '#f87171'}}>
                     <span className="overall-title">Overall Score</span>
                     <span className="overall-score">{result.overallScore}</span>
@@ -108,7 +107,6 @@ export const Scorecard: React.FC<ScorecardProps> = ({ startup }) => {
                     </div>
                 </div>
             </div>
-        </>
     );
   }
 

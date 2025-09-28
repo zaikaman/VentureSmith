@@ -134,16 +134,14 @@ export const InterviewScripts: React.FC<InterviewScriptsProps> = ({ startup }) =
 
   if (result) {
     return (
-      <>
-        <TaskResultHeader title="Interview Scripts" onRegenerate={handleGenerate} />
         <div className="is-results-container">
+          <TaskResultHeader title="Interview Scripts" onRegenerate={handleGenerate} />
           <div className="scripts-accordion">
             {result.scripts.map((script, i) => (
               <AccordionItem key={i} script={script} initiallyOpen={i === 0} />
             ))}
           </div>
         </div>
-      </>
     );
   }
 

@@ -165,8 +165,8 @@
 
 /* --- Results Display --- */
 .mf-results-container {
-  padding: 2rem;
-  background-color: var(--bg-slate-900);
+  padding: 2rem; 
+  background-color: #0f172a; 
   border-radius: 16px;
   animation: fadeInResults 0.5s forwards;
 }

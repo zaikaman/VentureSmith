@@ -45,6 +45,7 @@ import MapProcesses from './MapProcesses';
 import DraftJobDescriptions from './DraftJobDescriptions';
 import AIInvestorMatching from './AIInvestorMatching';
 import DueDiligenceChecklist from './DueDiligenceChecklist';
+import AIPitchCoach from './AIPitchCoach';
 
 import './VentureWorkspace.css';
 
@@ -161,7 +162,7 @@ export const VentureWorkspace: React.FC = () => {
             tasks: [
                 { id: 'investorMatching', name: 'AI Investor Matching', isCompleted: !!startup?.investorMatching },
                 { id: 'dueDiligenceChecklist', name: 'Due Diligence Checklist', isCompleted: !!startup?.dueDiligenceChecklist },
-                { id: 'aiPitchCoach', name: 'AI Pitch Coach', isCompleted: false },
+                { id: 'aiPitchCoach', name: 'AI Pitch Coach', isCompleted: !!startup?.aiPitchCoach },
             ]
         },
     ], [startup]);
@@ -313,6 +314,8 @@ export const VentureWorkspace: React.FC = () => {
                 return <AIInvestorMatching startup={startup} />;
             case 'dueDiligenceChecklist':
                 return <DueDiligenceChecklist startup={startup} />;
+            case 'aiPitchCoach':
+                return <AIPitchCoach startup={startup} />;
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;

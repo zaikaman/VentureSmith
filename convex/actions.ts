@@ -1047,3 +1047,30 @@ export const generateDueDiligenceChecklist = action({
         return { success: true };
     },
 });
+
+export const generatePitchCoachAnalysis = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.businessPlan || !startup.pitchDeck) {
+      throw new Error("Business Plan and Pitch Deck must be completed first to use the AI Pitch Coach.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      businessPlan: JSON.parse(startup.businessPlan),
+      pitchDeck: JSON.parse(startup.pitchDeck),
+    };
+
+    const result = await ctx.runAction(internal.gemini.generatePitchCoachAnalysisWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateAIPitchCoach, {
+      startupId,
+      aiPitchCoach: JSON.stringify(result),
+    });
+
+    return result;
+  },
+});

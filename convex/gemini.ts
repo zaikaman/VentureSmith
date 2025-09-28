@@ -2003,36 +2003,133 @@ export const generateWaitlistPageWithAI = internalAction(
   }
 );
 
-export const generateContent = internalAction(
+export const generatePitchCoachAnalysisWithAI = internalAction(
   async (
     _,
-    { prompt }: { prompt: string }
+    { fullContext }: { fullContext: any }
   ) => {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables. Please add it in the Convex dashboard under Settings.");
+      throw new Error("GEMINI_API_KEY is not set.");
     }
     const ai = new GoogleGenAI({ apiKey });
 
-    try {
-        console.log("--- Requesting generic content from Gemini ---");
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: [{ role: "user", parts: [{ text: prompt }] }],
-        });
-        const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-
-        if (!resultText) {
-            throw new Error("No content text received from Gemini API");
+    const pitchCoachSchema = {
+      type: "OBJECT",
+      properties: {
+        overallScore: { type: "NUMBER", description: "A holistic score for the pitch from 0 to 100." },
+        feedback: {
+          type: "ARRAY",
+          description: "An array of feedback items categorized by area.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              category: { type: "STRING", description: "The feedback category (e.g., 'Clarity & Conciseness', 'Storytelling', 'Delivery & Tone')." },
+              icon: { type: "STRING", description: "A relevant Font Awesome 5 free icon class name (e.g., 'fas fa-bullseye', 'fas fa-book-open', 'fas fa-microphone-alt')." },
+              points: { 
+                type: "ARRAY", 
+                items: { 
+                  type: "OBJECT",
+                  properties: {
+                    feedback: { type: "STRING", description: "A specific piece of feedback, phrased constructively." },
+                    isPositive: { type: "BOOLEAN", description: "True if the feedback is positive, false if it's a point for improvement." }
+                  },
+                  required: ["feedback", "isPositive"]
+                }
+              }
+            },
+            required: ["category", "icon", "points"]
+          }
+        },
+        bodyLanguageTips: {
+          type: "ARRAY",
+          description: "Actionable tips for improving body language and presence.",
+          items: { type: "STRING" }
+        },
+        vapiAssistantPrompt: {
+          type: "STRING",
+          description: "A detailed system prompt for a Vapi voice AI assistant. This prompt should instruct the AI to act as a friendly, encouraging pitch coach during a practice session. It should guide the AI to listen to the user's pitch and provide gentle, real-time feedback or ask clarifying questions based on the provided pitch script."
         }
-        
-        console.log("Generic content received successfully.");
-        return resultText;
+      },
+      required: ["overallScore", "feedback", "bodyLanguageTips", "vapiAssistantPrompt"]
+    };
+
+    const prompt = `
+      You are "Echo", a world-class AI Pitch Coach from a top accelerator like Y Combinator. You are about to analyze a startup's pitch and provide structured, actionable feedback.
+
+      **Startup Data Package:**
+      - **Official Startup Name:** ${fullContext.name}
+      - **Business Plan Summary:** ${JSON.stringify(fullContext.businessPlan?.executiveSummary, null, 2)}
+      - **Pitch Deck Script & Slides:** ${JSON.stringify(fullContext.pitchDeck, null, 2)}
+
+      **Your Task:**
+      Generate a comprehensive pitch analysis in JSON format. The feedback should be sharp, insightful, and encouraging.
+
+      **JSON Schema Requirements:**
+      1.  **overallScore**: Provide a single, holistic score from 0-100.
+      2.  **feedback**: Create exactly three feedback categories: 'Clarity & Conciseness', 'Storytelling & Impact', and 'Delivery & Confidence'. For each category, provide 2-3 specific feedback points. Each point must be marked as positive (isPositive: true) or an area for improvement (isPositive: false).
+      3.  **bodyLanguageTips**: Provide 3 practical tips on body language for a compelling pitch delivery.
+      4.  **vapiAssistantPrompt**: Write a system prompt for another AI (a Vapi voice assistant). This AI's job is to do a live practice session with the user. The prompt should instruct the Vapi assistant to be friendly, listen to the user practice their pitch (the script is in the context), and give gentle encouragement or ask clarifying questions. It should not be overly critical during the live practice.
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting AI Pitch Coach Analysis from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: pitchCoachSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No AI Pitch Coach data received from Gemini API");
+      }
+
+      console.log("AI Pitch Coach data received successfully.");
+      return JSON.parse(resultText);
 
     } catch (error: any) {
-        console.error("Failed to get generic content:", error.message);
-        throw new Error(`Failed to get generic content from Gemini API. Error: ${error.message}`);
+      console.error("Failed to get AI Pitch Coach data:", error.message);
+      throw new Error(`Failed to get AI Pitch Coach data from Gemini API. Error: ${error.message}`);
     }
+  }
+);
+
+export const generateContent = internalAction(
+  async (_, { prompt, responseMimeType }: { prompt: string, responseMimeType?: "application/json" | "text/plain" }) => {
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+          throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables.");
+      }
+      const ai = new GoogleGenAI({ apiKey });
+
+      try {
+          console.log("--- Requesting Generic Content from Gemini ---");
+          const response = await ai.models.generateContent({
+              model: "gemini-2.5-flash",
+              contents: [{ role: "user", parts: [{ text: prompt }] }],
+              config: {
+                responseMimeType: responseMimeType,
+              },
+          });
+          const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+          if (!resultText) {
+              throw new Error("No content received from Gemini API");
+          }
+
+          console.log("Generic content received successfully.");
+          return resultText;
+
+      } catch (error: any) {
+          console.error("Failed to get generic content:", error.message);
+          throw new Error(`Failed to get generic content from Gemini API. Error: ${error.message}`);
+      }
   }
 );
 

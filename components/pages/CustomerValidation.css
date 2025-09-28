@@ -88,9 +88,9 @@
 
 /* --- Results Display --- */
 .cv-results-container {
-  padding: 2rem;
-  background-color: var(--bg-slate-900);
-  border-radius: 16px;
+  padding: 2rem; 
+  background-color: #0f172a; 
+  border-radius: 16px; 
   animation: fadeInResults 0.5s forwards;
 }
 
