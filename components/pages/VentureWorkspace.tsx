@@ -132,7 +132,6 @@ export const VentureWorkspace: React.FC = () => {
             tasks: [
                 { id: 'productHuntKit', name: 'Product Hunt Launch Kit', isCompleted: !!startup?.productHuntKit },
                 { id: 'pressRelease', name: 'Draft Press Release', isCompleted: !!startup?.pressRelease },
-                { id: 'launchMonitoring', name: 'Real-time Launch Monitoring', isCompleted: false },
             ]
         },
         {

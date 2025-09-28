@@ -100,25 +100,20 @@ export type TaskID =
   | 'generateDevelopmentRoadmap'
   | 'estimateCosts'
   // Phase 7
-  | 'alphaTesting'
-  | 'betaTesterRecruitment'
-  | 'feedbackAnalysis'
-  // Phase 8
   | 'pricingStrategy'
   | 'marketingCopy'
   | 'preLaunchWaitlist'
-  // Phase 9
+  // Phase 8
   | 'productHuntKit'
   | 'pressRelease'
-  | 'launchMonitoring'
-  // Phase 10
+  // Phase 9
   | 'growthMetrics'
   | 'abTestIdeas'
   | 'seoStrategy'
-  // Phase 11
+  // Phase 10
   | 'processAutomation'
   | 'draftJobDescriptions'
-  // Phase 12
+  // Phase 11
   | 'investorMatching'
   | 'dueDiligenceChecklist'
   | 'aiPitchCoach';
