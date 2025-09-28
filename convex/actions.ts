@@ -183,6 +183,7 @@ export const defineMissionVision = action({
     const marketPulse = JSON.parse(startup.marketPulse);
 
     const result = await ctx.runAction(internal.gemini.defineMissionVisionWithAI, {
+      name: startup.name,
       refinedIdea,
       marketPulse,
     });
@@ -235,6 +236,7 @@ export const generateCompetitorMatrix = action({
     const marketResearchSummary = JSON.parse(startup.marketResearch).summary;
 
     const result = await ctx.runAction(internal.gemini.generateCompetitorMatrixWithAI, {
+      startupName: startup.name,
       marketResearchSummary,
     });
 
@@ -288,6 +290,7 @@ export const generateInterviewScripts = action({
     const personas = JSON.parse(startup.customerPersonas).personas;
 
     const result = await ctx.runAction(internal.gemini.generateInterviewScriptsWithAI, {
+      startupName: startup.name,
       refinedIdea,
       personas,
     });
@@ -476,6 +479,7 @@ export const createDatabaseSchema = action({
     }
 
     const fullContext = {
+      name: startup.name,
       brainstormResult: JSON.parse(startup.brainstormResult),
       userFlowDiagram: JSON.parse(startup.userFlowDiagram),
     };
@@ -542,6 +546,7 @@ export const generateApiEndpoints = action({
     }
 
     const fullContext = {
+      name: startup.name,
       brainstormResult: JSON.parse(startup.brainstormResult),
       userFlowDiagram: JSON.parse(startup.userFlowDiagram),
       databaseSchema: JSON.parse(startup.databaseSchema),
@@ -569,6 +574,7 @@ export const generateDevelopmentRoadmap = action({
     }
 
     const fullContext = {
+      name: startup.name,
       brainstormResult: JSON.parse(startup.brainstormResult),
       techStack: JSON.parse(startup.techStack),
       databaseSchema: JSON.parse(startup.databaseSchema),
@@ -597,6 +603,7 @@ export const estimateCloudCosts = action({
     }
 
     const fullContext = {
+      name: startup.name,
       techStack: JSON.parse(startup.techStack),
       databaseSchema: JSON.parse(startup.databaseSchema),
       apiEndpoints: startup.apiEndpoints,
@@ -624,6 +631,7 @@ export const generatePricingStrategy = action({
     }
 
     const fullContext = {
+      name: startup.name,
       businessPlan: JSON.parse(startup.businessPlan),
       customerPersonas: JSON.parse(startup.customerPersonas),
       competitorMatrix: JSON.parse(startup.competitorMatrix),
@@ -651,6 +659,7 @@ export const generateMarketingCopy = action({
     }
 
     const fullContext = {
+      name: startup.name,
       brandIdentity: JSON.parse(startup.brandIdentity),
       missionVision: JSON.parse(startup.missionVision),
       customerPersonas: JSON.parse(startup.customerPersonas),
@@ -679,6 +688,7 @@ export const generateWaitlistPage = action({
     }
 
     const fullContext = {
+      name: startup.name,
       brandIdentity: JSON.parse(startup.brandIdentity),
       missionVision: JSON.parse(startup.missionVision),
       marketingCopy: JSON.parse(startup.marketingCopy),

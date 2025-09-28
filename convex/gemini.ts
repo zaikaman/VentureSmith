@@ -329,10 +329,18 @@ export const generateBusinessPlanWithAI = internalAction(
     };
 
     const prompt = `
-      You are a top-tier business strategist drafting a comprehensive business plan.
+      You are a top-tier business strategist drafting a comprehensive business plan for a startup named "${fullContext.name}".
       Analyze the provided startup data and generate the 7-part business plan.
       
       **Startup Data Package:**
+      - **Official Startup Name:** ${fullContext.name}
+      - **Refined Idea:** ${fullContext.refinedIdea}
+      - **Market Pulse:** ${JSON.stringify(fullContext.marketPulse, null, 2)}
+      - **Mission/Vision:** ${JSON.stringify(fullContext.missionVision, null, 2)}
+      - **Branding Options:** ${JSON.stringify(fullContext.brandIdentity, null, 2)}
+
+      **CRITICAL INSTRUCTION:** The official name of the startup is "${fullContext.name}". You MUST use this name when referring to the company. Do NOT use any of the name suggestions from the "Branding Options" section.
+
       **Important Formatting Rule:** Do not use any markdown formatting. All text in the JSON string values must be plain text. Do not use asterisks (*).
 
       Your output MUST conform to the provided JSON schema.
@@ -399,11 +407,17 @@ export const generatePitchDeckWithAI = internalAction(
     };
 
     const prompt = `
-      You are a startup pitch expert (like a Y Combinator partner) creating a pitch deck.
-      You have the complete data package for a new venture.
+      You are a startup pitch expert (like a Y Combinator partner) creating a pitch deck for a startup named "${fullContext.name}".
+      You have the complete data package for the new venture.
 
       **Startup Data Package:**
-      ${JSON.stringify(fullContext, null, 2)}
+      - **Official Startup Name:** ${fullContext.name}
+      - **Refined Idea:** ${fullContext.refinedIdea}
+      - **Market Pulse:** ${JSON.stringify(fullContext.marketPulse, null, 2)}
+      - **Mission/Vision:** ${JSON.stringify(fullContext.missionVision, null, 2)}
+      - **Branding Options:** ${JSON.stringify(fullContext.brandIdentity, null, 2)}
+
+      **CRITICAL INSTRUCTION:** The official name of the startup is "${fullContext.name}". You MUST use this name when referring to the company. Do NOT use any of the name suggestions from the "Branding Options" section.
 
       Based on this **entire** data package, generate a full Pitch Deck including:
       1.  A 1-minute voice pitch script.
@@ -495,7 +509,7 @@ export const getMarketPulseWithAI = internalAction(
 export const defineMissionVisionWithAI = internalAction(
   async (
     _,
-    { refinedIdea, marketPulse }: { refinedIdea: string, marketPulse: any }
+    { name, refinedIdea, marketPulse }: { name: string, refinedIdea: string, marketPulse: any }
   ) => {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -508,6 +522,7 @@ export const defineMissionVisionWithAI = internalAction(
       You are tasked with creating the foundational "Genesis Block" for a new startup: its Mission and Vision.
 
       Here is the core data:
+      - **Startup Name:** "${name}"
       - **Refined Idea:** "${refinedIdea}"
       - **Market Pulse Analysis:** ${JSON.stringify(marketPulse, null, 2)}
 
@@ -599,7 +614,7 @@ export const generateBrandIdentityWithAI = internalAction(
 export const generateCompetitorMatrixWithAI = internalAction(
   async (
     _,
-    { marketResearchSummary }: { marketResearchSummary: string }
+    { startupName, marketResearchSummary }: { startupName: string, marketResearchSummary: string }
   ) => {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -630,7 +645,7 @@ export const generateCompetitorMatrixWithAI = internalAction(
     };
 
     const prompt = `
-      You are a strategic analyst. You have been provided with a market research summary.
+      You are a strategic analyst. You have been provided with a market research summary for a startup called "${startupName}".
       Your task is to extract the information about competitors and structure it into a competitor landscape matrix.
 
       **Market Research Summary:**
@@ -706,7 +721,13 @@ export const generateCustomerPersonasWithAI = internalAction(
       You are tasked with creating a set of ideal customer personas based on a comprehensive startup data package.
 
       **Startup Data Package:**
-      ${JSON.stringify(fullContext, null, 2)}
+      - **Official Startup Name:** ${fullContext.name}
+      - **Refined Idea:** ${fullContext.refinedIdea}
+      - **Market Research:** ${JSON.stringify(fullContext.marketResearch, null, 2)}
+      - **Mission & Vision:** ${JSON.stringify(fullContext.missionVision, null, 2)}
+      - **Brand Identity:** ${JSON.stringify(fullContext.brandIdentity, null, 2)}
+
+      **CRITICAL INSTRUCTION:** The official name of the startup is "${fullContext.name}". You MUST use this name when referring to the company. Do NOT use any of the name suggestions from the "Brand Identity" section.
 
       Based on the **entire** data package (idea, market, mission, brand), generate 4 distinct customer personas that would be the most likely early adopters and champions of this product. It is crucial that you generate exactly 2 male personas and 2 female personas.
       For each persona, provide the details as specified in the schema, including their gender ('male' or 'female'). Make the details specific and actionable.
@@ -743,7 +764,7 @@ export const generateCustomerPersonasWithAI = internalAction(
 export const generateInterviewScriptsWithAI = internalAction(
   async (
     _,
-    { refinedIdea, personas }: { refinedIdea: string, personas: any }
+    { startupName, refinedIdea, personas }: { startupName: string, refinedIdea: string, personas: any }
   ) => {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -775,7 +796,7 @@ export const generateInterviewScriptsWithAI = internalAction(
 
     const prompt = `
       You are a professional UX researcher creating scripts for customer interviews.
-      Your goal is to validate the problems and proposed solution for a new startup.
+      Your goal is to validate the problems and proposed solution for a new startup called "${startupName}".
 
       **Startup Idea:** "${refinedIdea}"
 
@@ -852,7 +873,15 @@ export const runInterviewSimulationsWithAI = internalAction(
       You have been given a complete data package for the startup, including the personas you need to simulate.
 
       **Startup Data Package:**
-      ${JSON.stringify(fullContext, null, 2)}
+      - **Official Startup Name:** ${fullContext.name}
+      - **Refined Idea:** ${fullContext.refinedIdea}
+      - **Market Pulse:** ${JSON.stringify(fullContext.marketPulse, null, 2)}
+      - **Mission & Vision:** ${JSON.stringify(fullContext.missionVision, null, 2)}
+      - **Brand Identity:** ${JSON.stringify(fullContext.brandIdentity, null, 2)}
+      - **Customer Personas:** ${JSON.stringify(fullContext.customerPersonas, null, 2)}
+      - **Interview Scripts:** ${JSON.stringify(fullContext.interviewScripts, null, 2)}
+
+      **CRITICAL INSTRUCTION:** The official name of the startup is "${fullContext.name}". You MUST use this name when referring to the company. Do NOT use any of the name suggestions from the "Brand Identity" section.
 
       **Your Task:**
       Carefully review the ENTIRE data package (the idea, market, mission, brand, etc.).
@@ -933,11 +962,19 @@ export const getMentorFeedbackWithAI = internalAction(
       You are reviewing a complete data package for a new venture.
 
       **Startup Data Package:**
-      ${JSON.stringify(
-        fullContext,
-        null,
-        2
-      )}
+      - **Official Startup Name:** ${fullContext.name}
+      - **Brainstorm Result:** ${JSON.stringify(fullContext.brainstormResult, null, 2)}
+      - **Market Pulse:** ${JSON.stringify(fullContext.marketPulse, null, 2)}
+      - **Mission & Vision:** ${JSON.stringify(fullContext.missionVision, null, 2)}
+      - **Brand Identity:** ${JSON.stringify(fullContext.brandIdentity, null, 2)}
+      - **Scorecard:** ${JSON.stringify(fullContext.scorecard, null, 2)}
+      - **Business Plan:** ${JSON.stringify(fullContext.businessPlan, null, 2)}
+      - **Pitch Deck:** ${JSON.stringify(fullContext.pitchDeck, null, 2)}
+      - **Market Research:** ${JSON.stringify(fullContext.marketResearch, null, 2)}
+      - **Competitor Matrix:** ${JSON.stringify(fullContext.competitorMatrix, null, 2)}
+      - **Customer Personas:** ${JSON.stringify(fullContext.customerPersonas, null, 2)}
+
+      **CRITICAL INSTRUCTION:** The official name of the startup is "${fullContext.name}". You MUST use this name when referring to the company. Do NOT use any of the name suggestions from the "Brand Identity" section.
 
       **Your Task:**
       Provide a brutally honest, sharp, and insightful critique of this venture as if you were deciding whether to invest. Your feedback is invaluable.
@@ -1037,11 +1074,13 @@ export const generateUserFlowWithAI = internalAction(
     };
 
     const prompt = `
-      You are a senior UX designer tasked with creating a primary user flow diagram for a new startup.
+      You are a senior UX designer tasked with creating a primary user flow diagram for a new startup called "${fullContext.name}".
       Based on the provided data, map out the most common and critical path a user would take from discovery to achieving the core value proposition.
 
       **Startup Data Package:**
-      ${JSON.stringify(fullContext, null, 2)}
+      - **Official Startup Name:** ${fullContext.name}
+      - **Refined Idea:** ${fullContext.refinedIdea}
+      - **Personas:** ${JSON.stringify(fullContext.personas, null, 2)}
 
       **Your Task:**
       Generate a user flow diagram with 5-7 key steps (nodes).
@@ -1271,7 +1310,13 @@ export const generateTechStackWithAI = internalAction(
       You are tasked with recommending a complete, modern, and scalable technology stack for a new venture based on its full context.
 
       **Startup Data Package:**
-      ${JSON.stringify(fullContext, null, 2)}
+      - **Official Startup Name:** ${fullContext.name}
+      - **Core Idea & Features:** ${JSON.stringify(fullContext.brainstormResult, null, 2)}
+      - **User Personas:** ${JSON.stringify(fullContext.customerPersonas, null, 2)}
+      - **User Flow:** ${JSON.stringify(fullContext.userFlow, null, 2)}
+      - **Wireframe Code:** ${fullContext.aiWireframe}
+
+      **CRITICAL INSTRUCTION:** The official name of the startup is "${fullContext.name}". You MUST use this name when referring to the company.
 
       **Your Task:**
       Based on the **entire** data package, recommend a technology stack. The stack should be divided into four categories: 'Frontend', 'Backend', 'Database', and 'Deployment'.
@@ -1370,10 +1415,11 @@ export const generateDatabaseSchema = internalAction(
     };
 
     const prompt = `
-      You are a senior database architect creating a visual schema for a new application.
+      You are a senior database architect creating a visual schema for a new application called "${fullContext.name}".
       Based on the provided application context, generate a database schema as a JSON object suitable for the React Flow library.
 
       **Startup Context:**
+      - **Official Startup Name:** ${fullContext.name}
       - **Core Idea & Features:** ${JSON.stringify(fullContext.brainstormResult, null, 2)}
       - **Primary User Flow:** ${JSON.stringify(fullContext.userFlowDiagram, null, 2)}
 
@@ -1424,10 +1470,11 @@ export const generateApiEndpointsWithAI = internalAction(
     const ai = new GoogleGenAI({ apiKey });
 
     const prompt = `
-      You are a senior backend engineer designing the RESTful API for a new application.
+      You are a senior backend engineer designing the RESTful API for a new application called "${fullContext.name}".
       Based on the provided application context, including the core idea, user flows, and database schema, your task is to define a logical and comprehensive set of API endpoints.
 
       **Application Context:**
+      - **Official Startup Name:** ${fullContext.name}
       - **Core Idea & Features:** ${JSON.stringify(fullContext.brainstormResult, null, 2)}
       - **Primary User Flow:** ${JSON.stringify(fullContext.userFlowDiagram, null, 2)}
       - **Database Schema:** ${JSON.stringify(fullContext.databaseSchema, null, 2)}
@@ -1522,10 +1569,11 @@ export const generateDevelopmentRoadmapWithAI = internalAction(
     };
 
     const prompt = `
-      You are a senior Project Manager and Tech Lead creating a development roadmap for a new application.
+      You are a senior Project Manager and Tech Lead creating a development roadmap for a new application called "${fullContext.name}".
       Based on the provided context, generate a clear, phased roadmap as a JSON object.
 
       **Application Context:**
+      - **Official Startup Name:** ${fullContext.name}
       - **Core Idea & Features:** ${JSON.stringify(fullContext.brainstormResult, null, 2)}
       - **Technology Stack:** ${JSON.stringify(fullContext.techStack, null, 2)}
       - **Database Schema:** ${JSON.stringify(fullContext.databaseSchema, null, 2)}
@@ -1615,10 +1663,11 @@ export const estimateCloudCostsWithAI = internalAction(
     };
 
     const prompt = `
-      You are a pragmatic Cloud Solutions Architect providing a high-level, initial cloud cost estimate for a new startup.
+      You are a pragmatic Cloud Solutions Architect providing a high-level, initial cloud cost estimate for a new startup called "${fullContext.name}".
       Based on the provided technical specifications, generate a cost breakdown in JSON format.
 
       **Application Context:**
+      - **Official Startup Name:** ${fullContext.name}
       - **Technology Stack:** ${JSON.stringify(fullContext.techStack, null, 2)}
       - **Database Schema:** ${JSON.stringify(fullContext.databaseSchema, null, 2)}
       - **API Endpoints:** ${fullContext.apiEndpoints}
@@ -1712,9 +1761,10 @@ export const generatePricingStrategyWithAI = internalAction(
 
     const prompt = `
       You are a monetization and pricing strategist for tech startups.
-      Based on the provided business context, generate 1 or 2 potential pricing models with detailed tiers in a JSON format.
+      Based on the provided business context for a startup called "${fullContext.name}", generate 1 or 2 potential pricing models with detailed tiers in a JSON format.
 
       **Business Context:**
+      - **Official Startup Name:** ${fullContext.name}
       - **Business Plan:** ${JSON.stringify(fullContext.businessPlan, null, 2)}
       - **Target Personas:** ${JSON.stringify(fullContext.customerPersonas, null, 2)}
       - **Competitor Matrix:** ${JSON.stringify(fullContext.competitorMatrix, null, 2)}
@@ -1827,6 +1877,7 @@ export const generateMarketingCopyWithAI = internalAction(
       Based on the provided business context, generate a complete set of marketing copy in a JSON format.
 
       **Business Context:**
+      - **Official Startup Name:** ${fullContext.name}
       - **Brand Identity:** ${JSON.stringify(fullContext.brandIdentity, null, 2)}
       - **Mission & Vision:** ${JSON.stringify(fullContext.missionVision, null, 2)}
       - **Target Personas:** ${JSON.stringify(fullContext.customerPersonas, null, 2)}
@@ -1834,6 +1885,8 @@ export const generateMarketingCopyWithAI = internalAction(
 
       **Your Task:**
       Generate a JSON object that contains a variety of marketing copy tailored to the business.
+
+      **CRITICAL INSTRUCTION:** You MUST use the "Official Startup Name" provided above for all marketing copy. Do NOT use any of the name suggestions from the "Brand Identity" section. The official name is "${fullContext.name}".
 
       **Important Formatting Rule:** Do not use any markdown formatting. All text in the JSON string values must be plain text. Do not use asterisks (*).
 
@@ -1900,6 +1953,7 @@ export const generateWaitlistPageWithAI = internalAction(
       Based on the provided marketing context, generate the code for a beautiful, modern, and effective waitlist page.
 
       **Marketing Context:**
+      - **Official Startup Name:** ${fullContext.name}
       - **Brand Identity:** ${JSON.stringify(fullContext.brandIdentity, null, 2)}
       - **Mission & Vision:** ${JSON.stringify(fullContext.missionVision, null, 2)}
       - **Key Tagline:** ${fullContext.marketingCopy.taglines[0]}
@@ -1907,12 +1961,14 @@ export const generateWaitlistPageWithAI = internalAction(
       **Your Task:**
       Generate a single, self-contained React component named 'WaitlistComponent'.
 
+      **CRITICAL INSTRUCTION:** You MUST use the "Official Startup Name" (${fullContext.name}) for the company name in the generated code. Do NOT use any of the name suggestions from the "Brand Identity" section.
+
       **Requirements:**
       1.  **Format:** A single React component in a string. Use inline style objects for all styling. Do not use CSS classes.
       2.  **No Modules:** Do NOT include any \`import\` or \`export\` statements.
       3.  **Styling:** Create a visually appealing, modern design. Use a clean layout, good typography, and a professional color scheme derived from the brand context. The page should build anticipation and trust.
       4.  **Structure:** The component must include:
-          - A strong, catchy headline (using the brand name and tagline).
+          - A strong, catchy headline (using the official brand name and tagline).
           - A brief, persuasive paragraph explaining the product's value (derived from the mission/vision).
           - An email input field.
           - A prominent call-to-action button (e.g., "Join the Waitlist", "Get Early Access").

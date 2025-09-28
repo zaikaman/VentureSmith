@@ -3,6 +3,8 @@ import { useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { toast } from 'sonner';
+import { InitialTaskView } from './InitialTaskView';
+import { TaskResultHeader } from './TaskResultHeader';
 import './DraftPressRelease.css';
 
 interface DraftPressReleaseProps {
@@ -218,24 +220,26 @@ const DraftPressRelease: React.FC<DraftPressReleaseProps> = ({ startup }) => {
   return (
     <div className="press-release-container">
       {hasContent && (
-        <div className="header-section">
-            <h2 className="text-3xl font-bold">Press Release</h2>
+        <TaskResultHeader title="Press Release" onRegenerate={handleGenerate}>
             {pressReleaseData && !isGenerating && (
-                <div className="header-actions">
-                    <button onClick={handleDownloadPDF} className="regenerate-button" title="Export to PDF">
-                        <i className="fas fa-file-pdf"></i>
-                        <span>Export to PDF</span>
-                    </button>
-                    <button onClick={handleGenerate} className="regenerate-button" title="Regenerate">
-                        <i className="fas fa-sync-alt"></i>
-                        <span>Regenerate</span>
-                    </button>
-                </div>
+                <button onClick={handleDownloadPDF} className="regenerate-button" title="Export to PDF">
+                    <i className="fas fa-file-pdf"></i>
+                    <span>Export to PDF</span>
+                </button>
             )}
-        </div>
+        </TaskResultHeader>
       )}
 
-      {isGenerating ? renderLoading() : pressReleaseData ? renderResults(pressReleaseData) : renderInitial()}
+      {isGenerating ? renderLoading() : pressReleaseData ? renderResults(pressReleaseData) : (
+        <InitialTaskView
+            title="Draft a Professional Press Release"
+            description="Generate a complete, well-structured press release to announce your startup to the world."
+            buttonText="Draft Press Release"
+            onAction={handleGenerate}
+            disabled={!canGenerate}
+            buttonIcon={<i className="fas fa-newspaper"></i>}
+        />
+      )}
     </div>
   );
 };

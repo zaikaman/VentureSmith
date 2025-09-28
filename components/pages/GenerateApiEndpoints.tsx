@@ -6,6 +6,8 @@ import { Id } from '../../convex/_generated/dataModel';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { InitialTaskView } from './InitialTaskView';
+import { TaskResultHeader } from './TaskResultHeader';
 
 import './GenerateApiEndpoints.css';
 
@@ -101,42 +103,23 @@ const GenerateApiEndpoints: React.FC<GenerateApiEndpointsProps> = ({ startup }) 
     </div>
   );
 
-  const renderInitial = () => (
-    <div className="initial-view">
-        <h3 className="text-3xl font-bold mb-4 text-white">Generate RESTful API Endpoints</h3>
-        <p className="text-slate-300 mb-8 max-w-3xl mx-auto">
-            Automatically design a complete set of RESTful API endpoints based on your application's logic, user flows, and database schema.
-        </p>
-        <button
-            onClick={handleGenerate}
-            className="cta-button"
-            disabled={!canGenerate}
-        >
-            Generate API Endpoints
-        </button>
-        {!canGenerate && <p className="text-sm text-slate-500 mt-4">Please complete the 'Brainstorm', 'User Flow', and 'Database Schema' steps first.</p>}
-    </div>
-  );
-
   const hasContent = apiResult || isGenerating;
 
   return (
     <div className="api-endpoints-container">
       {hasContent && (
-        <div className="header-section">
-            <h2 className="text-3xl font-bold">API Endpoints</h2>
-            {apiResult && !isGenerating && (
-                <div className="header-actions">
-                    <button onClick={handleGenerate} className="regenerate-button" title="Regenerate API Endpoints">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" /></svg>
-                        <span>Regenerate</span>
-                    </button>
-                </div>
-            )}
-        </div>
+        <TaskResultHeader title="API Endpoints" onRegenerate={handleGenerate} />
       )}
 
-      {isGenerating ? renderLoading() : apiResult ? renderResults() : renderInitial()}
+      {isGenerating ? renderLoading() : apiResult ? renderResults() : (
+        <InitialTaskView
+            title="Generate RESTful API Endpoints"
+            description="Automatically design a complete set of RESTful API endpoints based on your application's logic, user flows, and database schema."
+            buttonText="Generate API Endpoints"
+            onAction={handleGenerate}
+            disabled={!canGenerate}
+        />
+      )}
     </div>
   );
 };

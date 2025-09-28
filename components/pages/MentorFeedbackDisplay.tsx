@@ -3,6 +3,8 @@ import { useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { toast } from 'sonner';
+import { InitialTaskView } from './InitialTaskView';
+import { TaskResultHeader } from './TaskResultHeader';
 import './MentorFeedbackDisplay.css';
 
 // --- TYPE DEFINITIONS ---
@@ -102,53 +104,41 @@ const MentorFeedbackDisplay: React.FC<MentorFeedbackProps> = ({ startup }) => {
     };
 
     return (
-      <div className="mf-results-container">
-        <div className="mf-header">
-          <h2 className="text-3xl font-bold">AI Mentor Feedback</h2>
-          <button onClick={handleGenerate} className="regenerate-button" title="Regenerate Feedback">
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" /></svg>
-            <span>Regenerate</span>
-          </button>
-        </div>
+      <>
+        <TaskResultHeader title="AI Mentor Feedback" onRegenerate={handleGenerate} />
+        <div className="mf-results-container">
+          <div className="mf-tabs">
+            {(Object.keys(tabContent) as Array<keyof typeof tabContent>).map(tabName => (
+              <button 
+                key={tabName} 
+                className={`mf-tab-button ${activeTab === tabName ? `active ${tabName}` : ''}`}
+                onClick={() => setActiveTab(tabName)}
+              >
+                <i className={tabContent[tabName].icon}></i>
+                <span>{tabName.charAt(0).toUpperCase() + tabName.slice(1)}</span>
+              </button>
+            ))}
+          </div>
 
-        <div className="mf-tabs">
-          {(Object.keys(tabContent) as Array<keyof typeof tabContent>).map(tabName => (
-            <button 
-              key={tabName} 
-              className={`mf-tab-button ${activeTab === tabName ? `active ${tabName}` : ''}`}
-              onClick={() => setActiveTab(tabName)}
-            >
-              <i className={tabContent[tabName].icon}></i>
-              <span>{tabName.charAt(0).toUpperCase() + tabName.slice(1)}</span>
-            </button>
-          ))}
-        </div>
+          <div className={`mf-tab-content ${activeTab}`}>
+              <ul>
+                {tabContent[activeTab].items.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+          </div>
 
-        <div className={`mf-tab-content ${activeTab}`}>
-            <ul>
-              {tabContent[activeTab].items.map((item, i) => <li key={i}>{item}</li>)}
-            </ul>
         </div>
-
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="text-center p-12 bg-slate-900 rounded-lg">
-        <h3 className="text-3xl font-bold mb-4 text-white">Get Feedback from AI Mentor</h3>
-        <p className="text-slate-300 mb-8 max-w-3xl mx-auto">
-            Submit your business plan and other generated documents for a comprehensive review by your AI Mentor. It will analyze your strategy, market fit, and execution plan to provide actionable feedback.
-        </p>
-        <button
-            onClick={handleGenerate}
-            className="cta-button"
-            disabled={!canGenerate}
-        >
-            Request AI Mentor Review
-        </button>
-        {/* {!canGenerate && <p className="text-sm text-slate-500 mt-4">Please complete the Business Plan step first.</p>}*/}
-    </div>
+    <InitialTaskView
+        title="Get Feedback from AI Mentor"
+        description="Submit your business plan and other generated documents for a comprehensive review by your AI Mentor. It will analyze your strategy, market fit, and execution plan to provide actionable feedback."
+        buttonText="Request AI Mentor Review"
+        onAction={handleGenerate}
+        disabled={!canGenerate}
+    />
   );
 };
 

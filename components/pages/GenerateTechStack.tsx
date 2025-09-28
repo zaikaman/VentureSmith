@@ -3,6 +3,8 @@ import { useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { toast } from 'sonner';
+import { InitialTaskView } from './InitialTaskView';
+import { TaskResultHeader } from './TaskResultHeader';
 import './GenerateTechStack.css';
 
 // --- Interfaces ---
@@ -192,36 +194,22 @@ const GenerateTechStack: React.FC<GenerateTechStackProps> = ({ startup }) => {
     </div>
   );
 
-  const renderInitial = () => (
-    <div className="initial-view text-center p-12 bg-slate-900 rounded-lg">
-        <h3 className="text-3xl font-bold mb-4 text-white">Generate Technology Stack</h3>
-        <p className="text-slate-300 mb-8 max-w-3xl mx-auto">
-            Let our AI CTO analyze your venture's context to recommend a modern, scalable, and appropriate technology stack for your MVP.
-        </p>
-        <button
-            onClick={handleGenerate}
-            className="cta-button"
-            disabled={isGenerating || !startup.brainstormResult}
-        >
-            {isGenerating ? 'Generating...' : 'Generate Tech Stack'}
-        </button>
-        {!startup.brainstormResult && <p className="text-sm text-slate-500 mt-4">Please complete the 'Brainstorm & Refine Idea' step first.</p>}
-    </div>
-  );
-
   return (
     <div className="tech-stack-container">
-        <div className="header-section">
-            <h2 className="text-3xl font-bold">Technology Stack Recommendation</h2>
-            {result && !isGenerating && (
-                 <button onClick={handleGenerate} className="regenerate-button" title="Regenerate">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" /></svg>
-                    <span>Regenerate</span>
-                </button>
-            )}
-        </div>
-
-        {isGenerating ? renderLoading() : result ? renderResults(result) : renderInitial()}
+        {isGenerating ? renderLoading() : result ?
+        <>
+            <TaskResultHeader title="Technology Stack Recommendation" onRegenerate={handleGenerate} />
+            {renderResults(result)}
+        </>
+         : (
+            <InitialTaskView
+                title="Generate Technology Stack"
+                description="Let our AI CTO analyze your venture's context to recommend a modern, scalable, and appropriate technology stack for your MVP."
+                buttonText={isGenerating ? 'Generating...' : 'Generate Tech Stack'}
+                onAction={handleGenerate}
+                disabled={isGenerating || !startup.brainstormResult}
+            />
+        )}
     </div>
   );
 };

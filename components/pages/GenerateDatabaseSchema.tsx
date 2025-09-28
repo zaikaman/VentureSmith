@@ -5,6 +5,8 @@ import { Id } from '../../convex/_generated/dataModel';
 import { toast } from 'sonner';
 import { toPng } from 'html-to-image';
 import ReactFlow, { useNodesState, useEdgesState, Background, Controls, MiniMap, Edge, Node } from 'reactflow';
+import { InitialTaskView } from './InitialTaskView';
+import { TaskResultHeader } from './TaskResultHeader';
 
 import 'reactflow/dist/style.css';
 import './GenerateDatabaseSchema.css';
@@ -112,7 +114,8 @@ const GenerateDatabaseSchema: React.FC<GenerateDatabaseSchemaProps> = ({ startup
     } catch (err: any) {
       console.error("Schema generation failed:", err);
       toast.error("Failed to generate Database Schema", { description: err.message });
-    } finally {
+    }
+    finally {
       setIsGenerating(false);
     }
   };
@@ -178,46 +181,30 @@ const GenerateDatabaseSchema: React.FC<GenerateDatabaseSchemaProps> = ({ startup
     </div>
   );
 
-  const renderInitial = () => (
-    <div className="initial-view">
-        <h3 className="text-3xl font-bold mb-4 text-white">Generate Interactive Database Schema</h3>
-        <p className="text-slate-300 mb-8 max-w-3xl mx-auto">
-            Automatically design an interactive, draggable database schema based on your application's features and user flows.
-        </p>
-        <button
-            onClick={handleGenerate}
-            className="cta-button"
-            disabled={!canGenerate}
-        >
-            Generate Schema
-        </button>
-        {!canGenerate && <p className="text-sm text-slate-500 mt-4">Please complete the 'Brainstorm & Refine Idea' and 'User Flow Diagram' steps first.</p>}
-    </div>
-  );
-
   const hasContent = nodes.length > 0 || isGenerating;
 
   return (
     <div className="database-schema-container">
       {hasContent && (
-        <div className="header-section">
-            <h2 className="text-3xl font-bold">Database Schema (ERD)</h2>
+        <TaskResultHeader title="Database Schema (ERD)" onRegenerate={handleGenerate}>
             {nodes.length > 0 && !isGenerating && (
-                <div className="header-actions">
-                    <button onClick={handleGenerate} className="regenerate-button" title="Regenerate Schema">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" /></svg>
-                        <span>Regenerate</span>
-                    </button>
-                    <button onClick={handleExport} className="regenerate-button" title="Export to PNG">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 4.5a.75.75 0 01.75.75v5.518l2.28-2.28a.75.75 0 111.06 1.06l-3.75 3.75a.75.75 0 01-1.06 0L5.47 9.048a.75.75 0 111.06-1.06l2.22 2.22V5.25A.75.75 0 0110 4.5z"/><path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z"/></svg>
-                        <span>Export</span>
-                    </button>
-                </div>
+                <button onClick={handleExport} className="regenerate-button" title="Export to PNG">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 4.5a.75.75 0 01.75.75v5.518l2.28-2.28a.75.75 0 111.06 1.06l-3.75 3.75a.75.75 0 01-1.06 0L5.47 9.048a.75.75 0 111.06-1.06l2.22 2.22V5.25A.75.75 0 0110 4.5z"/><path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z"/></svg>
+                    <span>Export</span>
+                </button>
             )}
-        </div>
+        </TaskResultHeader>
       )}
 
-      {isGenerating ? renderLoading() : nodes.length > 0 ? renderResults() : renderInitial()}
+      {isGenerating ? renderLoading() : nodes.length > 0 ? renderResults() : (
+        <InitialTaskView
+            title="Generate Interactive Database Schema"
+            description="Automatically design an interactive, draggable database schema based on your application's features and user flows."
+            buttonText="Generate Schema"
+            onAction={handleGenerate}
+            disabled={!canGenerate}
+        />
+      )}
     </div>
   );
 };

@@ -3,6 +3,8 @@ import { useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { toast } from 'sonner';
+import { InitialTaskView } from './InitialTaskView';
+import { TaskResultHeader } from './TaskResultHeader';
 import './ProductHuntLaunchKit.css';
 
 interface ProductHuntLaunchKitProps {
@@ -273,41 +275,24 @@ const ProductHuntLaunchKit: React.FC<ProductHuntLaunchKitProps> = ({ startup }) 
     </div>
   );
 
-  const renderInitial = () => (
-    <div className="initial-view">
-        <h3 className="text-3xl font-bold mb-4 text-white">Prepare for Launch!</h3>
-        <p className="text-slate-300 mb-8 max-w-3xl mx-auto">
-            Generate a comprehensive suite of assets for a successful Product Hunt launch, from taglines and tweets to emails and post ideas.
-        </p>
-        <button
-            onClick={handleGenerate}
-            className="cta-button"
-            disabled={!canGenerate}
-        >
-            <i className="fas fa-rocket" style={{marginRight: '8px'}}></i>
-            Generate Full Launch Kit
-        </button>
-        {!canGenerate && <p className="text-sm text-slate-500 mt-4">Please complete the previous Go-to-Market steps first.</p>}
-    </div>
-  );
-
   const hasContent = !!kitData || isGenerating;
 
   return (
     <div className="ph-launch-kit-container">
       {hasContent && (
-        <div className="header-section">
-            <h2 className="text-3xl font-bold">Product Hunt Launch Kit</h2>
-            {kitData && !isGenerating && (
-                <button onClick={handleGenerate} className="regenerate-button" title="Regenerate Kit">
-                    <i className="fas fa-sync-alt"></i>
-                    <span>Regenerate</span>
-                </button>
-            )}
-        </div>
+        <TaskResultHeader title="Product Hunt Launch Kit" onRegenerate={handleGenerate} />
       )}
 
-      {isGenerating ? renderLoading() : kitData ? renderResults(kitData) : renderInitial()}
+      {isGenerating ? renderLoading() : kitData ? renderResults(kitData) : (
+        <InitialTaskView
+            title="Prepare for Launch!"
+            description="Generate a comprehensive suite of assets for a successful Product Hunt launch, from taglines and tweets to emails and post ideas."
+            buttonText="Generate Full Launch Kit"
+            onAction={handleGenerate}
+            disabled={!canGenerate}
+            buttonIcon={<i className="fas fa-rocket"></i>}
+        />
+      )}
     </div>
   );
 };

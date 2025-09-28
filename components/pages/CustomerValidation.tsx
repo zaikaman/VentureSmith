@@ -3,6 +3,8 @@ import { useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { toast } from 'sonner';
+import { InitialTaskView } from './InitialTaskView';
+import { TaskResultHeader } from './TaskResultHeader';
 import './CustomerValidation.css';
 
 // --- TYPE DEFINITIONS ---
@@ -99,66 +101,53 @@ const CustomerValidation: React.FC<CustomerValidationProps> = ({ startup }) => {
   if (results) {
     const activeResult = results.find(r => r.personaName === activePersona);
     return (
-      <div className="cv-results-container">
-        <div className="cv-header">
-          <h2 className="text-3xl font-bold">Simulated Customer Feedback</h2>
-          <button onClick={handleSimulation} className="regenerate-button" title="Regenerate">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" /></svg>
-            <span>Regenerate</span>
-          </button>
-        </div>
-
-        <div className="persona-tabs">
-          {results.map(result => {
-            const persona = personas.find(p => p.name === result.personaName);
-            return (
-              <button 
-                key={result.personaName} 
-                onClick={() => setActivePersona(result.personaName)}
-                className={`persona-tab ${activePersona === result.personaName ? 'active' : ''}`}>
-                  <span className="persona-avatar">{persona?.avatar}</span>
-                  <span>{result.personaName}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {activeResult && (
-          <div className="feedback-content">
-            <div className="feedback-card positive">
-              <h4 className="feedback-title"><i className="fa-solid fa-thumbs-up"></i> Key Positive Feedback</h4>
-              <ul>{activeResult.keyPositiveFeedback.map((item, i) => <li key={i}>{item}</li>)}</ul>
-            </div>
-            <div className="feedback-card concerns">
-              <h4 className="feedback-title"><i className="fa-solid fa-triangle-exclamation"></i> Critical Concerns</h4>
-              <ul>{activeResult.criticalConcerns.map((item, i) => <li key={i}>{item}</li>)}</ul>
-            </div>
-            <div className="feedback-card questions">
-              <h4 className="feedback-title"><i className="fa-solid fa-circle-question"></i> Unanswered Questions</h4>
-              <ul>{activeResult.unansweredQuestions.map((item, i) => <li key={i}>{item}</li>)}</ul>
-            </div>
+      <>
+        <TaskResultHeader title="Simulated Customer Feedback" onRegenerate={handleSimulation} />
+        <div className="cv-results-container">
+          <div className="persona-tabs">
+            {results.map(result => {
+              const persona = personas.find(p => p.name === result.personaName);
+              return (
+                <button 
+                  key={result.personaName} 
+                  onClick={() => setActivePersona(result.personaName)}
+                  className={`persona-tab ${activePersona === result.personaName ? 'active' : ''}`}>
+                    <span className="persona-avatar">{persona?.avatar}</span>
+                    <span>{result.personaName}</span>
+                </button>
+              );
+            })}
           </div>
-        )}
-      </div>
+
+          {activeResult && (
+            <div className="feedback-content">
+              <div className="feedback-card positive">
+                <h4 className="feedback-title"><i className="fa-solid fa-thumbs-up"></i> Key Positive Feedback</h4>
+                <ul>{activeResult.keyPositiveFeedback.map((item, i) => <li key={i}>{item}</li>)}</ul>
+              </div>
+              <div className="feedback-card concerns">
+                <h4 className="feedback-title"><i className="fa-solid fa-triangle-exclamation"></i> Critical Concerns</h4>
+                <ul>{activeResult.criticalConcerns.map((item, i) => <li key={i}>{item}</li>)}</ul>
+              </div>
+              <div className="feedback-card questions">
+                <h4 className="feedback-title"><i className="fa-solid fa-circle-question"></i> Unanswered Questions</h4>
+                <ul>{activeResult.unansweredQuestions.map((item, i) => <li key={i}>{item}</li>)}</ul>
+              </div>
+            </div>
+          )}
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="text-center p-12 bg-slate-900 rounded-lg">
-        <h3 className="text-3xl font-bold mb-4 text-white">Simulate Customer Interviews</h3>
-        <p className="text-slate-300 mb-8 max-w-3xl mx-auto">
-            Run a virtual focus group with your generated customer personas. The AI will simulate their reactions, providing critical feedback based on your entire venture context.
-        </p>
-        <button
-            onClick={handleSimulation}
-            className="cta-button"
-            disabled={!canSimulate}
-        >
-            Run Simulation
-        </button>
-        {error && <p className="text-red-500 mt-4">{error}</p>}
-        {!canSimulate && <p className="text-sm text-slate-500 mt-4">Please complete 'Generate Interview Scripts' first.</p>}
-    </div>
+    <InitialTaskView
+        title="Simulate Customer Interviews"
+        description="Run a virtual focus group with your generated customer personas. The AI will simulate their reactions, providing critical feedback based on your entire venture context."
+        buttonText="Run Simulation"
+        onAction={handleSimulation}
+        disabled={!canSimulate}
+    />
   );
 };
 

@@ -4,6 +4,8 @@ import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { toast } from 'sonner';
 import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
+import { InitialTaskView } from './InitialTaskView';
+import { TaskResultHeader } from './TaskResultHeader';
 
 
 import './BuildWaitlistPage.css';
@@ -126,42 +128,23 @@ const BuildWaitlistPage: React.FC<BuildWaitlistPageProps> = ({ startup }) => {
     );
   };
 
-  const renderInitial = () => (
-    <div className="initial-view">
-        <h3 className="text-3xl font-bold mb-4 text-white">Build Pre-launch Waitlist Page</h3>
-        <p className="text-slate-300 mb-8 max-w-3xl mx-auto">
-            Generate a complete, ready-to-use waitlist page to start capturing leads before you even launch your product.
-        </p>
-        <button
-            onClick={handleGenerate}
-            className="cta-button"
-            disabled={!canGenerate}
-        >
-            Build Waitlist Page
-        </button>
-        {!canGenerate && <p className="text-sm text-slate-500 mt-4">Please complete Brand Identity and Marketing Copy first.</p>}
-    </div>
-  );
-
   const hasContent = waitlistData || isGenerating;
 
   return (
     <div className="waitlist-page-container">
       {hasContent && (
-        <div className="header-section">
-            <h2 className="text-3xl font-bold">Waitlist Page Builder</h2>
-            {waitlistData && !isGenerating && (
-                <div className="header-actions">
-                    <button onClick={handleGenerate} className="regenerate-button" title="Regenerate Page">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" /></svg>
-                        <span>Regenerate</span>
-                    </button>
-                </div>
-            )}
-        </div>
+        <TaskResultHeader title="Waitlist Page Builder" onRegenerate={handleGenerate} />
       )}
 
-      {isGenerating ? renderLoading() : waitlistData ? renderResults() : renderInitial()}
+      {isGenerating ? renderLoading() : waitlistData ? renderResults() : (
+        <InitialTaskView
+            title="Build Pre-launch Waitlist Page"
+            description="Generate a complete, ready-to-use waitlist page to start capturing leads before you even launch your product."
+            buttonText="Build Waitlist Page"
+            onAction={handleGenerate}
+            disabled={!canGenerate}
+        />
+      )}
     </div>
   );
 };
