@@ -696,3 +696,33 @@ export const generateWaitlistPage = action({
     return result;
   },
 });
+
+export const generateProductHuntKit = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.businessPlan || !startup.marketingCopy || !startup.brandIdentity || !startup.missionVision) {
+      throw new Error("Business Plan, Marketing Copy, Brand Identity, and Mission/Vision must be completed first.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      idea: startup.idea,
+      businessPlan: JSON.parse(startup.businessPlan),
+      marketingCopy: JSON.parse(startup.marketingCopy),
+      brandIdentity: JSON.parse(startup.brandIdentity),
+      missionVision: JSON.parse(startup.missionVision),
+    };
+
+    const result = await ctx.runAction(internal.gemini.generateProductHuntKitWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateProductHuntKit, {
+      startupId,
+      productHuntKit: result,
+    });
+
+    return result;
+  },
+});

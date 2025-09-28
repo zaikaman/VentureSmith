@@ -106,7 +106,7 @@ const AIWireframeGenerator: React.FC<AIWireframeGeneratorProps> = ({ startup }) 
             <LivePreview className="wireframe-preview" />
           </div>
           <LiveError className="live-error" />
-          <h3 className="generated-code-title">Generated Code</h3>
+          <h3 className="generated-code-title">Code Editor</h3>
           <LiveEditor onChange={setCode} className="live-editor" />
         </LiveProvider>
     </div>

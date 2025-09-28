@@ -1946,3 +1946,131 @@ export const generateWaitlistPageWithAI = internalAction(
     }
   }
 );
+
+export const generateProductHuntKitWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const kitSchema = {
+      type: "OBJECT",
+      properties: {
+        taglines: {
+          type: "ARRAY",
+          description: "An array of 3-5 short, catchy taglines for the Product Hunt title.",
+          items: { type: "STRING" },
+        },
+        makersComment: {
+          type: "OBJECT",
+          description: "The maker's first comment, introducing the product and starting the conversation.",
+          properties: {
+            problem: { type: "STRING", description: "A relatable description of the problem being solved." },
+            solution: { type: "STRING", description: "How your product solves this problem in a unique way." },
+            callToAction: { type: "STRING", description: "An open-ended question to the community to spark engagement." },
+          },
+          required: ["problem", "solution", "callToAction"],
+        },
+        tweetSequence: {
+          type: "ARRAY",
+          description: "A sequence of 3 tweets for launch day.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              time: { type: "STRING", description: "When to post this tweet (e.g., 'Morning - Launch Time!', 'Afternoon Update', 'Final Hours')." },
+              content: { type: "STRING", description: "The content of the tweet. Must include the placeholder [PH_LINK] and relevant hashtags." },
+            },
+            required: ["time", "content"],
+          },
+        },
+        visualAssetIdeas: {
+          type: "ARRAY",
+          description: "A list of 3 creative, detailed ideas for images or GIFs.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              idea: { type: "STRING", description: "The core concept of the visual." },
+              description: { type: "STRING", description: "A detailed description of what the visual should look like, including any text overlays." },
+            },
+            required: ["idea", "description"],
+          },
+        },
+        announcementEmail: {
+          type: "OBJECT",
+          description: "An email to send to subscribers announcing the launch.",
+          properties: {
+            subject: { type: "STRING", description: "A compelling subject line for the email." },
+            body: { type: "STRING", description: "The full body of the email, written in a personal and exciting tone. Use markdown for formatting." },
+          },
+          required: ["subject", "body"],
+        },
+        linkedinPost: {
+          type: "STRING",
+          description: "A professional post for LinkedIn to announce the launch and explain the product's value proposition.",
+        },
+        thankYouTweet: {
+          type: "STRING",
+          description: "A pre-written tweet to thank the community for their support after the launch is over.",
+        },
+      },
+      required: ["taglines", "makersComment", "tweetSequence", "visualAssetIdeas", "announcementEmail", "linkedinPost", "thankYouTweet"],
+    };
+
+    const prompt = `
+      You are a Product Hunt launch expert and marketing guru. You have helped dozens of products reach #1 Product of the Day.
+      You are tasked with creating a comprehensive, detailed launch kit for a new startup based on its core data.
+
+      **Startup Data Package:**
+      - **Name:** ${fullContext.name}
+      - **Idea:** ${fullContext.idea}
+      - **Business Plan Summary:** ${fullContext.businessPlan.executiveSummary}
+      - **Key Features:** ${fullContext.businessPlan.productsAndServices.keyFeatures.join(", ")}
+      - **Brand Slogan:** ${fullContext.brandIdentity.slogan}
+      - **Mission:** ${fullContext.missionVision.mission}
+      - **Key Marketing Tagline:** ${fullContext.marketingCopy.taglines[0]}
+
+      **Your Task:**
+      Generate a JSON object containing a rich set of assets for a successful Product Hunt launch. Be creative, detailed, and strategic.
+
+      **JSON Schema Requirements:**
+      1.  **taglines**: Generate 3-5 diverse and catchy tagline options for the Product Hunt title.
+      2.  **makersComment**: Create the crucial first comment. Structure it with a relatable 'problem', a clear 'solution', and an engaging 'callToAction' question.
+      3.  **tweetSequence**: Write a sequence of exactly 3 tweets for launch day: one for the morning launch, one for the afternoon, and one for the final hours. Each must include the placeholder [PH_LINK] and relevant hashtags.
+      4.  **visualAssetIdeas**: Generate 3 distinct and creative ideas for visuals (images/GIFs). For each, provide a core 'idea' and a detailed 'description' of what it should look like.
+      5.  **announcementEmail**: Write a complete launch announcement email for subscribers, with a strong 'subject' and a personal, exciting 'body'.
+      6.  **linkedinPost**: Write a professional and insightful post for LinkedIn.
+      7.  **thankYouTweet**: Write a sincere thank you tweet for after the launch.
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Expanded Product Hunt Launch Kit from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: kitSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No Product Hunt kit data received from Gemini API");
+      }
+
+      console.log("Expanded Product Hunt kit data received successfully.");
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get Product Hunt kit data:", error.message);
+      throw new Error(`Failed to get Product Hunt kit data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
