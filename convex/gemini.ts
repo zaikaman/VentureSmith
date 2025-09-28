@@ -2272,6 +2272,78 @@ export const generateProcessMapWithAI = internalAction(
   }
 );
 
+export const generateJobDescriptionsWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const jobDescriptionSchema = {
+      type: "ARRAY",
+      items: {
+        type: "OBJECT",
+        properties: {
+          title: { type: "STRING", description: "The job title (e.g., 'Lead Frontend Engineer')." },
+          department: { type: "STRING", description: "The department for this role (e.g., 'Engineering', 'Marketing')." },
+          summary: { type: "STRING", description: "A brief, engaging summary of the role." },
+          responsibilities: { type: "ARRAY", items: { type: "STRING" }, description: "A list of 4-5 key responsibilities." },
+          qualifications: { type: "ARRAY", items: { type: "STRING" }, description: "A list of 4-5 key qualifications and requirements." },
+        },
+        required: ["title", "department", "summary", "responsibilities", "qualifications"],
+      }
+    };
+
+    const prompt = `
+      You are a senior HR manager and technical recruiter for a fast-growing tech startup.
+      Based on the provided business context for a startup called "${fullContext.name}", draft professional and appealing job descriptions for the key roles identified in the development roadmap.
+
+      **Business Context:**
+      - **Official Startup Name:** ${fullContext.name}
+      - **Business Plan Summary:** ${fullContext.businessPlan.executiveSummary}
+      - **Key Roles Identified:** ${JSON.stringify(fullContext.developmentRoadmap.roadmap[0].epics, null, 2)}
+
+      **Your Task:**
+      Generate a JSON object that contains an array of job descriptions for the 3 most critical roles based on the context (e.g., a lead developer, a product manager, a marketing lead).
+
+      **JSON Schema Requirements:**
+      1.  The root of the response must be a JSON array.
+      2.  Each object in the array must represent a job description and contain 'title', 'department', 'summary', an array of 'responsibilities', and an array of 'qualifications'.
+      **Important Formatting Rule:** Do not use any markdown formatting. All text in the JSON string values must be plain text. Do not use asterisks (*).
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Job Descriptions from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: jobDescriptionSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No job description data received from Gemini API");
+      }
+
+      console.log("Job description data received successfully.");
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get job description data:", error.message);
+      throw new Error(`Failed to get job description data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
 export const generateProductHuntKitWithAI = internalAction(
   async (
     _,

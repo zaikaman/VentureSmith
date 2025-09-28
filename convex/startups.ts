@@ -1055,10 +1055,11 @@ export const updateSeoStrategy = mutation({
     return { success: true };
   },
 });
-export const updateProcessAutomation = mutation({
+
+export const updateDraftJobDescriptions = mutation({
   args: {
     startupId: v.id("startups"),
-    processAutomation: v.string(),
+    draftJobDescriptions: v.string(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -1077,7 +1078,7 @@ export const updateProcessAutomation = mutation({
     }
 
     await ctx.db.patch(args.startupId, {
-      processAutomation: args.processAutomation,
+      draftJobDescriptions: args.draftJobDescriptions,
     });
 
     return { success: true };

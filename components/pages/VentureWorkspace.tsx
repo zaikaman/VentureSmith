@@ -42,6 +42,7 @@ import IdentifyGrowthMetrics from './IdentifyGrowthMetrics';
 import BrainstormABTestIdeas from './BrainstormABTestIdeas';
 import GenerateSeoStrategy from './GenerateSeoStrategy';
 import MapProcesses from './MapProcesses';
+import DraftJobDescriptions from './DraftJobDescriptions';
 
 import './VentureWorkspace.css';
 
@@ -150,7 +151,7 @@ export const VentureWorkspace: React.FC = () => {
             id: 'phase-10', name: 'Phase 10: Scaling & Operations',
             tasks: [
                 { id: 'processAutomation', name: 'Map Processes for Automation', isCompleted: !!startup?.processAutomation },
-                { id: 'draftJobDescriptions', name: 'Draft Job Descriptions', isCompleted: false },
+                { id: 'draftJobDescriptions', name: 'Draft Job Descriptions', isCompleted: !!startup?.draftJobDescriptions },
             ]
         },
         {
@@ -304,6 +305,8 @@ export const VentureWorkspace: React.FC = () => {
                 return <GenerateSeoStrategy startup={startup} />;
             case 'processAutomation':
                 return <MapProcesses startup={startup} />;
+            case 'draftJobDescriptions':
+                return <DraftJobDescriptions startup={startup} />;
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;

@@ -43,6 +43,7 @@ export default defineSchema({
     abTestIdeas: v.optional(v.string()),
     seoStrategy: v.optional(v.string()),
     processAutomation: v.optional(v.string()),
+    draftJobDescriptions: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),
 });
