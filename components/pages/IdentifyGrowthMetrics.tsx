@@ -130,6 +130,7 @@ interface IdentifyGrowthMetricsProps {
 const IdentifyGrowthMetrics: React.FC<IdentifyGrowthMetricsProps> = ({ startup, startupId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number | null>(0);
   const updateGrowthMetrics = useMutation(api.startups.updateGrowthMetrics);
 
   const metricsResult = startup?.growthMetrics ? JSON.parse(startup.growthMetrics) : null;
@@ -185,21 +186,31 @@ const IdentifyGrowthMetrics: React.FC<IdentifyGrowthMetricsProps> = ({ startup, 
       />
       <div className="growth-metrics-content">
         <p className="growth-metrics-intro">{metricsResult.introduction}</p>
-        <div className="metrics-grid">
+        <div className="accordion">
           {metricsResult.metrics.map((metric: any, index: number) => (
-            <div key={index} className="metric-card" style={{ borderTopColor: metric.color }}>
-              <div className="metric-card-header">
+            <div key={index} className="accordion-item">
+              <button 
+                className="accordion-header" 
+                onClick={() => setActiveIndex(activeIndex === index ? null : index)}
+              >
                 <i className={`${metric.icon} metric-icon`} style={{ color: metric.color }}></i>
                 <h3>{metric.category}</h3>
-              </div>
-              <p className="metric-card-description">{metric.description}</p>
-              <ul className="metric-points">
-                {metric.points.map((point: any, pIndex: number) => (
-                  <li key={pIndex}>
-                    <strong>{point.name}:</strong> {point.detail}
-                  </li>
-                ))}
-              </ul>
+                <span className={`accordion-chevron ${activeIndex === index ? 'expanded' : ''}`}>
+                  <i className="fas fa-chevron-down"></i>
+                </span>
+              </button>
+              {activeIndex === index && (
+                <div className="accordion-content">
+                  <p className="metric-card-description">{metric.description}</p>
+                  <ul className="metric-points">
+                    {metric.points.map((point: any, pIndex: number) => (
+                      <li key={pIndex}>
+                        <strong>{point.name}:</strong> {point.detail}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           ))}
         </div>

@@ -109,48 +109,86 @@
 }
 
 /* --- Results View --- */
-.tech-stack-results {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
+.accordion {
+  width: 100%;
+  max-width: 900px;
+  margin: 2rem auto 0 auto;
 }
 
-@media (max-width: 1200px) {
-    .tech-stack-results {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.accordion-item {
+  background-color: #1e293b; /* bg-slate-800 */
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-@media (max-width: 768px) {
-    .tech-stack-results {
-        grid-template-columns: 1fr;
-    }
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1.5rem;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #f0f4f8;
 }
 
-.tech-category-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 1.5rem;
+.accordion-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e5e7eb;
+  flex-grow: 1;
 }
 
-.tech-category-header {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #e5e7eb;
-    margin-bottom: 1.5rem;
+.category-icon {
+  margin-right: 1rem;
+  font-size: 1.3rem;
+  width: 25px;
+  text-align: center;
+  color: #94a3b8; /* slate-400 */
+}
+
+.accordion-chevron {
+  margin-left: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.accordion-chevron.expanded {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  animation: fadeInContent 0.5s ease;
+}
+
+@keyframes fadeInContent {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .tech-item {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tech-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0.5rem;
 }
 
 .tech-item-icon {
     font-size: 2rem;
     width: 40px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .tech-item-details h4 {

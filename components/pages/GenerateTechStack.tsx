@@ -96,10 +96,20 @@ const getColorForTech = (techName: string): string => {
   return '#FFFFFF'; // Default color
 };
 
+const getIconForCategory = (categoryName: string): string => {
+  const lowerCaseName = categoryName.toLowerCase();
+  if (lowerCaseName.includes('frontend')) return 'fa-solid fa-desktop';
+  if (lowerCaseName.includes('backend')) return 'fa-solid fa-server';
+  if (lowerCaseName.includes('database')) return 'fa-solid fa-database';
+  if (lowerCaseName.includes('deployment')) return 'fa-solid fa-cloud-arrow-up';
+  return 'fa-solid fa-layer-group'; // Default icon
+};
+
 // --- Main Component ---
 const GenerateTechStack: React.FC<GenerateTechStackProps> = ({ startup }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<TechStackResult | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(0);
   const generateTechStackAction = useAction(api.actions.generateTechStack);
 
   const loadingTexts = [
@@ -172,23 +182,34 @@ const GenerateTechStack: React.FC<GenerateTechStackProps> = ({ startup }) => {
   );
 
   const renderResults = (data: TechStackResult) => (
-    <div className="tech-stack-results">
+    <div className="accordion">
       {data.stack.map((category, index) => (
-        <div key={index} className="tech-category-card">
-          <h3 className="tech-category-header">{category.category}</h3>
-          <div>
-            {category.technologies.map((tech, techIndex) => (
-              <div key={techIndex} className="tech-item">
-                <div className="tech-item-icon">
-                  <i className={getIconForTech(tech.name)} style={{ color: getColorForTech(tech.name) }}></i>
+        <div key={index} className="accordion-item">
+          <button 
+            className="accordion-header" 
+            onClick={() => setActiveIndex(activeIndex === index ? null : index)}
+          >
+            <i className={`${getIconForCategory(category.category)} category-icon`}></i>
+            <h3>{category.category}</h3>
+            <span className={`accordion-chevron ${activeIndex === index ? 'expanded' : ''}`}>
+              <i className="fas fa-chevron-down"></i>
+            </span>
+          </button>
+          {activeIndex === index && (
+            <div className="accordion-content">
+              {category.technologies.map((tech, techIndex) => (
+                <div key={techIndex} className="tech-item">
+                  <div className="tech-item-icon">
+                    <i className={getIconForTech(tech.name)} style={{ color: getColorForTech(tech.name) }}></i>
+                  </div>
+                  <div className="tech-item-details">
+                    <h4>{tech.name}</h4>
+                    <p>{tech.justification}</p>
+                  </div>
                 </div>
-                <div className="tech-item-details">
-                  <h4>{tech.name}</h4>
-                  <p>{tech.justification}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </div>

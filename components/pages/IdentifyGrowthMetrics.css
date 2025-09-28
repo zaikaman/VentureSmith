@@ -50,55 +50,80 @@
   margin-right: auto;
 }
 
-/* Grid for displaying metric cards */
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
+/* Accordion Styles */
+.accordion {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-/* Individual metric card styling */
-.metric-card {
-  background-color: #1e293b;
+.accordion-item {
+  background-color: #1e293b; /* bg-slate-800 */
   border-radius: 8px;
-  padding: 1.5rem;
-  border-top: 4px solid;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.metric-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+.accordion-item:last-child {
+  margin-bottom: 0;
 }
 
-.metric-card-header {
+.accordion-header {
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  width: 100%;
+  padding: 1.5rem;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #f0f4f8;
+}
+
+.accordion-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  flex-grow: 1;
 }
 
 .metric-icon {
   font-size: 1.8rem;
-  margin-right: 1rem;
+  margin-right: 1.5rem;
 }
 
-.metric-card h3 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: #f0f4f8;
+.accordion-chevron {
+  margin-left: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.accordion-chevron.expanded {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  animation: fadeInContent 0.5s ease;
+}
+
+@keyframes fadeInContent {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .metric-card-description {
   font-style: italic;
   color: #a0aec0;
   margin-bottom: 1.5rem;
+  padding-left: 3.3rem; /* Align with points */
 }
 
 .metric-points {
   list-style: none;
   padding: 0;
   margin: 0;
+  padding-left: 3.3rem; /* Align with description */
 }
 
 .metric-points li {
