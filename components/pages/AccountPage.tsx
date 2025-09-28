@@ -12,33 +12,18 @@ import "./AccountPage.css";
 const AccountPage = () => {
   const userProfile = useQuery(api.users.getCurrentUser);
   const startups = useQuery(api.startups.getStartupsForUser);
-  const createOrUpdateUser = useMutation(api.users.createOrUpdateUser);
-  const updateProfile = useMutation(api.users.updateProfile);
   const deleteStartupMutation = useMutation(api.startups.deleteStartup);
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
-  const [isProfileCreated, setIsProfileCreated] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [startupToDelete, setStartupToDelete] = useState<Id<"startups"> | null>(null);
-
-  useEffect(() => {
-    if (userProfile === null && !isProfileCreated) {
-      createOrUpdateUser();
-      setIsProfileCreated(true);
-    }
-  }, [userProfile, isProfileCreated, createOrUpdateUser]);
 
   useEffect(() => {
     if (userProfile) {
       setName(userProfile.name ?? "");
     }
   }, [userProfile]);
-
-  const handleSave = async () => {
-    await updateProfile({ name });
-    toast.success("Profile updated!");
-  };
 
   const handleVentureClick = (id: string) => {
     navigate(`/venture/${id}`);
@@ -89,14 +74,11 @@ const AccountPage = () => {
               id="name"
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
               placeholder={userProfile === undefined ? "Loading..." : "Your Name"}
               disabled={userProfile === undefined}
+              readOnly
             />
           </div>
-          <button onClick={handleSave} className="save-button" disabled={userProfile === undefined}>
-            Save
-          </button>
         </div>
 
         <div className="ventures-section">

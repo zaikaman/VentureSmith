@@ -20,7 +20,8 @@ export const getCurrentUser = query({
 
 // Mutation to create or update a user's profile
 export const createOrUpdateUser = mutation({
-    handler: async (ctx) => {
+    args: { name: v.string() },
+    handler: async (ctx, args) => {
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) {
             return null;
@@ -34,42 +35,27 @@ export const createOrUpdateUser = mutation({
         // If the user doesn't exist, create them
         if (user === null) {
             const newUser = await ctx.db.insert("users", {
+                name: args.name,
                 email: identity.email!,
                 subject: identity.subject,
             });
             return newUser;
         }
 
-        // If the user exists but has no email, update it
+        // If the user exists, update their name and email if different
+        const updates: { name?: string; email?: string } = {};
+        if (user.name !== args.name) {
+            updates.name = args.name;
+        }
         if (user.email !== identity.email) {
-            await ctx.db.patch(user._id, {
-                email: identity.email!,
-            });
+            updates.email = identity.email!;
+        }
+
+        if (Object.keys(updates).length > 0) {
+            await ctx.db.patch(user._id, updates);
         }
 
         return user._id;
-    }
-});
-
-// Mutation to update the user's name
-export const updateProfile = mutation({
-    args: { name: v.string() },
-    handler: async (ctx, args) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) {
-            return null;
-        }
-
-        const user = await ctx.db
-            .query("users")
-            .withIndex("by_subject", (q) => q.eq("subject", identity.subject))
-            .unique();
-
-        if (user === null) {
-            return null;
-        }
-
-        await ctx.db.patch(user._id, { name: args.name });
     }
 });
 

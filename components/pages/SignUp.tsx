@@ -3,6 +3,8 @@ import { toast } from 'sonner';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authClient } from '../../lib/auth-client';
+import { useMutation } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 import './Auth.css';
 
 export const SignUp: React.FC = () => {
@@ -14,6 +16,7 @@ export const SignUp: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [resendCooldown, setResendCooldown] = useState(0);
     const navigate = useNavigate();
+    const createOrUpdateUser = useMutation(api.users.createOrUpdateUser);
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -52,7 +55,8 @@ export const SignUp: React.FC = () => {
             email,
             otp,
         }, {
-            onSuccess: () => {
+            onSuccess: async () => {
+                await createOrUpdateUser({ name });
                 setLoading(false);
                 toast.success("Email verified successfully! You are now signed in.");
                 navigate('/');
