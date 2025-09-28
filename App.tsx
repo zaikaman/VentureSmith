@@ -16,7 +16,6 @@ import { useMatch } from 'react-router-dom';
 import { useQuery } from 'convex/react';
 import { api } from './convex/_generated/api';
 import { Id } from './convex/_generated/dataModel';
-import DueDiligenceChecklist from './components/pages/DueDiligenceChecklist';
 import './App.css';
 
 const WorkspaceWithChatbot = () => {
@@ -53,7 +52,6 @@ const App: React.FC = () => {
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/account" element={<AccountPage />} />
                             <Route path="/venture/:id" element={<WorkspaceWithChatbot />} />
-                            <Route path="/due-diligence-checklist/:startupId" element={<DueDiligenceChecklist />} />
                         </Routes>
                     </div>
                 </main>

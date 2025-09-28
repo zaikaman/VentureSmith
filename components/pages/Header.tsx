@@ -70,9 +70,9 @@ export const Header: React.FC = () => {
                     </nav>
 
                     <div className="header-actions">
-                        <button onClick={toggleTheme} className="theme-toggle-button" aria-label="Toggle theme">
+                        {/* <button onClick={toggleTheme} className="theme-toggle-button" aria-label="Toggle theme">
                             {theme === 'light' ? <MoonIcon /> : <SunIcon />}
-                        </button>
+                        </button> */}
                         <div className="flex items-center gap-2">
                             {session ? (
                                 <>
