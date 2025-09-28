@@ -2,6 +2,7 @@
     padding: 2rem;
     max-width: 1200px;
     margin: 3rem auto 0;
+    background-color: var(--background-color) !important;
 }
 
 .workspace-header {

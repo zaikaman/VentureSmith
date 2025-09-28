@@ -104,7 +104,11 @@ export const BlueprintBuilder: React.FC = () => {
     }
 
     if (isLoading) {
-        return <LoadingIndicator idea={idea} />;
+        return (
+            <div className="blueprint-builder-container">
+                <LoadingIndicator idea={idea} />
+            </div>
+        );
     }
 
     if (error) {

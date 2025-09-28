@@ -6,7 +6,9 @@
     justify-content: center;
     text-align: center;
     padding: 2rem;
+    padding-top: 6rem;
     min-height: 80vh;
+    background-color: var(--background-color) !important;
 }
 
 .spinner {

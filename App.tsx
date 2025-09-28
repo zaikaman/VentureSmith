@@ -11,8 +11,30 @@ import { Home } from './components/pages/Home';
 import { LoginModal } from './components/pages/LoginModal';
 import AccountPage from './components/pages/AccountPage';
 import { VentureWorkspace } from './components/pages/VentureWorkspace';
+import { VentureChatbot } from './components/chatbot/VentureChatbot';
+import { useMatch } from 'react-router-dom';
+import { useQuery } from 'convex/react';
+import { api } from './convex/_generated/api';
+import { Id } from './convex/_generated/dataModel';
 import DueDiligenceChecklist from './components/pages/DueDiligenceChecklist';
 import './App.css';
+
+const WorkspaceWithChatbot = () => {
+  const match = useMatch('/venture/:id');
+  const startupId = match?.params.id as Id<"startups"> | undefined;
+
+  const startup = useQuery(
+    api.startups.getStartupById,
+    startupId ? { id: startupId } : 'skip'
+  );
+
+  return (
+    <>
+      <VentureWorkspace />
+      {startup && <VentureChatbot startup={startup} />}
+    </>
+  );
+};
 
 const App: React.FC = () => {
     const { theme } = useTheme();
@@ -30,7 +52,7 @@ const App: React.FC = () => {
                             <Route path="/signin" element={<SignIn />} />
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/account" element={<AccountPage />} />
-                            <Route path="/venture/:id" element={<VentureWorkspace />} />
+                            <Route path="/venture/:id" element={<WorkspaceWithChatbot />} />
                             <Route path="/due-diligence-checklist/:startupId" element={<DueDiligenceChecklist />} />
                         </Routes>
                     </div>

@@ -323,7 +323,11 @@ export const VentureWorkspace: React.FC = () => {
     };
 
     if (isSessionPending || (session && startup === undefined)) {
-        return <LoadingIndicator idea="Loading Venture..." />;
+        return (
+            <div className="blueprint-builder-container">
+                <LoadingIndicator idea="Loading Venture..." />
+            </div>
+        );
     }
 
     if (!session) {

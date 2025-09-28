@@ -1048,6 +1048,49 @@ export const generateDueDiligenceChecklist = action({
     },
 });
 
+export const chatWithVentureContext = action({
+  args: {
+    startupId: v.id("startups"),
+    messageHistory: v.string(),
+  },
+  handler: async (ctx, { startupId, messageHistory }) => {
+    const startup = await ctx.runQuery(api.startups.get, { id: startupId });
+    if (!startup) {
+      throw new Error("Startup not found");
+    }
+
+    // Sanitize and structure the context to avoid overly large payloads
+    const startupContext = `
+      Startup Name: ${startup.name}
+      Core Idea: ${startup.idea}
+      Business Plan Summary: ${startup.businessPlan ? JSON.parse(startup.businessPlan).executiveSummary : 'Not generated yet.'}
+      Latest Scorecard Score: ${startup.scorecard ? JSON.parse(startup.scorecard).overallScore : 'Not generated yet.'}
+      Mission: ${startup.missionVision ? JSON.parse(startup.missionVision).mission : 'Not generated yet.'}
+    `;
+
+    const prompt = `
+      You are a helpful AI assistant for an entrepreneur building a new venture called "${startup.name}".
+      Your goal is to provide support, answer questions, and help them think through their business ideas based on the context provided.
+      Be encouraging, insightful, and concise.
+
+      Here is the current context for the venture:
+      ${startupContext}
+
+      Here is the recent conversation history:
+      ${messageHistory}
+
+      Based on all of this, provide a helpful response to the latest user message.
+    `;
+
+    const responseText = await ctx.runAction(internal.gemini.generateContent, {
+      prompt,
+      responseMimeType: "text/plain",
+    });
+
+    return responseText;
+  },
+});
+
 export const generatePitchCoachAnalysis = action({
   args: { startupId: v.id("startups") },
   handler: async (ctx, { startupId }) => {
