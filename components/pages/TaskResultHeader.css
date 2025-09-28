@@ -4,13 +4,13 @@
     align-items: center;
     padding: 1rem 0;
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--border-slate-700);
 }
 
 .task-result-title {
     font-size: 1.875rem; /* 30px */
     font-weight: 700;
-    color: var(--color-text-primary);
+    color: #FFF;
 }
 
 .header-actions {
@@ -26,17 +26,17 @@
     font-size: 0.875rem; /* 14px */
     font-weight: 600;
     border-radius: 0.5rem;
-    background-color: var(--color-background-tertiary);
-    color: var(--color-text-secondary);
-    border: 1px solid var(--color-border-subtle);
+    background-color: var(--bg-slate-800);
+    color: var(--text-slate-300);
+    border: 1px solid var(--border-slate-700);
     cursor: pointer;
     transition: all 0.2s ease-in-out;
 }
 
 .regenerate-button:hover {
-    background-color: var(--color-background-hover);
-    color: var(--color-text-primary);
-    border-color: var(--color-border-default);
+    background-color: var(--bg-slate-700);
+    color: var(--text-color);
+    border-color: var(--border-slate-700);
 }
 
 .regenerate-button svg {

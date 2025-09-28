@@ -7,7 +7,7 @@
     text-align: center;
     padding: 2rem;
     border-radius: 0.5rem;
-    background-color: #0f172a; /* bg-slate-900 */
+    background-color: var(--bg-slate-900);
     min-height: 600px; /* Ensure it has a decent height */
 }
 
@@ -15,12 +15,12 @@
     font-size: 2.25rem; /* 36px */
     font-weight: 700;
     margin-bottom: 1rem;
-    color: var(--color-text-primary);
+    color: var(--text-color);
 }
 
 .initial-task-description {
     font-size: 1.125rem; /* 18px */
-    color: var(--color-text-secondary);
+    color: var(--text-slate-300);
     margin-bottom: 2rem;
     max-width: 600px;
     line-height: 1.6;
@@ -34,22 +34,32 @@
     font-size: 1rem;
     font-weight: 600;
     border-radius: 0.5rem;
-    background-color: var(--color-primary);
-    color: white;
+    background-color: white;
+    color: black;
     border: none;
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
-    box-shadow: 0 4px 14px 0 rgba(0, 118, 255, 0.39);
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, filter 0.2s, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 4px 14px 0 rgba(255, 255, 255, 0.2); /* White shadow for dark mode */
+}
+
+[data-theme='light'] .initial-task-action .cta-button {
+    background-color: var(--text-color);
+    color: var(--background-color);
+    box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.2); /* Black shadow for light mode */
 }
 
 .initial-task-action .cta-button:hover {
-    background-color: var(--color-primary-dark);
     transform: translateY(-1px);
+    filter: brightness(0.95); /* Darkens the white button in dark mode */
+}
+
+[data-theme='light'] .initial-task-action .cta-button:hover {
+    filter: brightness(1.5); /* Lightens the black button in light mode */
 }
 
 .initial-task-action .cta-button:disabled {
-    background-color: var(--color-background-tertiary);
-    color: var(--color-text-tertiary);
+    background-color: var(--bg-slate-800);
+    color: var(--text-slate-400);
     cursor: not-allowed;
     box-shadow: none;
     transform: none;

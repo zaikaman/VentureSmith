@@ -112,8 +112,7 @@ export const MarketPulseCheck: React.FC<MarketPulseCheckProps> = ({ startup }) =
           description="Get a rapid, AI-powered analysis of your idea's market potential. Our sonar will scan for demand, competition, growth, and related keywords."
           buttonText="Analyze Market Pulse"
           onAction={handleScan}
-          buttonIcon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75h7.5M8.25 12h7.5m-7.5 5.25h7.5M3.75 6.75h.007v.008H3.75V6.75zm.375 0a3.004 3.004 0 014.118 0M8.625 6.75a3.004 3.004 0 004.118 0m0 0a4.505 4.505 0 015.636 0M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
-        />
+          buttonIcon={<i className="fa-solid fa-magnifying-glass-chart"></i>}        />
       )}
 
       {showResults && result && (

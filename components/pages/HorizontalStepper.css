@@ -107,3 +107,42 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
+
+[data-theme='light'] .stepper-container {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .phase-name {
+    color: var(--text-slate-300);
+}
+
+[data-theme='light'] .step-name {
+    color: var(--text-color);
+}
+
+[data-theme='light'] .stepper-arrow {
+    background: var(--bg-white-10);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    color: var(--text-slate-300);
+}
+
+[data-theme='light'] .stepper-arrow:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .overview-button {
+    background: var(--bg-white-10);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    color: var(--text-slate-300);
+}
+
+[data-theme='light'] .overview-button:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: var(--text-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
