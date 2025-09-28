@@ -14,6 +14,7 @@ interface BrandIdentityResult {
 interface BrandIdentityProps {
   startup: {
     _id: Id<"startups">;
+    name?: string;
     brandIdentity?: string | undefined;
     brainstormResult?: string | undefined;
     marketPulse?: string | undefined;

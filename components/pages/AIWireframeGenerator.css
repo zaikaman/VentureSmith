@@ -55,12 +55,7 @@
   animation: marching-ants 20s linear infinite;
 }
 
-.shape-nav { }
-.shape-hero { }
 .shape-cta { fill: rgba(59, 130, 246, 0.4); }
-.shape-card1 { }
-.shape-card2 { }
-.shape-card3 { }
 
 .wireframe-status-text {
   color: #94a3b8; /* slate-400 */

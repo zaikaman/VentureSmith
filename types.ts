@@ -12,11 +12,35 @@ export interface ScorecardData {
 }
 
 export interface BusinessPlanData {
-  slogan: string;
-  problem: string;
-  solution: string;
-  targetAudience: string;
-  revenueModel: string;
+  executiveSummary: string;
+  companyDescription: {
+    description: string;
+    mission: string;
+    vision: string;
+    coreValues: string[];
+  };
+  productsAndServices: {
+    description: string;
+    keyFeatures: string[];
+    uniqueValueProposition: string;
+  };
+  marketAnalysis: {
+    industryOverview: string;
+    targetMarket: string;
+    competitiveLandscape: string;
+  };
+  marketingAndSalesStrategy: {
+    digitalMarketingStrategy: string[];
+    salesFunnel: string[];
+  };
+  organizationAndManagement: {
+    teamStructure: string;
+    keyRoles: Array<{ role: string; responsibilities: string; }>;
+  };
+  financialProjections: {
+    summary: string;
+    forecast: Array<{ year: number; revenue: string; cogs: string; netProfit: string; }>;
+  };
 }
 
 export interface WebsitePrototypeData {

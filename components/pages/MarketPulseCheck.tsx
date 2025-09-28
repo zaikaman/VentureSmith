@@ -18,6 +18,7 @@ interface MarketPulseCheckProps {
     _id: Id<"startups">;
     idea?: string | undefined;
     marketPulse?: string | undefined;
+    brainstormResult?: string | undefined;
   };
 }
 

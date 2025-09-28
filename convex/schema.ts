@@ -38,6 +38,7 @@ export default defineSchema({
     marketingCopy: v.optional(v.string()),
     preLaunchWaitlist: v.optional(v.string()),
     productHuntKit: v.optional(v.string()),
+    pressRelease: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),
 });

@@ -2074,3 +2074,80 @@ export const generateProductHuntKitWithAI = internalAction(
     }
   }
 );
+
+export const generatePressReleaseWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const pressReleaseSchema = {
+      type: "OBJECT",
+      properties: {
+        headline: { type: "STRING", description: "A compelling, attention-grabbing headline for the press release." },
+        dateline: { type: "STRING", description: "The city, state, and date of the release (e.g., 'SAN FRANCISCO, CA – September 28, 2025')." },
+        introduction: { type: "STRING", description: "A summary of the announcement (the who, what, when, where, why)." },
+        body: { type: "STRING", description: "Detailed paragraphs about the product, the problem it solves, and its features." },
+        quote: { type: "STRING", description: "An insightful quote from the founder/CEO." },
+        aboutUs: { type: "STRING", description: "A standard boilerplate about the company, using its mission and vision." },
+        contactEmail: { type: "STRING", description: "A placeholder contact email, like 'press@yourcompany.com'." },
+      },
+      required: ["headline", "dateline", "introduction", "body", "quote", "aboutUs", "contactEmail"],
+    };
+
+    const prompt = `
+      You are a professional public relations (PR) executive specializing in tech startups.
+      You are tasked with drafting a professional and effective press release for a new product launch.
+
+      **Startup Data Package:**
+      - **Company Name:** ${fullContext.name}
+      - **Product Idea:** ${fullContext.idea}
+      - **Executive Summary:** ${fullContext.businessPlan.executiveSummary}
+      - **Company Mission:** ${fullContext.businessPlan.companyDescription.mission}
+      - **Founder/CEO Name:** ${fullContext.brandIdentity.names[0]} (use the first name suggestion as the founder's name)
+
+      **Your Task:**
+      Generate a JSON object containing the structured content for a press release.
+
+      **JSON Schema Requirements:**
+      1.  **headline**: Create a powerful and concise headline.
+      2.  **dateline**: Use the current date and a major tech hub city (e.g., San Francisco, CA).
+      3.  **introduction**: Write a strong opening paragraph that summarizes the key announcement.
+      4.  **body**: Elaborate on the product, its value, and the problem it solves. Keep it to 2-3 paragraphs.
+      5.  **quote**: Write a compelling and human-sounding quote attributed to the founder name provided.
+      6.  **aboutUs**: Write a standard, professional 'About [Company Name]' boilerplate.
+      7.  **contactEmail**: Provide a placeholder press contact email.
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Press Release from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: pressReleaseSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No press release data received from Gemini API");
+      }
+
+      console.log("Press release data received successfully.");
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get press release data:", error.message);
+      throw new Error(`Failed to get press release data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);

@@ -37,6 +37,7 @@ import AIPricingStrategy from './AIPricingStrategy';
 import GenerateMarketingCopy from './GenerateMarketingCopy';
 import BuildWaitlistPage from './BuildWaitlistPage';
 import ProductHuntLaunchKit from './ProductHuntLaunchKit';
+import DraftPressRelease from './DraftPressRelease';
 
 import './VentureWorkspace.css';
 
@@ -130,7 +131,7 @@ export const VentureWorkspace: React.FC = () => {
             id: 'phase-8', name: 'Phase 8: Launch & Promotion',
             tasks: [
                 { id: 'productHuntKit', name: 'Product Hunt Launch Kit', isCompleted: !!startup?.productHuntKit },
-                { id: 'pressRelease', name: 'Draft Press Release', isCompleted: false },
+                { id: 'pressRelease', name: 'Draft Press Release', isCompleted: !!startup?.pressRelease },
                 { id: 'launchMonitoring', name: 'Real-time Launch Monitoring', isCompleted: false },
             ]
         },
@@ -290,6 +291,8 @@ export const VentureWorkspace: React.FC = () => {
                 return <BuildWaitlistPage startup={startup} />;
             case 'productHuntKit':
                 return <ProductHuntLaunchKit startup={startup} />;
+            case 'pressRelease':
+                return <DraftPressRelease startup={startup} />;
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;

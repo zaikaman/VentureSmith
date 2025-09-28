@@ -1,0 +1,178 @@
+.press-release-container {
+    background-color: #0f172a; /* bg-slate-900 */
+    padding: 2rem;
+    border-radius: 0.5rem;
+    color: white;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.initial-view, .loading-container {
+    text-align: center;
+    padding: 3rem;
+    background-color: #1e293b; /* bg-slate-800 */
+    border-radius: 0.5rem;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- Loading Animation: Typewriter --- */
+.typewriter-animation-container {
+    width: 90%;
+    max-width: 400px;
+    height: 250px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.typewriter-paper {
+    width: 80%;
+    height: 120px;
+    background-color: #f1f5f9; /* slate-100 */
+    border-radius: 4px;
+    position: absolute;
+    top: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+.typewriter-text {
+    font-family: 'Special Elite', monospace, sans-serif; /* A good typewriter font */
+    color: #1e293b;
+    font-size: 1.2rem;
+    padding: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: .15em solid #334155; /* The cursor */
+    animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+}
+
+.typewriter-body {
+    width: 100%;
+    height: 80px;
+    background-color: #475569; /* slate-600 */
+    position: absolute;
+    bottom: 50px;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 5px solid #334155;
+}
+
+.typewriter-key {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #94a3b8;
+    border-radius: 50%;
+    bottom: 35px;
+    animation: press-key 1s infinite ease-in-out;
+}
+
+.key-1 { left: 30%; animation-delay: 0s; }
+.key-2 { left: 45%; animation-delay: 0.2s; }
+.key-3 { left: 60%; animation-delay: 0.4s; }
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #334155; }
+}
+
+@keyframes press-key {
+    50% { transform: translateY(5px); background-color: #e2e8f0; }
+}
+
+.loading-status-text {
+    margin-top: 1.5rem;
+}
+
+/* --- Results View --- */
+.pr-results-container {
+    background-color: #fff;
+    color: #111827;
+    padding: 3rem;
+    border-radius: 8px;
+    font-family: 'Times New Roman', Times, serif;
+    text-align: left;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.pr-headline {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.pr-dateline {
+    font-weight: bold;
+    color: #4b5563;
+    margin-bottom: 2rem;
+}
+
+.pr-introduction {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #374151;
+    margin-bottom: 2rem;
+    border-left: 3px solid #d1d5db;
+    padding-left: 1rem;
+}
+
+.pr-body {
+    white-space: pre-wrap; /* Respect newlines from AI */
+    margin-bottom: 2rem;
+}
+
+.pr-quote-section {
+    margin: 2rem 0;
+    padding-left: 2rem;
+    border-left: 5px solid #e5e7eb;
+    font-size: 1.2rem;
+    font-style: italic;
+}
+
+.pr-about-section {
+    margin-top: 3rem;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1.5rem;
+}
+
+.pr-about-section h3 {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.pr-contact-section {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.pr-end-mark {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 2rem;
+}

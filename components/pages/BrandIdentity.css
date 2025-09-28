@@ -141,10 +141,6 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-.name-list, .slogan-container, .regenerate-button {
-    /* Re-using styles from previous implementation */
-}
-
 .name-list { list-style: none; padding: 0; margin: 2rem 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
 .name-item {
     background: var(--bg-slate-800);

@@ -131,7 +131,9 @@
     align-items: flex-start;
 }
 
-    align-items: flex-start;
+.modal-task-item {
+    display: flex;
+    align-items: center;
     gap: 12px;
     padding: 10px;
     border-radius: 8px;
@@ -141,6 +143,7 @@
     cursor: pointer;
     transition: background-color 0.2s, color 0.2s;
     border: 1px solid transparent;
+    width: 100%;
 }
 
 .modal-task-item:hover {

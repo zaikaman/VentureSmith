@@ -726,3 +726,31 @@ export const generateProductHuntKit = action({
     return result;
   },
 });
+
+export const generatePressRelease = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.businessPlan || !startup.brandIdentity) {
+      throw new Error("Business Plan and Brand Identity must be completed first.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      idea: startup.idea,
+      businessPlan: JSON.parse(startup.businessPlan),
+      brandIdentity: JSON.parse(startup.brandIdentity),
+    };
+
+    const result = await ctx.runAction(internal.gemini.generatePressReleaseWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updatePressRelease, {
+      startupId,
+      pressRelease: result,
+    });
+
+    return result;
+  },
+});

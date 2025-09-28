@@ -14,13 +14,15 @@
     font-weight: 800;
     margin-bottom: 0.5rem;
     background: linear-gradient(45deg, #a5b4fc, #fbcfe8);
-    -webkit-background-clip: text;
+    background-clip: text;            
+    -webkit-background-clip: text;    
+    color: transparent;               
     -webkit-text-fill-color: transparent;
 }
 
 .venture-subtitle {
     font-size: 1.1rem;
-    color: #9ca3af; /* text-gray-400 */
+    color: #9ca3af; 
     max-width: 600px;
     margin: 0 auto;
 }
