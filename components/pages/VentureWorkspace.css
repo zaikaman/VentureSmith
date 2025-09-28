@@ -36,3 +36,46 @@
     padding: 2rem;
     min-height: 500px; /* Ensure content area has some height */
 }
+
+/* --- Responsive Styles --- */
+
+/* For tablets and smaller devices */
+@media (max-width: 768px) {
+    .venture-workspace-container {
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .venture-title {
+        font-size: 2rem;
+    }
+
+    .venture-subtitle {
+        font-size: 1rem;
+    }
+
+    .workspace-content {
+        padding: 1.5rem;
+    }
+}
+
+/* For mobile phones */
+@media (max-width: 480px) {
+    .venture-workspace-container {
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    .venture-title {
+        font-size: 1.8rem;
+    }
+
+    .venture-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .workspace-content {
+        padding: 1rem;
+        margin-top: 1.5rem;
+    }
+}

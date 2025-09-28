@@ -161,12 +161,14 @@
 
 .financial-table-container {
     margin-top: 2rem;
+    overflow-x: auto; /* Make table scrollable on small screens */
 }
 
 .financial-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 1rem;
+    min-width: 600px; /* Ensure table has a minimum width */
 }
 
 .financial-table th, .financial-table td {
@@ -184,3 +186,74 @@
     border-bottom: none;
 }
 
+/* --- Responsive Styles --- */
+
+@media (max-width: 1024px) {
+    .bp-document-layout {
+        grid-template-columns: 200px 1fr;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .bp-document-layout {
+        display: block;
+    }
+
+    .bp-sidebar {
+        position: relative;
+        top: 0;
+        height: auto;
+        margin-bottom: 2rem;
+        overflow-x: auto;
+        padding-bottom: 1rem; /* For scrollbar visibility */
+    }
+
+    .bp-sidebar nav ul {
+        display: flex;
+        flex-wrap: nowrap;
+        border-left: none;
+        border-bottom: 2px solid var(--border-slate-700);
+        padding-bottom: 0.5rem;
+    }
+
+    .bp-sidebar nav li a {
+        border-left: none;
+        border-bottom: 2px solid transparent;
+        margin-left: 0;
+        margin-bottom: -2px;
+        padding: 0.75rem 1rem;
+        white-space: nowrap;
+    }
+
+    .bp-sidebar nav li a.active {
+        border-left-color: transparent;
+        border-bottom-color: #a5b4fc;
+    }
+}
+
+@media (max-width: 480px) {
+    .bp-document-container {
+        padding: 1rem;
+    }
+
+    .bp-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .bp-doc-section-title {
+        font-size: 1.5rem;
+    }
+
+    .bp-doc-section-content p {
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+
+    .download-button, .regenerate-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
