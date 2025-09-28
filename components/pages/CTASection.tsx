@@ -7,9 +7,9 @@ export const CTASection: React.FC = () => {
         <section className="cta-section">
             <div className="cta-container">
                 <div className="cta-content">
-                    <h2 className="cta-headline">Ready to Build What's Next?</h2>
-                    <p className="cta-subheadline">Start your journey with VentureSmith today and turn your idea into a reality. No credit card required.</p>
-                    <Link to="/blueprint-builder" className="cta-button">Generate Your Business Plan</Link>
+                    <h2 className="cta-headline">Your Venture Awaits.</h2>
+                    <p className="cta-subheadline">Stop wondering 'what if'. Start building your future, today. The AI co-founder is ready.</p>
+                    <Link to="/blueprint-builder" className="cta-button">Start Building for Free</Link>
                 </div>
             </div>
         </section>

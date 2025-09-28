@@ -17,8 +17,8 @@ export const HeroSection: React.FC = () => {
 
     return (
         <section className="section hero-section">
-            <h1 ref={headlineRef} className={isHeadlineVisible ? 'is-visible' : ''}>Build your business, one block at a time</h1>
-            <p ref={subheadlineRef} className={isSubheadlineVisible ? 'is-visible' : ''}>VentureSmith helps you validate, plan, and build your next business idea with the power of AI.</p>
+            <h1 ref={headlineRef} className={isHeadlineVisible ? 'is-visible' : ''}>From Idea to IPO-Ready, Instantly.</h1>
+            <p ref={subheadlineRef} className={isSubheadlineVisible ? 'is-visible' : ''}>VentureSmith is your AI co-founder. Go from a single sentence to a comprehensive suite of investor-ready documents, a functional website prototype, and a clear go-to-market strategy in minutes.</p>
             <div ref={ctaRef} className={`cta-container ${isCtaVisible ? 'is-visible' : ''}`}>
                 <Link to="/blueprint-builder" className="cta-button">
                     Build Your Startup Now
