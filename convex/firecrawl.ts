@@ -1,4 +1,3 @@
-
 import { v } from "convex/values";
 import { action } from "./_generated/server";
 import { api, internal } from "./_generated/api";
@@ -28,7 +27,7 @@ export const search = action({
           }
         });
         console.log(`Firecrawl API Result for keyword '${keyword}':`, searchResult);
-        return searchResult; // Success
+        return searchResult?.web || []; // Success
       } catch (error: any) {
         if (error.message && (error.message.includes("Rate limit exceeded") || error.message.includes("AbortError"))) {
           if (i < maxRetries - 1) {
@@ -97,4 +96,26 @@ export const performMarketAnalysis = action({
 
         return { summary, sources };
     }
+});
+
+export const scrape = action({
+  args: { url: v.string() },
+  handler: async (_, { url }) => {
+    const apiKey = process.env.FIRECRAWL_API_KEY;
+    if (!apiKey) {
+      throw new Error("FIRECRAWL_API_KEY environment variable not set.");
+    }
+    const app = new FirecrawlApp({ apiKey });
+    
+    console.log(`Scraping URL with Firecrawl: ${url}`);
+
+    // Using a try-catch to handle potential scraping failures for a single URL
+    try {
+      const scrapedData = await app.scrape(url);
+      return scrapedData;
+    } catch (error: any) {
+      console.error(`Failed to scrape ${url}. Error: ${error.message}`);
+      return null; // Return null to indicate failure for this URL
+    }
+  },
 });

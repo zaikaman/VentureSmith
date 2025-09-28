@@ -878,3 +878,69 @@ export const generateJobDescriptions = action({
     return result;
   },
 });
+
+export const generateInvestorMatches = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.businessPlan || !startup.pitchDeck) {
+      throw new Error("Business Plan and Pitch Deck must be completed first.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      businessPlan: JSON.parse(startup.businessPlan),
+      pitchDeck: JSON.parse(startup.pitchDeck),
+    };
+
+    // 1. Generate search queries
+    const { queries } = await ctx.runAction(internal.gemini.generateInvestorSearchQueries, {
+      fullContext,
+    });
+
+    // 2. Search for URLs and then scrape content for each query
+    const allScrapedData: any[] = [];
+    for (const query of queries) {
+      try {
+        // Step 1: Search for URLs. `search` action returns an array of search results.
+        const searchResults = await ctx.runAction(api.firecrawl.search, { keyword: query });
+        
+        if (searchResults && searchResults.length > 0) {
+          // Take top 2 URLs from the search results for this query
+          const urlsToScrape = searchResults.slice(0, 2).map((res: any) => res.url);
+
+          // Step 2: Scrape each URL in parallel
+          const scrapePromises = urlsToScrape.map((url: string) => ctx.runAction(api.firecrawl.scrape, { url }));
+          const scrapedPages = await Promise.all(scrapePromises);
+          
+          scrapedPages.forEach((scrapedPage) => {
+            if (scrapedPage) {
+              allScrapedData.push(scrapedPage);
+            }
+          });
+        }
+      } catch (error) {
+        // This will catch errors from the search action itself
+        console.warn(`Could not perform search for query: "${query}". Skipping.`, error);
+      }
+    }
+
+    if (allScrapedData.length === 0) {
+      throw new Error(`Could not find or scrape any information for the generated investor search queries.`);
+    }
+
+    // 3. Analyze scraped data and find matches
+    const result = await ctx.runAction(internal.gemini.findInvestorsWithAI, {
+      fullContext,
+      scrapedData: allScrapedData,
+    });
+
+    // 4. Save the result
+    await ctx.runMutation(api.startups.updateInvestorMatching, {
+      startupId,
+      investorMatching: result,
+    });
+
+    return result;
+  },
+});

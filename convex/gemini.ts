@@ -2548,3 +2548,129 @@ export const generatePressReleaseWithAI = internalAction(
     }
   }
 );
+
+export const generateInvestorSearchQueries = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const prompt = `
+      You are an AI assistant for a startup founder. Your task is to generate 3 highly specific Google
+search queries to find potential investors.
+      The startup is called "${fullContext.name}".
+      It is in the "${fullContext.businessPlan.marketAnalysis.industryOverview}" industry.
+      The core idea is: "${fullContext.businessPlan.executiveSummary}".
+
+      Based on this, generate a JSON object containing an array of 3 search query strings. The queries
+should be tailored to find venture capital firms or angel investors relevant to the startup's industry,
+stage, and model.
+
+      Example queries: "early stage SaaS VC firms", "angel investors interested in AI-powered developer
+tools", "seed funding for consumer hardware startups".
+
+      Return a JSON object with a single key "queries" which is an array of strings.
+      { "queries": ["query 1", "query 2", "query 3"] }
+    `;
+
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+      if (!resultText) {
+        throw new Error("No search queries received from Gemini API");
+      }
+      return JSON.parse(resultText);
+    } catch (error: any) {
+      throw new Error(`Failed to generate investor search queries. Error: ${error.message}`);
+    }
+  }
+);
+
+export const findInvestorsWithAI = internalAction(
+  async (
+    _,
+    { fullContext, scrapedData }: { fullContext: any, scrapedData: any[] }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const investorSchema = {
+      type: "ARRAY",
+      items: {
+        type: "OBJECT",
+        properties: {
+          name: { type: "STRING", description: "Name of the individual investor or firm." },
+          firmOrType: { type: "STRING", description: "The name of the VC firm, or 'Angel Investor'." },
+          investmentFocus: { 
+            type: "ARRAY", 
+            items: { type: "STRING" }, 
+            description: "A list of their key investment areas (e.g., 'SaaS', 'Fintech', 'AI')." 
+          },
+          matchRationale: { 
+            type: "STRING", 
+            description: "A concise, 1-2 sentence explanation of why this investor is a strong match for the startup." 
+          },
+          profileUrl: { type: "STRING", description: "The source URL where the information was found." },
+        },
+        required: ["name", "firmOrType", "investmentFocus", "matchRationale", "profileUrl"],
+      }
+    };
+
+    const contentString = scrapedData.map(page => `--- Source URL: ${page.metadata.sourceURL}
+---\n\n${page.markdown}`).join("\n\n");
+
+    const prompt = `
+      You are a top-tier venture capital analyst. You have been given a profile of a startup and a large
+amount of text scraped from the web about potential investors.
+      Your task is to analyze all the scraped text and identify the 3-5 best investor matches for the
+startup.
+
+      Startup Profile:
+      - Name: "${fullContext.name}"
+      - Industry: "${fullContext.businessPlan.marketAnalysis.industryOverview}"
+      - Summary: "${fullContext.businessPlan.executiveSummary}"
+
+      Scraped Data from Investor Websites/Profiles:
+      ${contentString}
+
+      Your Task:
+      Carefully read through all the scraped data. Identify 3-5 individual investors or VC firms that are
+the best fit. For each match, extract the required information and provide a strong, evidence-based
+rationale for why they are a good match.
+
+      Your output MUST be a JSON array of objects that conforms to the provided schema.
+    `;
+
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: investorSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+      if (!resultText) {
+        throw new Error("No investor matches received from Gemini API");
+      }
+      return resultText;
+    } catch (error: any) {
+      throw new Error(`Failed to find investors from scraped data. Error: ${error.message}`);
+    }
+  }
+);
