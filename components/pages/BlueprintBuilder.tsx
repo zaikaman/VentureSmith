@@ -56,7 +56,7 @@ export const BlueprintBuilder: React.FC = () => {
     }, [session, isLoading, createStartup, navigate]);
 
     const handleHistoryItemClick = (startup: any) => {
-        navigate(`/venture/${startup._id}`);
+        setIdea(startup.idea);
     };
 
     const handleDelete = (startupId: Id<"startups">) => {
@@ -133,7 +133,7 @@ export const BlueprintBuilder: React.FC = () => {
             <div className="text-center p-8">
                 <h1 className="text-4xl font-bold mb-4">Create Your Startup Blueprint</h1>
                 <p className="text-lg text-slate-400 mb-8">Describe your business idea below to get started.</p>
-                <IdeaInputForm onGenerate={handleGenerate} />
+                <IdeaInputForm onGenerate={handleGenerate} initialIdea={idea} />
             </div>
             {session && (
                 <div className="history-section">
