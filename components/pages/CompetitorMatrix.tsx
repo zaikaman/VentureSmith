@@ -71,6 +71,7 @@ export const CompetitorMatrix: React.FC<CompetitorMatrixProps> = ({ startup }) =
           <div className="blip"></div>
           <div className="blip"></div>
         </div>
+        <div className="mobile-spinner"></div>
         <div className="radar-status-text">ANALYZING COMPETITIVE LANDSCAPE...</div>
       </div>
     );

@@ -117,6 +117,7 @@ const GenerateSeoStrategy: React.FC<GenerateSeoStrategyProps> = ({ startup }) =>
         <div className="keyword-tag tag-3">#saas</div>
         <div className="keyword-tag tag-4">#innovation</div>
       </div>
+      <div className="mobile-spinner"></div>
       <div className="loading-status-text">{currentLoadingText}</div>
     </div>
   );

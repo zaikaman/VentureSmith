@@ -117,6 +117,7 @@ const LoadingAnimation = () => {
           <i className="fas fa-rocket radar-icon"></i>
         </div>
       </div>
+      <div className="mobile-spinner"></div>
       <div className="loading-status-text">{currentText}</div>
     </div>
   );

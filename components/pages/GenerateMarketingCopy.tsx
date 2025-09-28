@@ -131,6 +131,7 @@ const GenerateMarketingCopy: React.FC<GenerateMarketingCopyProps> = ({ startup }
             <div className="floating-word word-3">Growth</div>
             <div className="floating-word word-4">Users</div>
         </div>
+      <div className="mobile-spinner"></div>
       <div className="loading-status-text">{currentLoadingText}</div>
     </div>
   );

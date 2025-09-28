@@ -137,6 +137,21 @@
     letter-spacing: 1px;
 }
 
+/* --- Mobile Spinner --- */
+.mobile-spinner {
+    display: none; /* Hidden by default */
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #818cf8; /* Using a color from the animation */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* --- Results View --- */
 .costs-results-container {
     overflow-x: auto; /* Enable horizontal scrolling on small screens */
@@ -194,4 +209,18 @@
     font-weight: bold;
     font-size: 1.1rem;
     color: #4ade80;
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    .loading-container .balance-animation-container {
+        display: none; /* Hide complex animation on mobile */
+    }
+    .loading-container .mobile-spinner {
+        display: block; /* Show simple spinner on mobile */
+        margin-bottom: 2rem;
+    }
+    .loading-container {
+        height: 400px;
+    }
 }

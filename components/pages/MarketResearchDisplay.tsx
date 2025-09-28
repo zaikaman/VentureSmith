@@ -63,6 +63,7 @@ export const MarketResearchDisplay: React.FC<MarketResearchDisplayProps> = ({ st
         <div className="data-stream-container">
             {[...Array(50)].map((_, i) => <div key={i} className="stream-line" style={{ '--index': i } as React.CSSProperties}></div>)}
             <div className="stream-core"></div>
+            <div className="mobile-spinner"></div>
             <div className="stream-status-text">PERFORMING DEEP WEB ANALYSIS...</div>
         </div>
     );

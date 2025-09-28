@@ -114,6 +114,7 @@ const EstimateCloudCosts: React.FC<EstimateCloudCostsProps> = ({ startup }) => {
             <i className="fas fa-dollar-sign cost-icon cost-6"></i>
         </div>
       </div>
+      <div className="mobile-spinner"></div>
       <div className="loading-status-text">{currentLoadingText}</div>
     </div>
   );

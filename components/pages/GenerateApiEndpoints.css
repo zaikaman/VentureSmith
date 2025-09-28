@@ -1,4 +1,3 @@
-
 .api-endpoints-container {
     background-color: #0f172a; /* bg-slate-900 */
     padding: 2rem;
@@ -140,6 +139,20 @@
     letter-spacing: 1px;
 }
 
+/* --- Mobile Spinner --- */
+.mobile-spinner {
+    display: none; /* Hidden by default */
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #818cf8; /* Using a color from the animation */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
 
 /* --- Results View --- */
 .api-results-container {
@@ -200,3 +213,16 @@
 .api-results-container .method-put { color: #f97316; } /* orange-500 */
 .api-results-container .method-delete { color: #ef4444; } /* red-500 */
 
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    .loading-container .flow-animation-container {
+        display: none; /* Hide complex animation on mobile */
+    }
+    .loading-container .mobile-spinner {
+        display: block; /* Show simple spinner on mobile */
+        margin-bottom: 2rem;
+    }
+    .loading-container {
+        height: 400px;
+    }
+}

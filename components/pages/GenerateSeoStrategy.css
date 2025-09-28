@@ -82,6 +82,21 @@
     50% { opacity: 1; transform: translateY(0); }
 }
 
+/* --- Mobile Spinner --- */
+.mobile-spinner {
+    display: none; /* Hidden by default */
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #22c55e; /* Using a color from the animation */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* --- Results View --- */
 .seo-results-container {
     display: flex;
@@ -183,4 +198,18 @@
 .pillar-card li {
     color: #94a3b8;
     font-size: 0.9rem;
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    .loading-container .seo-animation-container {
+        display: none; /* Hide complex animation on mobile */
+    }
+    .loading-container .mobile-spinner {
+        display: block; /* Show simple spinner on mobile */
+        margin-bottom: 2rem;
+    }
+    .loading-container {
+        height: 400px;
+    }
 }

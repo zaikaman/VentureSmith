@@ -100,6 +100,26 @@
     100% { transform: rotateY(0deg); }
 }
 
+/* --- Mobile Spinner --- */
+.mobile-spinner {
+    display: none; /* Hidden by default */
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #a5b4fc; /* Using a color from the animation */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -30px;
+    margin-left: -30px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* --- Persona Results View --- */
 .cp-results-container { animation: fadeInResults 1s forwards; }
 
@@ -195,4 +215,17 @@
     margin-left: -1em;
     position: absolute;
     left: 0;
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    .persona-sculpting-container .sculpting-grid {
+        display: none; /* Hide complex animation on mobile */
+    }
+    .persona-sculpting-container .mobile-spinner {
+        display: block; /* Show simple spinner on mobile */
+    }
+    .persona-sculpting-container {
+        height: 400px;
+    }
 }

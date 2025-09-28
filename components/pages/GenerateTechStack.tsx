@@ -177,6 +177,7 @@ const GenerateTechStack: React.FC<GenerateTechStackProps> = ({ startup }) => {
             <i className="fa-brands fa-aws tech-icon icon-4"></i>
             <i className="fa-brands fa-figma tech-icon icon-5"></i>
         </div>
+        <div className="mobile-spinner"></div>
         <div className="loading-status-text">{currentLoadingText}</div>
     </div>
   );

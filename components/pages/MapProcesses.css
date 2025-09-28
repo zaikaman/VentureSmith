@@ -98,6 +98,17 @@
     100% { transform: rotate(0deg); }
 }
 
+/* --- Mobile Spinner --- */
+.mobile-spinner {
+    display: none; /* Hidden by default */
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #fb923c; /* Using a color from the animation */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
 /* --- Results View --- */
 .automation-results-container {
     display: flex;
@@ -171,3 +182,24 @@
 .type-full { background-color: #1d4ed8; color: #dbeafe; }
 .type-assisted { background-color: #9333ea; color: #f3e8ff; }
 .type-manual { background-color: #475569; color: #e2e8f0; }
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    .loading-container .automation-animation-container {
+        display: none; /* Hide complex animation on mobile */
+    }
+    .loading-container .mobile-spinner {
+        display: block; /* Show simple spinner on mobile */
+        margin-bottom: 2rem;
+    }
+    .loading-container {
+        height: 400px;
+    }
+    .process-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .steps-table {
+        font-size: 0.9rem;
+    }
+}

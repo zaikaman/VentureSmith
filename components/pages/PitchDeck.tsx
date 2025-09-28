@@ -148,6 +148,7 @@ const PitchDeck: React.FC<PitchDeckProps> = ({ startup }) => {
                     {[...Array(10)].map((_, i) => <div key={i} className="render-bar" style={{animationDelay: `${i * 0.1}s`}}></div>)}
                 </div>
             </div>
+            <div className="mobile-spinner"></div>
             <div className="production-status-text">PRODUCING PITCH DECK...</div>
         </div>
     );

@@ -102,6 +102,7 @@ export const MarketPulseCheck: React.FC<MarketPulseCheckProps> = ({ startup }) =
               <div key={i} className="sonar-blip" style={{ animationDelay: `${i * 0.5}s` }}>{kw}</div>
             ))}
           </div>
+          <div className="mobile-spinner"></div>
           <div className="scan-text">ANALYZING MARKET PULSE...</div>
         </div>
       )}

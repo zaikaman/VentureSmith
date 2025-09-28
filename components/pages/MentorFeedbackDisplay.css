@@ -163,6 +163,21 @@
     to { opacity: 1; text-shadow: 0 0 5px #cbd5e1; }
 }
 
+/* --- Mobile Spinner --- */
+.mobile-spinner {
+    display: none; /* Hidden by default */
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #3b82f6; /* Using a color from the animation */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* --- Results Display --- */
 .mf-results-container {
   padding: 2rem; 
@@ -277,4 +292,17 @@
 .regenerate-button svg {
     width: 1.1rem;
     height: 1.1rem;
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    .mentor-review-container .mentor-animation {
+        display: none; /* Hide complex animation on mobile */
+    }
+    .mentor-review-container .mobile-spinner {
+        display: block; /* Show simple spinner on mobile */
+    }
+    .mentor-review-container {
+        height: 400px;
+    }
 }

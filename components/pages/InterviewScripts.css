@@ -146,6 +146,20 @@
     to { opacity: 1; }
 }
 
+/* --- Mobile Spinner --- */
+.mobile-spinner {
+    display: none; /* Hidden by default */
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #a5b4fc; /* Using a color from the animation */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
 
 /* --- Results View --- */
 .is-results-container { animation: fadeInResults 1s forwards; }
@@ -259,4 +273,17 @@
 
 .copy-button:hover {
     background: var(--bg-slate-600);
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    .dialogue-container .dialogue-animation {
+        display: none; /* Hide complex animation on mobile */
+    }
+    .dialogue-container .mobile-spinner {
+        display: block; /* Show simple spinner on mobile */
+    }
+    .dialogue-container {
+        height: 400px;
+    }
 }

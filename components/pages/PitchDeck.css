@@ -77,6 +77,26 @@
 
 .production-status-text { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: #94a3b8; font-size: 1rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; animation: pulseText 2s infinite; }
 
+/* --- Mobile Spinner --- */
+.mobile-spinner {
+    display: none; /* Hidden by default */
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #a5b4fc;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -30px; /* Half of height */
+    margin-left: -30px; /* Half of width */
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* --- Results View --- */
 .presentation-container { animation: fadeInResults 1s forwards; position: relative; overflow: hidden; }
 .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
@@ -187,4 +207,29 @@
     font-weight: bold;
     font-size: 36px;
     top: -2px;
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    .directors-room-container .screen {
+        display: none; /* Hide complex animation on mobile */
+    }
+    .directors-room-container .mobile-spinner {
+        display: block; /* Show simple spinner on mobile */
+    }
+    .directors-room-container {
+        height: 400px; /* Optional: reduce height */
+    }
+    .presentation-layout {
+        grid-template-columns: 1fr;
+    }
+    .teleprompter {
+        height: 400px; /* Give it a fixed height when stacked */
+    }
+    .slide-title {
+        font-size: 1.8rem;
+    }
+    .slide-body {
+        font-size: 1rem;
+    }
 }

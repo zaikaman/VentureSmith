@@ -135,6 +135,7 @@ const ProductHuntLaunchKit: React.FC<ProductHuntLaunchKitProps> = ({ startup }) 
           <div className="flame"></div>
         </div>
       </div>
+      <div className="mobile-spinner"></div>
       <div className="loading-status-text">{currentLoadingText}</div>
     </div>
   );

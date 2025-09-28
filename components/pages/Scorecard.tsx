@@ -67,6 +67,7 @@ export const Scorecard: React.FC<ScorecardProps> = ({ startup }) => {
             <div className="data-packet packet-2">Market Pulse</div>
             <div className="data-packet packet-3">Mission/Vision</div>
             <div className="data-packet packet-4">Brand Identity</div>
+            <div className="mobile-spinner"></div>
             <div className="analysis-status-text">ANALYZING VENTURE DNA...</div>
         </div>
     );

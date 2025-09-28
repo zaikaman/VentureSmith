@@ -127,6 +127,7 @@ export const InterviewScripts: React.FC<InterviewScriptsProps> = ({ startup }) =
                 {/* Add some particles for effect */}
                 {[...Array(10)].map((_, i) => <div key={i} className={`particle p-${i}`}></div>)}
             </div>
+            <div className="mobile-spinner"></div>
             <div className="dialogue-status-text">AI IS WEAVING DIALOGUE...</div>
         </div>
     );

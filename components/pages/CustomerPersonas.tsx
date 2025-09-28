@@ -91,6 +91,7 @@ export const CustomerPersonas: React.FC<CustomerPersonasProps> = ({ startup }) =
             </div>
           ))}
         </div>
+        <div className="mobile-spinner"></div>
         <div className="sculpt-status-text">SCULPTING IDEAL PERSONAS...</div>
       </div>
     );

@@ -134,6 +134,7 @@ export const WebsitePrototype: React.FC<WebsitePrototypeProps> = ({ startup }) =
           </g>
         </svg>
       </div>
+      <div className="mobile-spinner"></div>
       <div className="prototype-status-text">{currentLoadingText}</div>
     </div>
   );

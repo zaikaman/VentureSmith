@@ -92,19 +92,19 @@ export const MissionVision: React.FC<MissionVisionProps> = ({ startup }) => {
     if (isForging) {
         return (
             <div className="loading-container"> {/* Use reference class */}
-                <div className="typewriter-animation-container"> {/* Use reference class */}
-                    <div className="mv-core"></div>
-                    
-                    {/* Mission Icons Flying In */}
-                    <i className="fas fa-gears mission-icon icon-1"></i>
-                    <i className="fas fa-compass mission-icon icon-2"></i>
-
-                    {/* Vision Icons Flying Out */}
-                    <i className="fas fa-star vision-icon icon-1"></i>
-                    <i className="fas fa-trophy vision-icon icon-2"></i>
-                </div>
-                <div className="loading-status-text">{currentLoadingText}</div>
-            </div>
+                            <div className="typewriter-animation-container"> {/* Use reference class */}
+                                <div className="mv-core"></div>
+                                
+                                {/* Mission Icons Flying In */}
+                                <i className="fas fa-gears mission-icon icon-1"></i>
+                                <i className="fas fa-compass mission-icon icon-2"></i>
+                
+                                {/* Vision Icons Flying Out */}
+                                <i className="fas fa-star vision-icon icon-1"></i>
+                                <i className="fas fa-trophy vision-icon icon-2"></i>
+                            </div>
+                            <div className="mobile-spinner"></div>
+                            <div className="loading-status-text">{currentLoadingText}</div>            </div>
         );
     }
 

@@ -95,6 +95,7 @@ const UserFlowDiagram: React.FC<UserFlowDiagramProps> = ({ startup }) => {
             <path d="M 40,150 C 100,200 300,100 360,150" className="animated-path p-3" />
           </svg>
         </div>
+        <div className="mobile-spinner"></div>
         <div className="morph-status-text">MAPPING USER JOURNEYS...</div>
       </div>
   );

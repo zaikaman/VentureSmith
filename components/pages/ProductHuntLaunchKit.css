@@ -147,6 +147,21 @@
     letter-spacing: 1px;
 }
 
+/* --- Mobile Spinner --- */
+.mobile-spinner {
+    display: none; /* Hidden by default */
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #ff6154; /* Using a color from the rocket animation */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* --- Results View --- */
 .results-grid.full-width {
     grid-template-columns: 1fr 1fr 1fr; /* Three columns */
@@ -276,4 +291,21 @@
     padding: 0.5rem;
     border: 1px dashed #334155;
     border-radius: 4px;
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    .loading-container .rocket-animation-container {
+        display: none; /* Hide complex animation on mobile */
+    }
+    .loading-container .mobile-spinner {
+        display: block; /* Show simple spinner on mobile */
+        margin-bottom: 2rem; /* Add some space below */
+    }
+    .results-grid.full-width {
+        grid-template-columns: 1fr; /* Stack cards on mobile */
+    }
+    .result-card.span-1, .result-card.span-2, .result-card.span-3 {
+        grid-column: span 1;
+    }
 }

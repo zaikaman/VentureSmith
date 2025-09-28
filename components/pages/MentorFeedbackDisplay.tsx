@@ -82,6 +82,7 @@ const MentorFeedbackDisplay: React.FC<MentorFeedbackProps> = ({ startup }) => {
           <div className="document doc-1"></div>
           <div className="document doc-2"></div>
         </div>
+        <div className="mobile-spinner"></div>
         <div className="mentor-status-text">AI MENTOR IS REVIEWING YOUR DOCUMENTS...</div>
       </div>
     );

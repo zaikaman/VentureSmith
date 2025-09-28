@@ -108,6 +108,7 @@ const GenerateDevelopmentRoadmap: React.FC<GenerateDevelopmentRoadmapProps> = ({
         <div className="gantt-milestone milestone-4">Wk 6</div>
         <div className="gantt-milestone milestone-5">Launch</div>
       </div>
+      <div className="mobile-spinner"></div>
       <div className="loading-status-text">{currentLoadingText}</div>
     </div>
   );

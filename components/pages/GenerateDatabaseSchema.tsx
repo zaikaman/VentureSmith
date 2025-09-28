@@ -161,6 +161,7 @@ const GenerateDatabaseSchema: React.FC<GenerateDatabaseSchemaProps> = ({ startup
             <div className="db-table-col"></div><div className="db-table-col"></div>
         </div>
       </div>
+      <div className="mobile-spinner"></div>
       <div className="loading-status-text">{currentLoadingText}</div>
     </div>
   );

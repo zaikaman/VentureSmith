@@ -152,6 +152,7 @@ const DraftJobDescriptions: React.FC<DraftJobDescriptionsProps> = ({ startup }) 
             </div>
         </div>
       </div>
+      <div className="mobile-spinner"></div>
       <div className="loading-status-text">{currentLoadingText}</div>
     </div>
   );

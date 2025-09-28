@@ -85,6 +85,21 @@
     color: #9ca3af; /* slate-400 */
 }
 
+/* --- Mobile Spinner --- */
+.mobile-spinner {
+    display: none; /* Hidden by default */
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #a5b4fc; /* Using a color from the animation */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* Result Display Styles */
 .result-container {
     width: 100%;
@@ -149,4 +164,18 @@
 .regenerate-button svg {
   width: 1.25rem; /* 20px */
   height: 1.25rem; /* 20px */
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    .loading-container .typewriter-animation-container {
+        display: none; /* Hide complex animation on mobile */
+    }
+    .loading-container .mobile-spinner {
+        display: block; /* Show simple spinner on mobile */
+        margin-bottom: 2rem;
+    }
+    .loading-container {
+        height: 400px;
+    }
 }

@@ -47,6 +47,28 @@
 }
 .build-status-text { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: #94a3b8; font-size: 1rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; animation: pulseText 2s infinite; }
 
+/* --- Mobile Spinner --- */
+.mobile-spinner {
+    display: none; /* Hidden by default */
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #a5b4fc;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -30px;
+    margin-left: -30px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* --- Document Layout --- */
 .bp-document-container { 
     padding: 2rem; 
@@ -230,6 +252,18 @@
         border-left-color: transparent;
         border-bottom-color: #a5b4fc;
     }
+
+    .architect-container {
+        height: 400px; /* Reduce height on mobile */
+    }
+
+    .construction-site {
+        display: none; /* Hide complex animation */
+    }
+
+    .mobile-spinner {
+        display: block; /* Show simple spinner */
+    }
 }
 
 @media (max-width: 480px) {
@@ -252,8 +286,4 @@
         line-height: 1.7;
     }
 
-    .download-button, .regenerate-button {
-        width: 100%;
-        justify-content: center;
-    }
 }

@@ -96,6 +96,21 @@
     60%, 100% { transform: rotateY(180deg); }
 }
 
+/* --- Mobile Spinner --- */
+.mobile-spinner {
+    display: none; /* Hidden by default */
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #a78bfa; /* Using a color from the animation */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 .job-accordion-item {
     background-color: #1e293b; /* bg-slate-800 */
     border: 1px solid #334155; /* border-slate-700 */
@@ -146,4 +161,18 @@
     flex-direction: column;
     gap: 0.5rem;
     color: #cbd5e1; /* slate-300 */
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    .loading-container .hiring-animation-container {
+        display: none; /* Hide complex animation on mobile */
+    }
+    .loading-container .mobile-spinner {
+        display: block; /* Show simple spinner on mobile */
+        margin-bottom: 2rem;
+    }
+    .loading-container {
+        height: 400px;
+    }
 }

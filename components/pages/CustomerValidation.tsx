@@ -93,6 +93,7 @@ const CustomerValidation: React.FC<CustomerValidationProps> = ({ startup }) => {
             <div key={i} className={`chair chair-${i}`}>{p.avatar}</div>
           ))}
         </div>
+        <div className="mobile-spinner"></div>
         <div className="focus-group-status-text">AI IS CONDUCTING A VIRTUAL FOCUS GROUP...</div>
       </div>
     );

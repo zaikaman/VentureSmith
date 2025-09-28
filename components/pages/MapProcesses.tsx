@@ -114,6 +114,7 @@ const MapProcesses: React.FC<MapProcessesProps> = ({ startup }) => {
             <i className="fas fa-robot"></i>
         </div>
       </div>
+      <div className="mobile-spinner"></div>
       <div className="loading-status-text">{currentLoadingText}</div>
     </div>
   );

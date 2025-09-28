@@ -82,6 +82,7 @@ const GenerateApiEndpoints: React.FC<GenerateApiEndpointsProps> = ({ startup }) 
         <div className="flow-packet packet-3"></div>
         <div className="flow-packet packet-4"></div>
       </div>
+      <div className="mobile-spinner"></div>
       <div className="loading-status-text">{currentLoadingText}</div>
     </div>
   );
