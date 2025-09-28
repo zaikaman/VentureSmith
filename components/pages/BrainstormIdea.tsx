@@ -109,7 +109,7 @@ const BrainstormIdea: React.FC<BrainstormIdeaProps> = ({ startup }) => {
                 <ul className="card-list">{(result!.initialConcerns || []).map((concern, i) => <li key={i}>{cleanText(concern)}</li>)}</ul>
             </div>
             <div className="info-card">
-                <div className="card-header"><div className="card-icon"><i className="fa-solid fa-shield-halved"></i></div><h3 className="card-title">Competitive Advantage</h3></div>
+                <div className="card-header"><div className="card-icon"><i className="fa-solid fa-shield"></i></div><h3 className="card-title">Competitive Advantage</h3></div>
                 <ul className="card-list">{(result!.competitiveAdvantage || []).map((advantage, i) => <li key={i}>{cleanText(advantage)}</li>)}</ul>
             </div>
         </div>
