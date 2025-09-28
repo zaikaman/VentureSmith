@@ -944,3 +944,106 @@ export const generateInvestorMatches = action({
     return result;
   },
 });
+
+export const generateDueDiligenceChecklist = action({
+    args: {
+        startupId: v.id("startups"),
+    },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("Not authenticated");
+        }
+
+        const startup = await ctx.runQuery(api.startups.getStartupById, { id: args.startupId });
+        if (!startup) {
+            throw new Error("Startup not found");
+        }
+
+        const { idea, businessPlan, marketResearch, techStack } = startup;
+
+        const jsonPrompt = `
+        Based on the following details for a startup named "${startup.name}", generate a comprehensive Due Diligence Checklist for potential investors.
+
+        **Core Idea:**
+        ${idea || 'Not provided.'}
+
+        **Business Plan Summary:**
+        ${businessPlan || 'Not provided.'}
+
+        **Market Research Summary:**
+        ${marketResearch || 'Not provided.'}
+
+        **Proposed Tech Stack:**
+        ${techStack || 'Not provided.'}
+
+        **CRITICAL INSTRUCTION:** Your output MUST be a single, valid JSON object. Do not include any text or markdown before or after the JSON object.
+        The JSON object should have a single root key "checklist", which is an array of objects.
+        Each object in the array represents a category and must have two keys:
+        1. "category": A string for the category name (e.g., "Financial", "Legal", "Technical", "Team", "Product").
+        2. "items": An array of strings, where each string is a specific, actionable checklist item.
+
+        **Example JSON output:**
+        {
+          "checklist": [
+            {
+              "category": "Financial",
+              "items": [
+                "Review of 3-year financial projections.",
+                "Analysis of cash flow statements for the last 12 months.",
+                "Verification of current capitalization table (cap table)."
+              ]
+            },
+            {
+              "category": "Legal",
+              "items": [
+                "Review of company incorporation documents.",
+                "Inspection of all intellectual property (IP) filings and ownership.",
+                "Analysis of all major customer and supplier contracts."
+              ]
+            }
+          ]
+        }
+        `;
+
+        const resultJsonString = await ctx.runAction(api.gemini.generateContent, {
+            prompt: jsonPrompt,
+            responseMimeType: "application/json"
+        });
+
+        const rawString = resultJsonString as string;
+        // Use a regex to find the JSON block, which is more robust
+        const match = rawString.match(/\{[\s\S]*\}/);
+
+        if (!match) {
+            throw new Error("AI response did not contain a valid JSON object. Raw response: " + rawString);
+        }
+
+        const cleanJsonString = match[0];
+
+        try {
+            const originalData = JSON.parse(cleanJsonString);
+            const transformedData = {
+                ...originalData,
+                checklist: originalData.checklist.map((category: any) => ({
+                    ...category,
+                    items: category.items.map((itemText: string) => ({
+                        text: itemText,
+                        completed: false
+                    }))
+                }))
+            };
+
+            await ctx.runMutation(api.startups.updateDueDiligenceChecklist, {
+                startupId: args.startupId,
+                dueDiligenceChecklist: JSON.stringify(transformedData),
+            });
+        } catch (e: any) {
+            console.error("Failed to parse cleaned JSON. Error:", e.message);
+            console.error("Cleaned JSON string that failed parsing was:", cleanJsonString);
+            throw new Error("Failed to parse JSON from AI after robust cleaning.");
+        }
+
+        return { success: true };
+    },
+});

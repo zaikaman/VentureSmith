@@ -2003,6 +2003,39 @@ export const generateWaitlistPageWithAI = internalAction(
   }
 );
 
+export const generateContent = internalAction(
+  async (
+    _,
+    { prompt }: { prompt: string }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables. Please add it in the Convex dashboard under Settings.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    try {
+        console.log("--- Requesting generic content from Gemini ---");
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
+        });
+        const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+        if (!resultText) {
+            throw new Error("No content text received from Gemini API");
+        }
+        
+        console.log("Generic content received successfully.");
+        return resultText;
+
+    } catch (error: any) {
+        console.error("Failed to get generic content:", error.message);
+        throw new Error(`Failed to get generic content from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
 export const generateABTestIdeasWithAI = internalAction(
   async (
     _,

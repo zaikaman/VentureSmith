@@ -11,6 +11,7 @@ import { Home } from './components/pages/Home';
 import { LoginModal } from './components/pages/LoginModal';
 import AccountPage from './components/pages/AccountPage';
 import { VentureWorkspace } from './components/pages/VentureWorkspace';
+import DueDiligenceChecklist from './components/pages/DueDiligenceChecklist';
 import './App.css';
 
 const App: React.FC = () => {
@@ -30,6 +31,7 @@ const App: React.FC = () => {
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/account" element={<AccountPage />} />
                             <Route path="/venture/:id" element={<VentureWorkspace />} />
+                            <Route path="/due-diligence-checklist/:startupId" element={<DueDiligenceChecklist />} />
                         </Routes>
                     </div>
                 </main>

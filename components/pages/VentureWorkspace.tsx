@@ -44,6 +44,7 @@ import GenerateSeoStrategy from './GenerateSeoStrategy';
 import MapProcesses from './MapProcesses';
 import DraftJobDescriptions from './DraftJobDescriptions';
 import AIInvestorMatching from './AIInvestorMatching';
+import DueDiligenceChecklist from './DueDiligenceChecklist';
 
 import './VentureWorkspace.css';
 
@@ -159,7 +160,7 @@ export const VentureWorkspace: React.FC = () => {
             id: 'phase-11', name: 'Phase 11: Fundraising & Investor Relations',
             tasks: [
                 { id: 'investorMatching', name: 'AI Investor Matching', isCompleted: !!startup?.investorMatching },
-                { id: 'dueDiligenceChecklist', name: 'Due Diligence Checklist', isCompleted: false },
+                { id: 'dueDiligenceChecklist', name: 'Due Diligence Checklist', isCompleted: !!startup?.dueDiligenceChecklist },
                 { id: 'aiPitchCoach', name: 'AI Pitch Coach', isCompleted: false },
             ]
         },
@@ -310,6 +311,8 @@ export const VentureWorkspace: React.FC = () => {
                 return <DraftJobDescriptions startup={startup} />;
             case 'investorMatching':
                 return <AIInvestorMatching startup={startup} />;
+            case 'dueDiligenceChecklist':
+                return <DueDiligenceChecklist startup={startup} />;
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;

@@ -45,6 +45,7 @@ export default defineSchema({
     processAutomation: v.optional(v.string()),
     draftJobDescriptions: v.optional(v.string()),
     investorMatching: v.optional(v.string()),
+    dueDiligenceChecklist: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),
 });

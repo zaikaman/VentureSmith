@@ -1,0 +1,272 @@
+/* DueDiligenceChecklist.css */
+
+.due-diligence-container {
+    padding: 2rem;
+    background-color: #0f172a; /* bg-slate-900 */
+    border-radius: 0.5rem;
+    color: white;
+    min-height: 80vh;
+}
+
+/* --- Loading Animation (unchanged) --- */
+.loading-container {
+    text-align: center;
+    padding: 3rem;
+    background-color: #1e293b; /* bg-slate-800 */
+    border-radius: 0.5rem;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.diligence-animation-container {
+    width: 250px;
+    height: 200px;
+    position: relative;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.document-icon {
+    width: 120px;
+    height: 150px;
+    background-color: #e2e8f0; /* slate-200 */
+    border-radius: 8px;
+    position: relative;
+    z-index: 1; /* Place it at the bottom of the stack */
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.document-line {
+    width: 80%;
+    height: 4px;
+    background-color: #94a3b8; /* slate-400 */
+    border-radius: 2px;
+    margin: 12px auto;
+}
+
+.magnifying-glass {
+    width: 80px;
+    height: 80px;
+    border: 8px solid #38bdf8; /* light-blue-400 */
+    border-radius: 50%;
+    position: absolute;
+    z-index: 10; /* Below the checkmarks */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: scan 4s linear infinite;
+}
+
+.magnifying-glass::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 40px;
+    background: #38bdf8; /* light-blue-400 */
+    bottom: -35px;
+    right: -20px;
+    transform: rotate(-45deg);
+    border-radius: 5px;
+}
+
+.checkmark-icon {
+    position: absolute;
+    z-index: 20; /* Ensure checkmarks are on top */
+    color: #22c55e; /* green-500 */
+    font-size: 24px;
+    opacity: 0;
+    transform: scale(0.5);
+    animation: pop-in 0.5s forwards;
+    text-shadow: 0 0 10px #22c55e;
+}
+
+.check-1 { top: 40px; left: 90px; animation-delay: 1s; }
+.check-2 { top: 75px; left: 140px; animation-delay: 2s; }
+.check-3 { top: 110px; left: 100px; animation-delay: 3s; }
+
+
+@keyframes scan {
+    0% { transform: translate(-80px, -60px) rotate(0deg); }
+    25% { transform: translate(30px, 0px) rotate(20deg); }
+    75% { transform: translate(-70px, 70px) rotate(-30deg); }
+    100% { transform: translate(-80px, -60px) rotate(0deg); }
+}
+
+@keyframes pop-in {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.loading-status-text {
+    margin-top: 2rem;
+    color: #94a3b8; /* text-slate-400 */
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+}
+
+/* --- New Interactive Results View --- */
+.checklist-results-container {
+    padding: 1rem 0;
+}
+
+.overall-progress-section {
+    background-color: #1e293b; /* bg-slate-800 */
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid #334155;
+}
+
+.overall-progress-section h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #cbd5e1; /* slate-300 */
+    margin-bottom: 0.75rem;
+}
+
+.overall-progress-section .progress-bar-container {
+    background-color: #334155; /* bg-slate-700 */
+    border-radius: 9999px;
+    height: 12px;
+    width: calc(100% - 50px);
+    display: inline-block;
+}
+
+.overall-progress-section .progress-bar {
+    background: linear-gradient(to right, #4f46e5, #7c3aed); /* indigo-600 to purple-600 */
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.5s ease-in-out;
+}
+
+.overall-progress-section span {
+    display: inline-block;
+    width: 50px;
+    text-align: right;
+    font-weight: 600;
+    color: #e2e8f0; /* slate-200 */
+}
+
+.category-card {
+    background-color: #1e293b; /* bg-slate-800 */
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #334155; /* border-slate-700 */
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover {
+    border-color: #4f46e5; /* indigo-600 */
+}
+
+.category-header {
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.category-title h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #c4b5fd; /* violet-300 */
+}
+
+.category-title i {
+    color: #a78bfa; /* violet-400 */
+    font-size: 1.1rem;
+}
+
+.category-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #94a3b8; /* slate-400 */
+    font-weight: 500;
+}
+
+.category-controls .transition-transform {
+    transition: transform 0.3s ease;
+}
+
+.category-controls .rotate-180 {
+    transform: rotate(180deg);
+}
+
+.category-progress-bar-container {
+    background-color: #334155; /* bg-slate-700 */
+    height: 4px;
+}
+
+.category-progress-bar {
+    background-color: #818cf8; /* indigo-400 */
+    height: 100%;
+    transition: width 0.4s ease-in-out;
+}
+
+.interactive-checklist-items {
+    list-style: none;
+    padding: 0.5rem 0;
+    margin: 0;
+}
+
+.interactive-checklist-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-top: 1px solid #334155; /* border-slate-700 */
+}
+
+.interactive-checklist-item:hover {
+    background-color: #273349; /* slightly darker slate-800 */
+}
+
+.interactive-checklist-item .checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #64748b; /* slate-500 */
+    border-radius: 4px;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.interactive-checklist-item.completed .checkbox {
+    background-color: #4ade80; /* green-400 */
+    border-color: #4ade80;
+}
+
+.interactive-checklist-item .checkbox i {
+    color: #0f172a; /* slate-900 */
+    font-size: 0.8rem;
+}
+
+.interactive-checklist-item span {
+    color: #cbd5e1; /* slate-300 */
+    transition: color 0.2s ease;
+}
+
+.interactive-checklist-item.completed span {
+    text-decoration: line-through;
+    color: #64748b; /* slate-500 */
+}
