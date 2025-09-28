@@ -1,4 +1,4 @@
-.modal-overlay {
+.lm-modal-overlay {
     position: fixed;
     inset: 0;
     background-color: rgba(0, 0, 0, 0.7) !important;
@@ -10,7 +10,7 @@
     z-index: 100;
 }
 
-.modal-content {
+.lm-modal-content {
     background-color: var(--bg-slate-900);
     border: 1px solid var(--border-slate-700);
     border-radius: 1.5rem; /* 24px */
@@ -21,25 +21,25 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-.modal-title {
+.lm-modal-title {
     font-size: 1.5rem; /* 24px */
     font-weight: 700;
     color: var(--text-color);
     margin-bottom: 1rem;
 }
 
-.modal-description {
+.lm-modal-description {
     color: var(--text-slate-300);
     margin-bottom: 2rem;
 }
 
-.modal-actions {
+.lm-modal-actions {
     display: flex;
     justify-content: center;
     gap: 1rem;
 }
 
-.modal-button {
+.lm-modal-button {
     padding: 0.75rem 1.5rem;
     border-radius: 9999px;
     font-size: 0.95rem;
@@ -49,16 +49,16 @@
     cursor: pointer;
 }
 
-.modal-button.confirm {
+.lm-modal-button.confirm {
     background-color: white;
     color: black;
 }
 
-.modal-button.confirm:hover {
+.lm-modal-button.confirm:hover {
     opacity: 0.9;
 }
 
-[data-theme='light'] .modal-button.confirm {
+[data-theme='light'] .lm-modal-button.confirm {
     background-color: var(--text-color);
     color: var(--background-color);
 }
