@@ -55,6 +55,10 @@
         font-size: 1rem;
     }
 
+    .workspace-header {
+        margin-top: 3rem;
+    }
+
     .workspace-content {
         padding: 1.5rem;
     }
@@ -73,6 +77,10 @@
 
     .venture-subtitle {
         font-size: 0.9rem;
+    }
+    
+    .workspace-header {
+        margin-top: 3rem;
     }
 
     .workspace-content {
