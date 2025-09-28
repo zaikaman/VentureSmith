@@ -56,7 +56,7 @@ export const BlueprintBuilder: React.FC = () => {
     }, [session, isLoading, createStartup, navigate]);
 
     const handleHistoryItemClick = (startup: any) => {
-        setIdea(startup.idea);
+        navigate(`/venture/${startup._id}`);
     };
 
     const handleDelete = (startupId: Id<"startups">) => {
