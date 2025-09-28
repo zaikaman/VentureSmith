@@ -4,7 +4,7 @@ import { api } from "../../convex/_generated/api";
 import { useEffect, useState } from "react";
 import { toast } from 'sonner';
 import { useNavigate } from "react-router-dom";
-import { SkeletonLoader } from './SkeletonLoader';
+import { SmallSpinner } from './SmallSpinner';
 import "./AccountPage.css";
 
 const AccountPage = () => {
@@ -73,7 +73,7 @@ const AccountPage = () => {
         <div className="ventures-section">
           <h2>Your Ventures</h2>
           {startups === undefined ? (
-            <SkeletonLoader />
+            <SmallSpinner />
           ) : startups.length > 0 ? (
             <ul className="ventures-list">
               {startups.map((startup) => (
