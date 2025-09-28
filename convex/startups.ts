@@ -968,3 +968,32 @@ export const updatePressRelease = mutation({
     return { success: true };
   },
 });
+
+export const updateGrowthMetrics = mutation({
+  args: {
+    startupId: v.id("startups"),
+    growthMetrics: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const startup = await ctx.db.get(args.startupId);
+    if (!startup) {
+      throw new Error("Startup not found");
+    }
+
+    const user = await ctx.db.query("users").withIndex("by_subject", q => q.eq("subject", identity.subject)).unique();
+    if (!user || user._id !== startup.userId) {
+      throw new Error("Not authorized to update this startup");
+    }
+
+    await ctx.db.patch(args.startupId, {
+      growthMetrics: args.growthMetrics,
+    });
+
+    return { success: true };
+  },
+});

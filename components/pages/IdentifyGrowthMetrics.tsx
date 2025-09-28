@@ -3,6 +3,9 @@ import './IdentifyGrowthMetrics.css';
 import { InitialTaskView } from './InitialTaskView';
 import { TaskResultHeader } from './TaskResultHeader';
 import { SmallSpinner } from './SmallSpinner';
+import { useMutation } from 'convex/react';
+import { api } from '../../convex/_generated/api';
+import { Id } from '../../convex/_generated/dataModel';
 
 // Mock data representing the AI-generated growth metrics
 const mockMetrics = {
@@ -119,37 +122,38 @@ const LoadingAnimation = () => {
   );
 };
 
+interface IdentifyGrowthMetricsProps {
+  startup: any;
+  startupId: Id<"startups">;
+}
 
-const IdentifyGrowthMetrics = () => {
+const IdentifyGrowthMetrics: React.FC<IdentifyGrowthMetricsProps> = ({ startup, startupId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [metricsResult, setMetricsResult] = useState<typeof mockMetrics | null>(null);
+  const updateGrowthMetrics = useMutation(api.startups.updateGrowthMetrics);
 
-  // This function would ideally call the Convex backend
+  const metricsResult = startup?.growthMetrics ? JSON.parse(startup.growthMetrics) : null;
+
   const handleGenerateMetrics = async () => {
     setIsLoading(true);
-    setMetricsResult(null); // Clear previous results
+    setIsGenerating(true);
 
-    // Simulate AI generation delay
     await new Promise(resolve => setTimeout(resolve, 12000));
 
-    // In a real app, you would call your Convex action here:
-    // const result = await generateGrowthMetricsAction({ startupId });
-    // setMetricsResult(result);
-    setMetricsResult(mockMetrics);
+    await updateGrowthMetrics({
+      startupId,
+      growthMetrics: JSON.stringify(mockMetrics),
+    });
 
     setIsLoading(false);
     setIsGenerating(false);
   };
   
   const handleStart = () => {
-    setIsGenerating(true);
     handleGenerateMetrics();
   };
 
   const handleRegenerate = () => {
-    // Reset state and generate again
-    setMetricsResult(null);
     handleGenerateMetrics();
   };
 
@@ -182,7 +186,7 @@ const IdentifyGrowthMetrics = () => {
       <div className="growth-metrics-content">
         <p className="growth-metrics-intro">{metricsResult.introduction}</p>
         <div className="metrics-grid">
-          {metricsResult.metrics.map((metric, index) => (
+          {metricsResult.metrics.map((metric: any, index: number) => (
             <div key={index} className="metric-card" style={{ borderTopColor: metric.color }}>
               <div className="metric-card-header">
                 <i className={`${metric.icon} metric-icon`} style={{ color: metric.color }}></i>
@@ -190,7 +194,7 @@ const IdentifyGrowthMetrics = () => {
               </div>
               <p className="metric-card-description">{metric.description}</p>
               <ul className="metric-points">
-                {metric.points.map((point, pIndex) => (
+                {metric.points.map((point: any, pIndex: number) => (
                   <li key={pIndex}>
                     <strong>{point.name}:</strong> {point.detail}
                   </li>

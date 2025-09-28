@@ -18,17 +18,14 @@
 
 /* Sonar Overlay */
 .sonar-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative; /* Change from fixed to relative */
   background: #020617; /* slate-950 */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
+  min-height: 600px; /* Ensure it has height */
+  border-radius: 0.5rem; /* Match parent container */
 }
 
 .sonar-scanner {

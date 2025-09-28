@@ -36,6 +36,15 @@ export const MissionVision: React.FC<MissionVisionProps> = ({ startup }) => {
   const [result, setResult] = useState<MissionVisionResult | null>(null);
   const defineMissionVision = useAction(api.actions.defineMissionVision);
 
+  const loadingTexts = [
+    "Analyzing core idea...",
+    "Evaluating market position...",
+    "Distilling purpose into a Mission...",
+    "Projecting future impact into a Vision...",
+    "Forging the Genesis Block..."
+  ];
+  const [currentLoadingText, setCurrentLoadingText] = useState(loadingTexts[0]);
+
   const brainstormData: BrainstormData | null = startup.brainstormResult ? JSON.parse(startup.brainstormResult) : null;
   const marketPulseData: MarketPulseData | null = startup.marketPulse ? JSON.parse(startup.marketPulse) : null;
 
@@ -44,6 +53,18 @@ export const MissionVision: React.FC<MissionVisionProps> = ({ startup }) => {
       setResult(JSON.parse(startup.missionVision));
     }
   }, [startup.missionVision]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (isForging) {
+      interval = setInterval(() => {
+        setCurrentLoadingText(prev => loadingTexts[(loadingTexts.indexOf(prev) + 1) % loadingTexts.length]);
+      }, 2500);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isForging]);
 
   const handleForge = async () => {
     if (!brainstormData || !marketPulseData) {
@@ -70,38 +91,36 @@ export const MissionVision: React.FC<MissionVisionProps> = ({ startup }) => {
   const renderContent = () => {
     if (isForging) {
         return (
-            <div className="genesis-block forging">
-                <div className="input-data-side">
-                    <div className="data-node idea-node">{brainstormData?.refinedIdea}</div>
-                    <div className="data-node pulse-node">Demand: {marketPulseData?.marketDemand}%</div>
-                    <div className="data-node pulse-node">Growth: {marketPulseData?.growthPotential}%</div>
+            <div className="loading-container"> {/* Use reference class */}
+                <div className="typewriter-animation-container"> {/* Use reference class */}
+                    <div className="mv-core"></div>
+                    
+                    {/* Mission Icons Flying In */}
+                    <i className="fas fa-gears mission-icon icon-1"></i>
+                    <i className="fas fa-compass mission-icon icon-2"></i>
+
+                    {/* Vision Icons Flying Out */}
+                    <i className="fas fa-star vision-icon icon-1"></i>
+                    <i className="fas fa-trophy vision-icon icon-2"></i>
                 </div>
-                <div className="core-animation">
-                    <div className="core-ring"></div>
-                </div>
-                <div className="output-data-side">
-                    <div className="output-field mission-field"></div>
-                    <div className="output-field vision-field"></div>
-                </div>
+                <div className="loading-status-text">{currentLoadingText}</div>
             </div>
         );
     }
 
     if (result) {
         return (
-            <>
+            <div className="result-container">
                 <TaskResultHeader title="Genesis Block Forged" onRegenerate={handleForge} />
-                <div className="genesis-block complete">
-                    <div className="result-card">
-                        <h3>Mission Statement</h3>
-                        <p>"{result.mission}"</p>
-                    </div>
-                    <div className="result-card">
-                        <h3>Vision Statement</h3>
-                        <p>"{result.vision}"</p>
-                    </div>
+                <div className="result-card">
+                    <h3>Mission Statement</h3>
+                    <p>"{result.mission}"</p>
                 </div>
-            </>
+                <div className="result-card">
+                    <h3>Vision Statement</h3>
+                    <p>"{result.vision}"</p>
+                </div>
+            </div>
         );
     }
 

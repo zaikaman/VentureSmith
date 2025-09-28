@@ -16,91 +16,76 @@
     height: 1.5rem;
 }
 
-/* Genesis Block Animation Styles */
-.genesis-block {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 400px;
-    padding: 2rem;
-}
-
-.input-data-side, .output-data-side {
-    width: 40%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.data-node, .output-field {
-    padding: 1rem;
-    border-radius: 8px;
-    border: 1px solid var(--border-slate-700);
-    background: var(--bg-slate-800);
-    color: var(--text-slate-300);
-    font-weight: 500;
-    text-align: left;
-}
-
-.core-animation {
-    width: 150px;
-    height: 150px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.core-ring {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 3px solid transparent;
-    border-top-color: #a5b4fc;
-    border-bottom-color: #a5b4fc;
-    animation: spin 2s linear infinite;
-}
-
-.core-ring::before {
-    content: '';
+/* New Assembler Animation */
+.mv-core {
     position: absolute;
-    top: 10px; left: 10px; right: 10px; bottom: 10px;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, #fff, #a5b4fc, rgba(165, 180, 252, 0));
     border-radius: 50%;
-    border: 3px solid transparent;
-    border-left-color: #fbcfe8;
-    border-right-color: #fbcfe8;
-    animation: spin 1.5s linear reverse infinite;
+    animation: pulse-core 2s infinite ease-in-out;
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
+.mission-icon, .vision-icon {
+    position: absolute;
+    font-size: 1.75rem;
+    color: #e0e7ff; /* indigo-100 */
+    opacity: 0;
+    animation-iteration-count: infinite;
+    animation-duration: 4s;
 }
 
-/* Forging animation specifics */
-.genesis-block.forging .data-node {
-    animation: pulseNode 1.5s infinite ease-in-out;
+/* --- Mission Icons Flying In --- */
+.mission-icon.icon-1 { animation-name: fly-in-1; animation-delay: 0s; }
+.mission-icon.icon-2 { animation-name: fly-in-2; animation-delay: 0.5s; }
+
+@keyframes fly-in-1 {
+    0% { top: 0%; left: 0%; opacity: 0; transform: scale(0.5); }
+    25% { opacity: 1; transform: scale(1.2); }
+    45% { top: 50%; left: 50%; opacity: 0; transform: scale(0.5) translate(-50%, -50%); }
+    100% { top: 50%; left: 50%; opacity: 0; }
 }
 
-@keyframes pulseNode {
-    0%, 100% { box-shadow: 0 0 5px rgba(165, 180, 252, 0.3); }
-    50% { box-shadow: 0 0 20px rgba(165, 180, 252, 0.7); }
+@keyframes fly-in-2 {
+    0% { top: 80%; left: 10%; opacity: 0; transform: scale(0.5); }
+    25% { opacity: 1; transform: scale(1.2); }
+    45% { top: 50%; left: 50%; opacity: 0; transform: scale(0.5) translate(-50%, -50%); }
+    100% { top: 50%; left: 50%; opacity: 0; }
 }
 
-.genesis-block.forging .output-field {
-    background: var(--bg-slate-900);
-    animation: flicker 2s infinite;
+/* --- Vision Icons Flying Out --- */
+.vision-icon.icon-1 { animation-name: fly-out-1; animation-delay: 0s; }
+.vision-icon.icon-2 { animation-name: fly-out-2; animation-delay: 0.5s; }
+
+@keyframes fly-out-1 {
+    50% { top: 50%; left: 50%; opacity: 1; transform: scale(1.5) translate(-50%, -50%); color: #facc15; }
+    80% { top: 10%; left: 80%; opacity: 0.5; transform: scale(1); }
+    100% { top: 10%; left: 80%; opacity: 0; }
 }
 
-@keyframes flicker {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 1; }
+@keyframes fly-out-2 {
+    50% { top: 50%; left: 50%; opacity: 1; transform: scale(1.5) translate(-50%, -50%); color: #facc15; }
+    80% { top: 70%; left: 0%; opacity: 0.5; transform: scale(1); }
+    100% { top: 70%; left: 0%; opacity: 0; }
+}
+
+@keyframes pulse-core {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 30px #a5b4fc; }
+    50% { transform: translate(-50%, -50%) scale(1.2); box-shadow: 0 0 50px #c7d2fe; }
+}
+
+.loading-status-text {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    color: #9ca3af; /* slate-400 */
 }
 
 /* Result Display Styles */
-.genesis-block.complete {
-    flex-direction: column;
-    height: auto;
+.result-container {
+    width: 100%;
     animation: fadeInResults 1s forwards;
 }
 

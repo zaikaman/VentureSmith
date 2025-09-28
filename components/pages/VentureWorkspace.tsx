@@ -294,7 +294,7 @@ export const VentureWorkspace: React.FC = () => {
             case 'pressRelease':
                 return <DraftPressRelease startup={startup} />;
             case 'growthMetrics':
-                return <IdentifyGrowthMetrics />;
+                return <IdentifyGrowthMetrics startup={startup} startupId={id!} />;
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;
