@@ -42,6 +42,7 @@ export default defineSchema({
     growthMetrics: v.optional(v.string()),
     abTestIdeas: v.optional(v.string()),
     seoStrategy: v.optional(v.string()),
+    processAutomation: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_userId", ["userId"]),
 });

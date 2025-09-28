@@ -2181,6 +2181,97 @@ export const generateSeoStrategyWithAI = internalAction(
   }
 );
 
+export const generateProcessMapWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const processMapSchema = {
+      type: "OBJECT",
+      properties: {
+        processes: {
+          type: "ARRAY",
+          description: "An array of 3-4 key business or technical processes.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              name: { type: "STRING", description: "The name of the process (e.g., 'New Customer Onboarding')." },
+              description: { type: "STRING", description: "A brief description of the process goal." },
+              automationPotential: { type: "STRING", enum: ["High", "Medium", "Low"], description: "An assessment of the overall automation potential for this process." },
+              steps: {
+                type: "ARRAY",
+                description: "The sequence of steps in the process.",
+                items: {
+                  type: "OBJECT",
+                  properties: {
+                    step: { type: "NUMBER", description: "The step number in the sequence." },
+                    action: { type: "STRING", description: "A description of the action taken in this step." },
+                    automationType: { type: "STRING", enum: ["Manual", "Assisted", "Full"], description: "The type of automation possible for this step." },
+                  },
+                  required: ["step", "action", "automationType"],
+                }
+              }
+            },
+            required: ["name", "description", "automationPotential", "steps"],
+          }
+        }
+      },
+      required: ["processes"],
+    };
+
+    const prompt = `
+      You are a senior business process analyst and automation expert.
+      Based on the provided business context for a startup called "${fullContext.name}", identify 3-4 core processes and map them out for automation opportunities.
+
+      **Business Context:**
+      - **Official Startup Name:** ${fullContext.name}
+      - **Business Plan Summary:** ${JSON.stringify(fullContext.businessPlan.executiveSummary, null, 2)}
+      - **Development Roadmap Overview:** ${JSON.stringify(fullContext.developmentRoadmap, null, 2)}
+
+      **Your Task:**
+      Generate a JSON object that outlines a process automation map. The map must contain a "processes" array.
+
+      **JSON Schema Requirements:**
+      1.  For each process, provide a 'name', 'description', and an 'automationPotential' rating ('High', 'Medium', or 'Low').
+      2.  For each process, detail the 'steps' in an array. Each step must have a 'step' number, an 'action' description, and an 'automationType' ('Manual', 'Assisted', or 'Full').
+      3.  Identify processes from different areas of the business (e.g., customer-facing, marketing, technical operations, finance).
+      **Important Formatting Rule:** Do not use any markdown formatting. All text in the JSON string values must be plain text. Do not use asterisks (*).
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting Process Automation Map from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: processMapSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No process map data received from Gemini API");
+      }
+
+      console.log("Process map data received successfully.");
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get process map data:", error.message);
+      throw new Error(`Failed to get process map data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
 export const generateProductHuntKitWithAI = internalAction(
   async (
     _,

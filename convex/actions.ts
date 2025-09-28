@@ -816,9 +816,31 @@ export const generateSeoStrategy = action({
       fullContext,
     });
 
-    await ctx.runMutation(api.startups.updateSeoStrategy, {
+    return result;
+  },
+});
+
+export const generateProcessMap = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.businessPlan || !startup.developmentRoadmap) {
+      throw new Error("Business Plan and Development Roadmap must be completed first.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      businessPlan: JSON.parse(startup.businessPlan),
+      developmentRoadmap: JSON.parse(startup.developmentRoadmap),
+    };
+
+    const result = await ctx.runAction(internal.gemini.generateProcessMapWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateProcessAutomation, {
       startupId,
-      seoStrategy: result,
+      processAutomation: result,
     });
 
     return result;

@@ -1,0 +1,176 @@
+/* MapProcesses.css */
+
+.map-processes-container {
+    background-color: #0f172a; /* bg-slate-900 */
+    padding: 2rem;
+    border-radius: 0.5rem;
+    color: white;
+}
+
+/* --- Loading Animation --- */
+.automation-animation-container {
+    width: 300px;
+    height: 250px;
+    position: relative;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #334155;
+    background-color: #1e293b;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.gear {
+    position: absolute;
+    color: #475569; /* slate-600 */
+    animation: spin 8s linear infinite;
+}
+
+.gear.g1 { font-size: 80px; top: 20px; left: 30px; animation-duration: 10s; }
+.gear.g2 { font-size: 50px; top: 80px; left: 90px; animation-direction: reverse; animation-duration: 6s; }
+.gear.g3 { font-size: 60px; bottom: 30px; right: 40px; }
+
+.conveyor-belt {
+    width: 100%;
+    height: 40px;
+    background-color: #334155; /* slate-700 */
+    position: absolute;
+    bottom: 60px;
+    border-top: 2px solid #475569;
+    border-bottom: 2px solid #475569;
+    background-image: linear-gradient(45deg, #475569 25%, transparent 25%, transparent 50%, #475569 50%, #475569 75%, transparent 75%, transparent);
+    background-size: 20px 20px;
+    animation: move-belt 1s linear infinite;
+}
+
+.task-box {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: #fb923c; /* orange-400 */
+    border: 1px solid #fdba74;
+    border-radius: 4px;
+    bottom: 105px;
+    left: -30px;
+    animation: move-box 5s linear infinite;
+    animation-delay: 1s;
+}
+
+.robot-arm {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    right: 10px;
+    top: 10px;
+    transform-origin: bottom left;
+}
+
+.robot-arm i {
+    font-size: 100px;
+    color: #94a3b8;
+    animation: grab-item 5s ease-in-out infinite;
+    transform-origin: bottom center;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes move-belt {
+    from { background-position: 0 0; }
+    to { background-position: -20px 0; }
+}
+
+@keyframes move-box {
+    0% { left: -30px; }
+    80% { left: 220px; transform: rotate(0deg); }
+    90% { left: 220px; transform: rotate(90deg) translateY(-40px); }
+    100% { left: 220px; transform: rotate(90deg) translateY(-40px); opacity: 0; }
+}
+
+@keyframes grab-item {
+    0%, 40% { transform: rotate(0deg); }
+    60% { transform: rotate(20deg) scaleY(0.9); }
+    80% { transform: rotate(-10deg); }
+    100% { transform: rotate(0deg); }
+}
+
+/* --- Results View --- */
+.automation-results-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.process-card {
+    background-color: #1e293b; /* bg-slate-800 */
+    border: 1px solid #334155; /* border-slate-700 */
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+.process-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.process-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #f472b6; /* pink-400 */
+}
+
+.process-header p {
+    font-size: 0.9rem;
+    color: #94a3b8; /* slate-400 */
+    max-width: 60ch;
+}
+
+.potential-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.potential-high { background-color: #166534; color: #bbf7d0; }
+.potential-medium { background-color: #854d0e; color: #fde047; }
+.potential-low { background-color: #881337; color: #fecdd3; }
+
+.steps-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.steps-table th, .steps-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #334155;
+}
+
+.steps-table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+
+.automation-type-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.type-full { background-color: #1d4ed8; color: #dbeafe; }
+.type-assisted { background-color: #9333ea; color: #f3e8ff; }
+.type-manual { background-color: #475569; color: #e2e8f0; }
