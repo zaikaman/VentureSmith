@@ -59,26 +59,23 @@ export const CompetitorMatrix: React.FC<CompetitorMatrixProps> = ({ startup }) =
     }
   };
 
-  if (isAnalyzing) {
-    return (
-      <div className="hologram-container">
-        <div className="radar">
-          <div className="radar-disc"></div>
-          <div className="radar-sweep"></div>
-          <div className="blip"></div>
-          <div className="blip"></div>
-          <div className="blip"></div>
-          <div className="blip"></div>
-          <div className="blip"></div>
-        </div>
-        <div className="mobile-spinner"></div>
-        <div className="radar-status-text">ANALYZING COMPETITIVE LANDSCAPE...</div>
-      </div>
-    );
-  }
-
-  if (result) {
-    return (
+  return (
+    <div>
+        {isAnalyzing ? (
+            <div className="hologram-container">
+                <div className="radar">
+                    <div className="radar-disc"></div>
+                    <div className="radar-sweep"></div>
+                    <div className="blip"></div>
+                    <div className="blip"></div>
+                    <div className="blip"></div>
+                    <div className="blip"></div>
+                    <div className="blip"></div>
+                </div>
+                <div className="mobile-spinner"></div>
+                <div className="radar-status-text">ANALYZING COMPETITIVE LANDSCAPE...</div>
+            </div>
+        ) : result ? (
             <div className="matrix-results-container">
                 <TaskResultHeader title="Competitor Landscape Matrix" onRegenerate={handleAnalyze} />
                 <div className="matrix-table-container">
@@ -106,16 +103,15 @@ export const CompetitorMatrix: React.FC<CompetitorMatrixProps> = ({ startup }) =
                     </table>
                 </div>
             </div>
-    );
-  }
-
-  return (
-    <InitialTaskView
-        title="Competitor Landscape Matrix"
-        description="Initiate tactical analysis to map out your competitors. Our AI will generate a detailed comparison matrix based on market research."
-        buttonText="Deploy Tactical Analysis"
-        onAction={handleAnalyze}
-        disabled={!canAnalyze}
-    />
+        ) : (
+            <InitialTaskView
+                title="Competitor Landscape Matrix"
+                description="Initiate tactical analysis to map out your competitors. Our AI will generate a detailed comparison matrix based on market research."
+                buttonText="Deploy Tactical Analysis"
+                onAction={handleAnalyze}
+                disabled={!canAnalyze}
+            />
+        )}
+    </div>
   );
 };

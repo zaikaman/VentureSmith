@@ -55,26 +55,23 @@ export const Scorecard: React.FC<ScorecardProps> = ({ startup }) => {
     }
   };
 
-  if (isAnalyzing) {
-    return (
-        <div className="analysis-core-container">
-            <div className="core-rings">
-                <div className="ring"></div>
-                <div className="ring"></div>
-                <div className="ring"></div>
+  return (
+    <div>
+        {isAnalyzing ? (
+            <div className="analysis-core-container">
+                <div className="core-rings">
+                    <div className="ring"></div>
+                    <div className="ring"></div>
+                    <div className="ring"></div>
+                </div>
+                <div className="data-packet packet-1">Ideation</div>
+                <div className="data-packet packet-2">Market Pulse</div>
+                <div className="data-packet packet-3">Mission/Vision</div>
+                <div className="data-packet packet-4">Brand Identity</div>
+                <div className="mobile-spinner"></div>
+                <div className="analysis-status-text">ANALYZING VENTURE DNA...</div>
             </div>
-            <div className="data-packet packet-1">Ideation</div>
-            <div className="data-packet packet-2">Market Pulse</div>
-            <div className="data-packet packet-3">Mission/Vision</div>
-            <div className="data-packet packet-4">Brand Identity</div>
-            <div className="mobile-spinner"></div>
-            <div className="analysis-status-text">ANALYZING VENTURE DNA...</div>
-        </div>
-    );
-  }
-
-  if (result) {
-    return (
+        ) : result ? (
             <div className="scorecard-results-container">
                 <TaskResultHeader title="Scorecard Analysis" onRegenerate={handleAnalyze} />
                 <div className="overall-score-card" style={{'--glow-color': result.overallScore > 75 ? '#4ade80' : result.overallScore > 50 ? '#facc15' : '#f87171'}}>
@@ -108,17 +105,15 @@ export const Scorecard: React.FC<ScorecardProps> = ({ startup }) => {
                     </div>
                 </div>
             </div>
-    );
-  }
-
-  return (
-    <InitialTaskView
-        title="AI-Powered Scorecard Analysis"
-        description="Initiate the Analysis Core to process all your venture data. The AI will generate a comprehensive scorecard on market potential, feasibility, and innovation."
-        buttonText="Activate Analysis Core"
-        onAction={handleAnalyze}
-        disabled={!canAnalyze}
-    />
+        ) : (
+            <InitialTaskView
+                title="AI-Powered Scorecard Analysis"
+                description="Initiate the Analysis Core to process all your venture data. The AI will generate a comprehensive scorecard on market potential, feasibility, and innovation."
+                buttonText="Activate Analysis Core"
+                onAction={handleAnalyze}
+                disabled={!canAnalyze}
+            />
+        )}
+    </div>
   );
 };
-

@@ -121,7 +121,7 @@ const BrainstormIdea: React.FC<BrainstormIdeaProps> = ({ startup }) => {
         {isSynthesizing ? renderAnimation() : result ? renderResults() : (
             <InitialTaskView
                 title="Brainstorm & Refine Idea"
-                description="Your initial idea is the seed. Let's synthesize it through a neural network to discover its core components and potential."
+                description="Your initial idea is the seed. Let\'s synthesize it through a neural network to discover its core components and potential."
                 buttonText="Synthesize Idea"
                 onAction={handleSynthesize}
                 disabled={!startup.idea}
@@ -129,6 +129,7 @@ const BrainstormIdea: React.FC<BrainstormIdeaProps> = ({ startup }) => {
         )}
     </div>
   );
+
 };
 
 export default BrainstormIdea;

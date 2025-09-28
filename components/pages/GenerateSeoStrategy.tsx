@@ -182,7 +182,6 @@ const GenerateSeoStrategy: React.FC<GenerateSeoStrategyProps> = ({ startup }) =>
           buttonText="Generate Strategy"
           onAction={handleGenerate}
           disabled={!canGenerate}
-          disabledReason={!canGenerate ? "Complete 'Brainstorm', 'Marketing Copy', and 'Personas' first." : undefined}
         />
       )}
     </div>

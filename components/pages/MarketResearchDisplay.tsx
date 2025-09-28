@@ -46,31 +46,27 @@ export const MarketResearchDisplay: React.FC<MarketResearchDisplayProps> = ({ st
     setResult(null);
 
     try {
-      // Firecrawl can be slow, so we give it a long animation time
       const scanResult = await generateMarketResearch({ startupId: startup._id });
       setTimeout(() => {
         setResult(scanResult);
         setIsScanning(false);
-      }, 6000); // Long animation for a long process
+      }, 6000);
     } catch (err: any) {
       toast.error("Failed to perform deep scan. Please try again.");
       setIsScanning(false);
     }
   };
 
-  if (isScanning) {
-    return (
-        <div className="data-stream-container">
-            {[...Array(50)].map((_, i) => <div key={i} className="stream-line" style={{ '--index': i } as React.CSSProperties}></div>)}
-            <div className="stream-core"></div>
-            <div className="mobile-spinner"></div>
-            <div className="stream-status-text">PERFORMING DEEP WEB ANALYSIS...</div>
-        </div>
-    );
-  }
-
-  if (result) {
-    return (
+  return (
+    <div>
+        {isScanning ? (
+            <div className="data-stream-container">
+                {[...Array(50)].map((_, i) => <div key={i} className="stream-line" style={{ '--index': i } as React.CSSProperties}></div>)}
+                <div className="stream-core"></div>
+                <div className="mobile-spinner"></div>
+                <div className="stream-status-text">PERFORMING DEEP WEB ANALYSIS...</div>
+            </div>
+        ) : result ? (
             <div className="dossier-container">
                 <TaskResultHeader title="Market Research Dossier" onRegenerate={handleScan} />
                 <div className="dossier-content">
@@ -93,16 +89,15 @@ export const MarketResearchDisplay: React.FC<MarketResearchDisplayProps> = ({ st
                     </div>
                 )}
             </div>
-    );
-  }
-
-  return (
-    <InitialTaskView
-        title="Deep Dive Market Analysis"
-        description="Initiate a deep scan of the web. Our AI will scrape and analyze relevant articles, forums, and competitor sites to generate a detailed market analysis."
-        buttonText="Initiate Deep Scan"
-        onAction={handleScan}
-        disabled={!canScan}
-    />
+        ) : (
+            <InitialTaskView
+                title="Deep Dive Market Analysis"
+                description="Initiate a deep scan of the web. Our AI will scrape and analyze relevant articles, forums, and competitor sites to generate a detailed market analysis."
+                buttonText="Initiate Deep Scan"
+                onAction={handleScan}
+                disabled={!canScan}
+            />
+        )}
+    </div>
   );
 };

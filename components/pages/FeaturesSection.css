@@ -64,10 +64,23 @@
 }
 
 .feature-icon {
-    width: 3rem;
-    height: 3rem;
+    width: 100%;
+    height: 180px;
     margin-bottom: 1.5rem;
-    color: var(--primary-color);
+    border-radius: 1rem;
+    overflow: hidden;
+    background-color: #020617;
+}
+
+.feature-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.feature-item:hover .feature-icon img {
+    transform: scale(1.05);
 }
 
 .feature-title {
