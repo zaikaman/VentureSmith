@@ -61,6 +61,21 @@ export interface MarketResearchData {
   trends: string[];
 }
 
+export interface GrowthMetricsData {
+  title: string;
+  introduction: string;
+  metrics: Array<{
+    category: string;
+    icon: any; // Can be improved with a specific icon type if you have one
+    color: string;
+    description: string;
+    points: Array<{
+      name: string;
+      detail: string;
+    }>;
+  }>;
+}
+
 export interface StartupData {
   name: string;
   scorecard: ScorecardData;
@@ -69,6 +84,7 @@ export interface StartupData {
   pitchDeck: PitchDeckData;
   marketResearch: MarketResearchData;
   databaseSchema?: string;
+  growthMetrics?: GrowthMetricsData;
 }
 
 export type TaskID =

@@ -1,0 +1,220 @@
+/* Styles for the wrapper of the initial view */
+.initial-task-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  padding: 2rem;
+}
+
+/* Style for the large icon in the initial view */
+.initial-task-icon-large {
+  font-size: 4rem; /* Larger icon size */
+  color: #3498db; /* A representative color */
+  margin-bottom: 1.5rem;
+  animation: float-icon 3s ease-in-out infinite;
+}
+
+@keyframes float-icon {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+
+/* Main container for the Identify Growth Metrics feature */
+.growth-metrics-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.growth-metrics-intro {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #8a94a6;
+  margin-bottom: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Grid for displaying metric cards */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+/* Individual metric card styling */
+.metric-card {
+  background-color: #1e293b;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-top: 4px solid;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.metric-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.metric-icon {
+  font-size: 1.8rem;
+  margin-right: 1rem;
+}
+
+.metric-card h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #f0f4f8;
+}
+
+.metric-card-description {
+  font-style: italic;
+  color: #a0aec0;
+  margin-bottom: 1.5rem;
+}
+
+.metric-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.metric-points li {
+  background-color: #29364a;
+  padding: 0.75rem;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  color: #cbd5e0;
+}
+
+.metric-points li strong {
+  color: #e2e8f0;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+/* Loading Animation Styles - Radar/Sonar Theme */
+.loading-container {
+    text-align: center;
+    padding: 3rem;
+    background-color: #1e293b; /* bg-slate-800 */
+    border-radius: 0.5rem;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.typewriter-animation-container {
+    width: 90%;
+    max-width: 400px;
+    height: 300px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-status-text {
+    margin-top: 1.5rem;
+    color: #cbd5e0;
+    font-size: 1rem;
+}
+
+/* New Radar Animation Styles */
+.radar-container {
+    width: 300px;
+    height: 300px;
+    position: relative;
+}
+
+.radar-grid {
+    stroke: rgba(71, 85, 105, 0.5);
+    stroke-width: 1;
+    fill: none;
+}
+
+.radar-sweep {
+    stroke: rgba(34, 197, 94, 0.7);
+    stroke-width: 2;
+    transform-origin: 50% 50%;
+    animation: rotate-sweep 4s linear infinite;
+}
+
+.radar-icon-group {
+    position: absolute;
+    opacity: 0;
+    animation: fade-in-pulse 4s linear infinite;
+}
+
+.radar-icon-glow {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(167, 243, 208, 0.5); /* green-200/50% */
+    border: 1px solid #a7f3d0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: fade-glow 4s linear infinite;
+}
+
+.radar-icon {
+    font-size: 1.5rem;
+    color: #d1fae5; /* green-100 */
+    position: relative; /* To appear above the glow */
+    z-index: 2;
+}
+
+/* Stagger icon appearances to match the sweep */
+.icon-group-1 { animation-delay: 0.5s; }
+.icon-group-2 { animation-delay: 1.8s; }
+.icon-group-3 { animation-delay: 3.0s; }
+
+@keyframes rotate-sweep {
+    from { transform: rotate(-90deg); }
+    to { transform: rotate(270deg); }
+}
+
+@keyframes fade-in-pulse {
+    0%, 5% { opacity: 0; }
+    10%, 100% { opacity: 1; }
+}
+
+@keyframes fade-glow {
+    0%, 10% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    15% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    25%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+}
+
+/* Loading text styles - matched with reference */
+.loading-status-text {
+  margin-top: 1.5rem;
+  color: #cbd5e0; /* A standard, clean text color */
+  font-size: 1rem;
+}
