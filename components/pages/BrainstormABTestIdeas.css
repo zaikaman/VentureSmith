@@ -1,0 +1,192 @@
+/* BrainstormABTestIdeas.css */
+
+.ab-test-container {
+    background-color: #0f172a; /* bg-slate-900 */
+    padding: 2rem;
+    border-radius: 0.5rem;
+    color: white;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.regenerate-button {
+    background-color: #1e293b; /* bg-slate-800 */
+    color: #94a3b8; /* text-slate-400 */
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #334155; /* border-slate-700 */
+    transition: all 0.2s ease-in-out;
+}
+
+.regenerate-button:hover {
+    background-color: #334155; /* bg-slate-700 */
+    color: white;
+}
+
+.regenerate-button svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.initial-view, .loading-container {
+    text-align: center;
+    padding: 3rem;
+    background-color: #1e293b; /* bg-slate-800 */
+    border-radius: 0.5rem;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- Loading Animation --- */
+.ab-animation-container {
+    width: 250px;
+    height: 250px;
+    position: relative;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.idea-orb {
+    width: 80px;
+    height: 80px;
+    background-color: #facc15; /* yellow-400 */
+    border-radius: 50%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 35px #facc15, inset 0 0 15px #fde047;
+    animation: pulse-orb 2.5s infinite ease-in-out;
+}
+
+.idea-orb svg {
+    width: 40px;
+    height: 40px;
+    color: #422006;
+}
+
+.variation-path {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    border-radius: 50%;
+    border: 2px dashed #475569; /* slate-600 */
+}
+
+.variation-box {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    transform-origin: 100px 100px; /* Center of the path */
+}
+
+.variation-a {
+    background-color: #38bdf8; /* sky-500 */
+    box-shadow: 0 0 20px #38bdf8;
+    animation: travel-a 5s linear infinite;
+}
+
+.variation-b {
+    background-color: #4ade80; /* green-400 */
+    box-shadow: 0 0 20px #4ade80;
+    animation: travel-b 5s linear infinite;
+}
+
+.loading-status-text {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: #94a3b8; /* slate-400 */
+    letter-spacing: 1px;
+}
+
+@keyframes pulse-orb {
+    0% { transform: scale(1); box-shadow: 0 0 35px #facc15, inset 0 0 15px #fde047; }
+    50% { transform: scale(1.1); box-shadow: 0 0 50px #fde047, inset 0 0 20px #fef08a; }
+    100% { transform: scale(1); box-shadow: 0 0 35px #facc15, inset 0 0 15px #fde047; }
+}
+
+@keyframes travel-a {
+    from { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+}
+
+@keyframes travel-b {
+    from { transform: rotate(180deg) translateX(100px) rotate(-180deg); }
+    to   { transform: rotate(540deg) translateX(100px) rotate(-540deg); }
+}
+
+/* --- Results View --- */
+.ab-results-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 1rem; /* For scrollbar */
+}
+
+.ab-test-card {
+    background-color: #1e293b; /* bg-slate-800 */
+    border: 1px solid #334155; /* border-slate-700 */
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+.ab-test-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #c084fc; /* purple-400 */
+    margin-bottom: 0.75rem;
+}
+
+.ab-test-card p {
+    color: #cbd5e1; /* slate-300 */
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.variations-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    border-top: 1px solid #334155;
+    padding-top: 1.5rem;
+}
+
+.variation-column h4 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.variation-column .variation-a-header {
+    color: #38bdf8; /* sky-400 */
+}
+
+.variation-column .variation-b-header {
+    color: #4ade80; /* green-400 */
+}
+
+.variation-column p {
+    font-size: 0.9rem;
+    color: #94a3b8; /* slate-400 */
+    margin-bottom: 0;
+}

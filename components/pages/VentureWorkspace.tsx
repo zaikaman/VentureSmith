@@ -39,6 +39,8 @@ import BuildWaitlistPage from './BuildWaitlistPage';
 import ProductHuntLaunchKit from './ProductHuntLaunchKit';
 import DraftPressRelease from './DraftPressRelease';
 import IdentifyGrowthMetrics from './IdentifyGrowthMetrics';
+import BrainstormABTestIdeas from './BrainstormABTestIdeas';
+import GenerateSeoStrategy from './GenerateSeoStrategy';
 
 import './VentureWorkspace.css';
 
@@ -139,8 +141,8 @@ export const VentureWorkspace: React.FC = () => {
             id: 'phase-9', name: 'Phase 9: Growth Hacking & Analytics',
             tasks: [
                 { id: 'growthMetrics', name: 'Identify Growth Metrics', isCompleted: !!startup?.growthMetrics },
-                { id: 'abTestIdeas', name: 'Brainstorm A/B Test Ideas', isCompleted: false },
-                { id: 'seoStrategy', name: 'Generate SEO Keyword Strategy', isCompleted: false },
+                { id: 'abTestIdeas', name: 'Brainstorm A/B Test Ideas', isCompleted: !!startup?.abTestIdeas },
+                { id: 'seoStrategy', name: 'Generate SEO Keyword Strategy', isCompleted: !!startup?.seoStrategy },
             ]
         },
         {
@@ -295,6 +297,10 @@ export const VentureWorkspace: React.FC = () => {
                 return <DraftPressRelease startup={startup} />;
             case 'growthMetrics':
                 return <IdentifyGrowthMetrics startup={startup} startupId={id!} />;
+            case 'abTestIdeas':
+                return <BrainstormABTestIdeas startup={startup} />;
+            case 'seoStrategy':
+                return <GenerateSeoStrategy startup={startup} />;
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;

@@ -2003,6 +2003,184 @@ export const generateWaitlistPageWithAI = internalAction(
   }
 );
 
+export const generateABTestIdeasWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const abTestSchema = {
+      type: "ARRAY",
+      items: {
+        type: "OBJECT",
+        properties: {
+          hypothesis: { type: "STRING", description: "A clear, testable hypothesis for the A/B test (e.g., 'Changing the CTA button color from blue to green will increase sign-ups')." },
+          description: { type: "STRING", description: "A brief explanation of the reasoning behind this test." },
+          variationA: {
+            type: "OBJECT",
+            properties: {
+              name: { type: "STRING", description: "Name of Variation A (e.g., 'Control: Blue Button')." },
+              details: { type: "STRING", description: "Specific details of what Variation A entails." },
+            },
+            required: ["name", "details"],
+          },
+          variationB: {
+            type: "OBJECT",
+            properties: {
+              name: { type: "STRING", description: "Name of Variation B (e.g., 'Challenger: Green Button')." },
+              details: { type: "STRING", description: "Specific details of what Variation B entails." },
+            },
+            required: ["name", "details"],
+          },
+        },
+        required: ["hypothesis", "description", "variationA", "variationB"],
+      }
+    };
+
+    const prompt = `
+      You are a conversion rate optimization (CRO) expert.
+      Based on the provided business context for a startup called "${fullContext.name}", generate 3 creative and impactful A/B test ideas in a JSON format.
+
+      **Business Context:**
+      - **Official Startup Name:** ${fullContext.name}
+      - **Refined Idea:** ${fullContext.refinedIdea}
+      - **Key Features:** ${fullContext.keyFeatures.join(", ")}
+      - **Target Personas:** ${JSON.stringify(fullContext.customerPersonas, null, 2)}
+
+      **Your Task:**
+      Generate a JSON object that contains an array of 3 distinct A/B test ideas. Focus on high-impact areas like user onboarding, call-to-actions, or pricing presentation.
+
+      **JSON Schema Requirements:**
+      1.  The root of the response must be a JSON array.
+      2.  Each object in the array must have "hypothesis", "description", "variationA" (object), and "variationB" (object).
+      3.  The variations objects must contain "name" and "details".
+      **Important Formatting Rule:** Do not use any markdown formatting. All text in the JSON string values must be plain text. Do not use asterisks (*).
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting A/B Test Ideas from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: abTestSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No A/B test ideas data received from Gemini API");
+      }
+
+      console.log("A/B test ideas data received successfully.");
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get A/B test ideas data:", error.message);
+      throw new Error(`Failed to get A/B test ideas data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+export const generateSeoStrategyWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const seoSchema = {
+      type: "OBJECT",
+      properties: {
+        keywordClusters: {
+          type: "ARRAY",
+          description: "An array of 3-4 keyword clusters.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              clusterName: { type: "STRING", description: "A high-level name for the keyword group (e.g., 'DIY Project Management Tools')." },
+              justification: { type: "STRING", description: "A brief explanation of who this cluster targets and their intent." },
+              keywords: { type: "ARRAY", items: { type: "STRING" }, description: "A list of 5-7 related keywords in this cluster." },
+            },
+            required: ["clusterName", "justification", "keywords"],
+          }
+        },
+        contentPillars: {
+          type: "ARRAY",
+          description: "An array of 2-3 main content pillars.",
+          items: {
+            type: "OBJECT",
+            properties: {
+              pillar: { type: "STRING", description: "The name of the content pillar (e.g., 'Startup Productivity')." },
+              description: { type: "STRING", description: "A brief description of what this content pillar covers." },
+              topics: { type: "ARRAY", items: { type: "STRING" }, description: "A list of 3-4 specific blog post or article ideas for this pillar." },
+            },
+            required: ["pillar", "description", "topics"],
+          }
+        }
+      },
+      required: ["keywordClusters", "contentPillars"],
+    };
+
+    const prompt = `
+      You are a world-class SEO strategist and content marketer.
+      Based on the provided business context for a startup called "${fullContext.name}", generate a foundational SEO keyword and content strategy in a JSON format.
+
+      **Business Context:**
+      - **Official Startup Name:** ${fullContext.name}
+      - **Refined Idea:** ${fullContext.refinedIdea}
+      - **Marketing Copy Snippets:** ${JSON.stringify(fullContext.marketingCopy, null, 2)}
+      - **Target Personas:** ${JSON.stringify(fullContext.customerPersonas, null, 2)}
+
+      **Your Task:**
+      Generate a JSON object that outlines the SEO strategy. The strategy must include two main parts: "keywordClusters" and "contentPillars".
+
+      **JSON Schema Requirements:**
+      1.  **keywordClusters**: Create 3-4 distinct clusters. Each cluster must have a 'clusterName', a 'justification' explaining the user intent, and a list of 5-7 'keywords'.
+      2.  **contentPillars**: Create 2-3 high-level content pillars. Each pillar must have a 'pillar' name, a 'description', and a list of 3-4 specific article 'topics'.
+      **Important Formatting Rule:** Do not use any markdown formatting. All text in the JSON string values must be plain text. Do not use asterisks (*).
+
+      Your output MUST conform to the provided JSON schema.
+    `;
+
+    try {
+      console.log("--- Requesting SEO Strategy from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: seoSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No SEO strategy data received from Gemini API");
+      }
+
+      console.log("SEO strategy data received successfully.");
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get SEO strategy data:", error.message);
+      throw new Error(`Failed to get SEO strategy data from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
 export const generateProductHuntKitWithAI = internalAction(
   async (
     _,

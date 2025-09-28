@@ -764,3 +764,63 @@ export const generatePressRelease = action({
     return result;
   },
 });
+
+export const generateABTestIdeas = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.customerPersonas) {
+      throw new Error("Brainstorming and Customer Personas must be completed first.");
+    }
+
+    const brainstormData = JSON.parse(startup.brainstormResult);
+
+    const fullContext = {
+      name: startup.name,
+      refinedIdea: brainstormData.refinedIdea,
+      keyFeatures: brainstormData.keyFeatures,
+      customerPersonas: JSON.parse(startup.customerPersonas).personas,
+    };
+
+    const result = await ctx.runAction(internal.gemini.generateABTestIdeasWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateABTestIdeas, {
+      startupId,
+      abTestIdeas: result,
+    });
+
+    return result;
+  },
+});
+
+
+
+export const generateSeoStrategy = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.marketingCopy || !startup.customerPersonas) {
+      throw new Error("Brainstorm, Marketing Copy, and Customer Personas must be completed first.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      refinedIdea: JSON.parse(startup.brainstormResult).refinedIdea,
+      marketingCopy: JSON.parse(startup.marketingCopy),
+      customerPersonas: JSON.parse(startup.customerPersonas).personas,
+    };
+
+    const result = await ctx.runAction(internal.gemini.generateSeoStrategyWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateSeoStrategy, {
+      startupId,
+      seoStrategy: result,
+    });
+
+    return result;
+  },
+});
