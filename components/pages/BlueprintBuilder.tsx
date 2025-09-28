@@ -9,7 +9,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { IdeaInputForm } from './IdeaInputForm';
-import { SkeletonLoader } from './SkeletonLoader';
+import { SmallSpinner } from './SmallSpinner';
 import './BlueprintBuilder.css';
 
 export const BlueprintBuilder: React.FC = () => {
@@ -140,7 +140,7 @@ export const BlueprintBuilder: React.FC = () => {
                         <div className="startups-section">
                             <h2>My Startups</h2>
                             {startups === undefined ? (
-                                <SkeletonLoader />
+                                <SmallSpinner />
                             ) : startups.length > 0 ? (
                                 <ul className="startup-list">
                                     {startups.map((startup) => (
