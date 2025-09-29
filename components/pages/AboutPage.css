@@ -1,0 +1,40 @@
+.static-page-container {
+  padding: 6rem 2rem 4rem 2rem;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.static-page-content {
+  max-width: 800px;
+  width: 100%;
+}
+
+.static-page-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--primary-accent-color);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.static-page-subtitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary-accent-color);
+}
+
+.static-page-section {
+  margin-bottom: 2.5rem;
+}
+
+.static-page-section p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--secondary-text-color);
+}

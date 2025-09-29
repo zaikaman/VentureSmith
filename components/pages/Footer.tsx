@@ -30,17 +30,16 @@ export const Footer: React.FC = () => {
                         <div className="footer-column">
                             <h4>Company</h4>
                             <ul>
-                                <li><a href="#">About us</a></li>
-                                <li><a href="#">Blog</a></li>
-                                <li><a href="#">Help Center</a></li>
-                                <li><a href="#">Contact</a></li>
+                                <li><Link to="/about">About us</Link></li>
+                                <li><Link to="/help-center">Help Center</Link></li>
+                                <li><Link to="/contact">Contact</Link></li>
                             </ul>
                         </div>
                         <div className="footer-column">
                             <h4>Legal</h4>
                             <ul>
-                                <li><a href="#">Terms of Use</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
+                                <li><Link to="/terms">Terms of Use</Link></li>
+                                <li><Link to="/privacy">Privacy Policy</Link></li>
                             </ul>
                         </div>
                     </div>

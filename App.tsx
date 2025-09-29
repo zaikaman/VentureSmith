@@ -14,13 +14,16 @@ import AccountPage from './components/pages/AccountPage';
 import { VentureWorkspace } from './components/pages/VentureWorkspace';
 import { VentureChatbot } from './components/chatbot/VentureChatbot';
 import { SmithWorkspace } from './components/pages/SmithWorkspace'; // Import the new component
+import AboutPage from './components/pages/AboutPage';
+import ContactPage from './components/pages/ContactPage';
+import TermsPage from './components/pages/TermsPage';
+import PrivacyPage from './components/pages/PrivacyPage';
+import HelpCenterPage from './components/pages/HelpCenterPage';
 import { useMatch } from 'react-router-dom';
 import { useQuery } from 'convex/react';
 import { api } from './convex/_generated/api';
 import { Id } from './convex/_generated/dataModel';
 import './App.css';
-
-
 
 const App: React.FC = () => {
     const { theme } = useTheme();
@@ -36,11 +39,16 @@ const App: React.FC = () => {
                             <Route path="/" element={<Home />} />
                             <Route path="/blueprint-builder" element={<BlueprintBuilder />} />
                             <Route path="/smith-build" element={<SmithBuild />} />
-                            <Route path="/smith-build/:sessionId" element={<SmithWorkspace />} /> {/* Add the new route */}
+                            <Route path="/smith-build/:sessionId" element={<SmithWorkspace />} />
                             <Route path="/signin" element={<SignIn />} />
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/account" element={<AccountPage />} />
                             <Route path="/venture/:id" element={<VentureWorkspace />} />
+                            <Route path="/about" element={<AboutPage />} />
+                            <Route path="/contact" element={<ContactPage />} />
+                            <Route path="/terms" element={<TermsPage />} />
+                            <Route path="/privacy" element={<PrivacyPage />} />
+                            <Route path="/help-center" element={<HelpCenterPage />} />
                         </Routes>
                     </div>
                 </main>
