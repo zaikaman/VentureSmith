@@ -41,6 +41,7 @@
     display: flex;
     flex-direction: column;
     gap: 4rem;
+    align-items: center;
 }
 
 /* The connecting line */
@@ -48,11 +49,11 @@
     content: '';
     position: absolute;
     top: 2rem;
-    bottom: 2rem;
-    left: 40px;
+    height: 27rem; /* Calculated height to connect centers of 3 step numbers */
+    left: 50%;
+    transform: translateX(calc(-50% - 16.6rem));
     width: 2px;
     background-color: var(--border-slate-700);
-    transform: translateX(-50%);
 }
 
 .step-item {
