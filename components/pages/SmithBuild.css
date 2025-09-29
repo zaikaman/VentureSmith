@@ -1,68 +1,119 @@
 /* SmithBuild Global Container */
 .smith-build-container {
     width: 100%;
-    padding: 0 2rem; /* Add some horizontal padding */
+    padding: 4rem 2rem;
 }
 
-/* Stage 1: Idea Input View - Modernized */
-.idea-input-container {
-    max-width: 600px;
-    margin: 6rem auto;
+/* New Header Styles */
+.smith-build-header {
     text-align: center;
+    margin-bottom: 4rem;
+}
+
+.smith-build-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-slate-100);
+    margin-bottom: 0.5rem;
+}
+
+.smith-build-header p {
+    font-size: 1.2rem;
+    color: var(--text-slate-400);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Options Grid */
+.smith-build-options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .smith-build-options {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Card for each build option */
+.build-option-card {
+    background-color: var(--bg-slate-900);
+    border: 1px solid var(--border-slate-800);
+    border-radius: 16px;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Increased gap */
+    gap: 1.5rem;
 }
 
-.idea-input-container h2 {
-    font-size: 2.5rem; /* Larger font size */
-    font-weight: 700;
+.build-option-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
     color: var(--text-slate-100);
 }
 
-.idea-input-container p {
-    font-size: 1.2rem;
+.build-option-card p {
     color: var(--text-slate-400);
+    flex-grow: 1; /* Pushes button to the bottom */
 }
 
-.idea-input-container textarea {
+.build-option-card textarea,
+.build-option-card select {
     width: 100%;
-    padding: 1rem;
-    font-size: 1.1rem;
-    border-radius: 12px; /* Softer radius */
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 10px;
     border: 1px solid var(--border-slate-700);
-    background-color: var(--bg-slate-900);
+    background-color: var(--bg-slate-800);
     color: var(--text-slate-200);
-    resize: vertical;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.idea-input-container textarea:focus {
+.build-option-card textarea:focus,
+.build-option-card select:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3); /* Primary color glow */
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
 }
 
-.idea-input-container button {
-    padding: 1rem 2rem;
+.build-option-card button {
+    padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 12px;
-    background-color: white;
-    color: black;
-    font-size: 1.2rem;
+    border-radius: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    transition: background-color 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
-.idea-input-container button:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+.build-option-card button:hover:not(:disabled) {
+    background-color: var(--primary-hover-color);
 }
+
+.build-option-card button:disabled {
+    background-color: var(--bg-slate-700);
+    color: var(--text-slate-500);
+    cursor: not-allowed;
+}
+
+.divider {
+    width: 100%;
+    max-width: 1000px;
+    margin: 4rem auto;
+    height: 1px;
+    background-color: var(--border-slate-700);
+}
+
 
 /* Stage 2: Workspace View - Modernized */
 .workspace-container {

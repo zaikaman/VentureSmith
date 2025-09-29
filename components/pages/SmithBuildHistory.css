@@ -1,0 +1,82 @@
+/* components/pages/SmithBuildHistory.css */
+.history-section {
+    width: 100%;
+    max-width: 1000px;
+    margin: 4rem auto 0;
+}
+
+.history-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: var(--text-slate-200);
+    text-align: center;
+}
+
+.history-empty-state {
+    text-align: center;
+    color: var(--text-slate-400);
+    padding: 2rem;
+    background-color: var(--bg-slate-900);
+    border: 1px solid var(--border-slate-800);
+    border-radius: 16px;
+}
+
+.history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.history-card {
+    background-color: var(--bg-slate-900);
+    border: 1px solid var(--border-slate-800);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.history-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.history-card-content {
+    flex-grow: 1;
+}
+
+.history-card-prompt {
+    color: var(--text-slate-300);
+    margin: 0 0 1rem 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.history-card-date {
+    font-size: 0.8rem;
+    color: var(--text-slate-500);
+    display: block; /* Ensure it takes its own line */
+    margin-top: 1rem;
+    text-align: right;
+}
+
+.delete-button {
+    background-color: #ef4444; /* red-500 */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+    align-self: flex-end;
+}
+
+.delete-button:hover {
+    background-color: #dc2626; /* red-600 */
+}

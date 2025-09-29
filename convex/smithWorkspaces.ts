@@ -106,3 +106,55 @@ export const updateWorkspaceMessages = mutation({
         await ctx.db.patch(args.id, { messages: args.messages });
     },
 });
+
+export const getWorkspacesForUser = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return [];
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_subject", (q) => q.eq("subject", identity.subject))
+      .unique();
+
+    if (!user) {
+      return [];
+    }
+
+    return ctx.db
+      .query("smithWorkspaces")
+      .withIndex("by_userId", (q) => q.eq("userId", user._id))
+      .order("desc")
+      .collect();
+  },
+});
+
+export const deleteWorkspace = mutation({
+  args: { id: v.id("smithWorkspaces") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const workspace = await ctx.db.get(args.id);
+    if (!workspace) {
+      throw new Error("Workspace not found");
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_subject", (q) => q.eq("subject", identity.subject))
+      .unique();
+
+    if (!user || user._id !== workspace.userId) {
+      throw new Error("Not authorized to delete this workspace");
+    }
+
+    await ctx.db.delete(args.id);
+    return { success: true };
+  },
+});
