@@ -80,11 +80,9 @@ export const MarketPulseCheck: React.FC<MarketPulseCheckProps> = ({ startup }) =
         idea: ideaToAnalyze, // Use the refined idea
       });
       setResult(pulseResult);
-      // Animation timings
-      setTimeout(() => {
-        setIsScanning(false);
-        setShowResults(true);
-      }, 4000); // Match this with CSS animation duration
+      // Update UI immediately without artificial delay
+      setIsScanning(false);
+      setShowResults(true);
     } catch (err: any) {
       toast.error("Failed to get market pulse. Please try again.");
       console.error("Error getting market pulse:", err);
