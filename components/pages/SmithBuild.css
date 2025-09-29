@@ -1,7 +1,10 @@
 /* SmithBuild Global Container */
 .smith-build-container {
     width: 100%;
-    padding: 4rem 2rem;
+    padding-top: 8rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 4rem;
 }
 
 /* New Header Styles */
