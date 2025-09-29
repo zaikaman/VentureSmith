@@ -1,4 +1,3 @@
-
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
@@ -48,5 +47,12 @@ export default defineSchema({
     dueDiligenceChecklist: v.optional(v.string()),
     aiPitchCoach: v.optional(v.string()),
     createdAt: v.number(),
+  }).index("by_userId", ["userId"]),
+
+  smithWorkspaces: defineTable({
+    userId: v.id("users"),
+    prompt: v.string(),
+    files: v.any(),
+    messages: v.any(),
   }).index("by_userId", ["userId"]),
 });

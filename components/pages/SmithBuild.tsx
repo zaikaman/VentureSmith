@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 import './SmithBuild.css';
 import { SmallSpinner } from './SmallSpinner';
 
@@ -7,15 +9,22 @@ import { SmallSpinner } from './SmallSpinner';
 const IdeaInputView = () => {
   const [prompt, setPrompt] = useState('');
   const navigate = useNavigate();
+  const createWorkspace = useMutation(api.smithWorkspaces.createWorkspace);
+  const [isBuilding, setIsBuilding] = useState(false);
 
-  const handleBuild = () => {
-    if (!prompt.trim()) return;
+  const handleBuild = async () => {
+    if (!prompt.trim() || isBuilding) return;
 
-    // Generate a simple unique ID for the session
-    const sessionId = Date.now().toString();
-
-    // Navigate to the new workspace page, passing the prompt in the state
-    navigate(`/smith-build/${sessionId}`, { state: { prompt } });
+    setIsBuilding(true);
+    try {
+      const workspaceId = await createWorkspace({ prompt });
+      navigate(`/smith-build/${workspaceId}`);
+    } catch (error) {
+      console.error("Failed to create workspace:", error);
+      // You might want to show an error message to the user
+    } finally {
+      setIsBuilding(false);
+    }
   };
 
   return (
@@ -28,8 +37,8 @@ const IdeaInputView = () => {
         placeholder="e.g., A simple counter button with a display that increments on click."
         rows={5}
       />
-      <button onClick={handleBuild}>
-        {'Start Building'}
+      <button onClick={handleBuild} disabled={isBuilding}>
+        {isBuilding ? <SmallSpinner /> : 'Start Building'}
       </button>
     </div>
   );

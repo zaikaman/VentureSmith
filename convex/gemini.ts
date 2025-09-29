@@ -1,6 +1,7 @@
 import { internal } from "./_generated/api";
-import { internalAction } from "./_generated/server";
+import { action, internalAction } from "./_generated/server";
 import { GoogleGenAI } from "@google/genai";
+import { v } from "convex/values";
 
 export const summarizeMarketContent = internalAction(
   async (
@@ -2929,3 +2930,97 @@ rationale for why they are a good match.
     }
   }
 );
+
+export const generateCodeChanges = action({
+  args: { files: v.any(), prompt: v.string() },
+  handler: async (
+    ctx,
+    { files, prompt }: { files: any, prompt: string }
+  ) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("User is not authenticated.");
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const fileGenSchema = {
+        type: "OBJECT",
+        properties: {
+            files: {
+                type: "ARRAY",
+                description: "An array of file objects, each with a path and content.",
+                items: {
+                    type: "OBJECT",
+                    properties: {
+                        path: { type: "STRING", description: "The full path of the file (e.g., 'index.html')." },
+                        content: { type: "STRING", description: "The full content of the file." }
+                    },
+                    required: ["path", "content"]
+                }
+            },
+            chatResponse: { 
+                type: "STRING",
+                description: "A friendly, welcoming message from the AI assistant, confirming the files have been created or modified."
+            },
+        },
+        required: ["files", "chatResponse"],
+    };
+
+    const fileContentString = Object.entries(files).map(([path, data]) => {
+        return `
+--- ${path} ---
+\`\`\`${(data as any).type}
+${(data as any).content}
+\`\`\`
+`;
+    }).join('');
+
+
+    const generationPrompt = `
+      You are an AI assistant that builds and modifies simple web applications based on a user's prompt and the current state of the files.
+      Your task is to update the files based on the user's request.
+
+      User Prompt: "${prompt}"
+
+      Current Files:
+      ${fileContentString}
+
+      Based on this prompt and the current files, generate the updated files.
+      You should return an array of file objects. Each object must have a "path" and a "content" property.
+      You must return the complete content of all files, even if they were not changed.
+
+      Also, provide a friendly chat response to the user explaining what you did.
+
+      Your output MUST conform to the provided JSON schema. Ensure the content of each file is a single, complete string.
+    `;
+
+    try {
+      console.log("--- Requesting Code Changes from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: generationPrompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: fileGenSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No file generation data received from Gemini API");
+      }
+
+      console.log("Code changes data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to generate code changes:", error.message);
+      throw new Error(`Failed to generate code changes from Gemini API. Error: ${error.message}`);
+    }
+  }
+});
