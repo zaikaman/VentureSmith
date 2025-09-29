@@ -111,6 +111,36 @@ export const VentureChatbot: React.FC<VentureChatbotProps> = ({ startup }) => {
     }
   };
 
+  const getVentureContextForVapi = () => {
+    const context: { [key: string]: string } = {
+        startupName: startup.name || 'Unnamed Venture',
+        startupIdea: startup.idea || 'Not yet defined.',
+    };
+
+    const fieldsToInclude = [
+        'missionVision', 
+        'brandIdentity', 
+        'customerPersonas',
+        'competitorMatrix',
+    ];
+
+    for (const field of fieldsToInclude) {
+        const value = startup[field as keyof typeof startup];
+        if (value && typeof value === 'string') {
+            // Pass the raw JSON string directly to Vapi.
+            context[field] = value;
+        } else if (value) {
+            // For any non-string but existing values, stringify them.
+            context[field] = JSON.stringify(value);
+        } else {
+            // If the field is null or undefined, send a clear message.
+            context[field] = 'not generated yet';
+        }
+    }
+
+    return context;
+  };
+
   const handleCall = () => {
     if (!vapi) return toast.error("Voice services are currently unavailable.");
     if (!VAPI_ASSISTANT_ID) return toast.error("Venture Assistant is not configured.");
@@ -118,20 +148,30 @@ export const VentureChatbot: React.FC<VentureChatbotProps> = ({ startup }) => {
     if (isCallActive) {
       vapi.stop();
     } else {
-      // The first argument is the Assistant ID string.
-      // The second argument is the Overrides object.
-      vapi.start(
-        VAPI_ASSISTANT_ID,
-        {
-          variableValues: {
-            startupName: startup.name || 'your venture',
-            startupIdea: startup.idea || 'not defined yet',
-            businessPlanSummary: startup.businessPlan ? JSON.parse(startup.businessPlan).executiveSummary : 'not generated yet',
-            scorecardScore: startup.scorecard ? JSON.parse(startup.scorecard).overallScore : 'not generated yet',
-            mission: startup.missionVision ? JSON.parse(startup.missionVision).mission : 'not generated yet',
-          }
+      const contextForVapi = getVentureContextForVapi();
+      
+      // Format the context into a string for the system prompt
+      let contextString = '';
+      for (const [key, value] of Object.entries(contextForVapi)) {
+        contextString += `${key}: ${value}\n`;
+      }
+
+      const systemPrompt = `You are a helpful assistant for a startup founder. You have been provided with the following context about their venture. Use this information to answer their questions.\n\n--- CONTEXT ---\n${contextString}--- END CONTEXT ---`;
+
+      const assistantOverrides = {
+        model: {
+          provider: 'google' as const,
+          model: 'gemini-2.5-flash' as const,
+          messages: [
+            {
+              role: 'system' as const,
+              content: systemPrompt
+            }
+          ]
         }
-      );
+      };
+
+      vapi.start(VAPI_ASSISTANT_ID, assistantOverrides);
     }
   };
 

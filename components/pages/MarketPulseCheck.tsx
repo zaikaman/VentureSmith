@@ -113,7 +113,7 @@ export const MarketPulseCheck: React.FC<MarketPulseCheckProps> = ({ startup }) =
           description="Get a rapid, AI-powered analysis of your idea's market potential. Our sonar will scan for demand, competition, growth, and related keywords."
           buttonText="Analyze Market Pulse"
           onAction={handleScan}
-          buttonIcon={<i className="fa-solid fa-magnifying-glass-chart"></i>}        />
+        />
       )}
 
       {showResults && result && (

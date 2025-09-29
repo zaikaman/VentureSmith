@@ -1054,19 +1054,29 @@ export const chatWithVentureContext = action({
     messageHistory: v.string(),
   },
   handler: async (ctx, { startupId, messageHistory }) => {
-    const startup = await ctx.runQuery(api.startups.get, { id: startupId });
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
     if (!startup) {
       throw new Error("Startup not found");
     }
 
-    // Sanitize and structure the context to avoid overly large payloads
-    const startupContext = `
-      Startup Name: ${startup.name}
-      Core Idea: ${startup.idea}
-      Business Plan Summary: ${startup.businessPlan ? JSON.parse(startup.businessPlan).executiveSummary : 'Not generated yet.'}
-      Latest Scorecard Score: ${startup.scorecard ? JSON.parse(startup.scorecard).overallScore : 'Not generated yet.'}
-      Mission: ${startup.missionVision ? JSON.parse(startup.missionVision).mission : 'Not generated yet.'}
-    `;
+    // Create a comprehensive context object
+    const fullContext: { [key: string]: any } = {};
+
+    // Iterate over all startup fields and parse JSON strings
+    for (const [key, value] of Object.entries(startup)) {
+      if (typeof value === 'string') {
+        try {
+          fullContext[key] = JSON.parse(value);
+        } catch (e) {
+          // Not a JSON string, use the value as is
+          fullContext[key] = value;
+        }
+      } else {
+        fullContext[key] = value;
+      }
+    }
+
+    const startupContext = `Here is the full context for the venture:\n${JSON.stringify(fullContext, null, 2)}`;
 
     const prompt = `
       You are a helpful AI assistant for an entrepreneur building a new venture called "${startup.name}".
