@@ -13,6 +13,7 @@ import { LoginModal } from './components/pages/LoginModal';
 import AccountPage from './components/pages/AccountPage';
 import { VentureWorkspace } from './components/pages/VentureWorkspace';
 import { VentureChatbot } from './components/chatbot/VentureChatbot';
+import { SmithWorkspace } from './components/pages/SmithWorkspace'; // Import the new component
 import { useMatch } from 'react-router-dom';
 import { useQuery } from 'convex/react';
 import { api } from './convex/_generated/api';
@@ -50,6 +51,7 @@ const App: React.FC = () => {
                             <Route path="/" element={<Home />} />
                             <Route path="/blueprint-builder" element={<BlueprintBuilder />} />
                             <Route path="/smith-build" element={<SmithBuild />} />
+                            <Route path="/smith-build/:sessionId" element={<SmithWorkspace />} /> {/* Add the new route */}
                             <Route path="/signin" element={<SignIn />} />
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/account" element={<AccountPage />} />
