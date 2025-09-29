@@ -116,6 +116,8 @@ const LoadingAnimation = () => {
           <div className="radar-icon-glow"></div>
           <i className="fas fa-rocket radar-icon"></i>
         </div>
+
+
       </div>
       <div className="mobile-spinner"></div>
       <div className="loading-status-text">{currentText}</div>
@@ -166,7 +168,6 @@ const IdentifyGrowthMetrics: React.FC<IdentifyGrowthMetricsProps> = ({ startup, 
   if (!metricsResult) {
     return (
       <div className="initial-task-wrapper">
-        <i className="fas fa-chart-line initial-task-icon-large"></i>
         <InitialTaskView
           title="Identify Growth Metrics"
           description="Let our AI analyze your business idea to identify and suggest the most important Key Performance Indicators (KPIs) to track for sustainable growth. Make data-driven decisions from day one."

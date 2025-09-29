@@ -1,0 +1,79 @@
+/* CompletionModal.css */
+.completion-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.completion-modal-content {
+    background-color: var(--bg-slate-900);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--border-slate-800);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
+.completion-modal-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-slate-100);
+    margin-bottom: 1rem;
+}
+
+.completion-modal-message {
+    color: var(--text-slate-300);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.completion-modal-message strong {
+    color: var(--primary-color);
+}
+
+.completion-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.completion-modal-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, transform 0.1s;
+}
+
+.completion-modal-button:active {
+    transform: scale(0.98);
+}
+
+.cancel-button {
+    background-color: var(--bg-slate-800);
+    color: var(--text-slate-200);
+    border: 1px solid var(--border-slate-700);
+}
+
+.cancel-button:hover {
+    background-color: var(--bg-slate-700);
+}
+
+.confirm-button {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.confirm-button:hover {
+    background-color: var(--primary-hover-color);
+}

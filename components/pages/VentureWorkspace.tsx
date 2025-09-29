@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
-import { useQuery, useMutation } from 'convex/react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { authClient } from '../../lib/auth-client';
@@ -10,7 +10,8 @@ import { VentureChatbot } from '../chatbot/VentureChatbot';
 import { LoadingIndicator } from './LoadingIndicator';
 import { HorizontalStepper } from './HorizontalStepper';
 import { PhasesOverviewModal } from './PhasesOverviewModal';
-import { StartupData, TaskID } from '../../types'; // Import StartupData and TaskID
+import { CompletionModal } from './CompletionModal';
+import { StartupData, TaskID } from '../../types';
 
 import { Scorecard } from './Scorecard';
 import PitchDeck from './PitchDeck';
@@ -19,6 +20,7 @@ import { MarketResearchDisplay } from './MarketResearchDisplay';
 import { CompetitorMatrix } from './CompetitorMatrix';
 import MentorFeedbackDisplay from './MentorFeedbackDisplay';
 import CustomerValidation from './CustomerValidation';
+import { SmithBuildPlaceholder } from './SmithBuildPlaceholder';
 import Placeholder from './Placeholder';
 import BrainstormIdea from './BrainstormIdea';
 import { MarketPulseCheck } from './MarketPulseCheck';
@@ -50,7 +52,6 @@ import AIPitchCoach from './AIPitchCoach';
 
 import './VentureWorkspace.css';
 
-// Define the shape of a task and phase for clarity
 interface Task {
     id: TaskID;
     name: string;
@@ -66,9 +67,11 @@ interface Phase {
 export const VentureWorkspace: React.FC = () => {
     const { id } = useParams<{ id: Id<"startups"> }>();
     const { data: session, isPending: isSessionPending } = authClient.useSession();
+    const navigate = useNavigate();
     
     const [activeView, setActiveView] = useState<TaskID>('brainstormIdea');
     const [isOverviewModalOpen, setOverviewModalOpen] = useState(false);
+    const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false);
     const hasSetInitialView = React.useRef(false);
 
     const startup = useQuery(
@@ -166,6 +169,12 @@ export const VentureWorkspace: React.FC = () => {
                 { id: 'aiPitchCoach', name: 'AI Pitch Coach', isCompleted: !!startup?.aiPitchCoach },
             ]
         },
+        {
+            id: 'phase-12', name: 'Optional Phase',
+            tasks: [
+                { id: 'smithBuild', name: 'SmithBuild', isCompleted: false },
+            ]
+        },
     ], [startup]);
 
     const allTasks = useMemo(() => phases.flatMap(p => p.tasks), [phases]);
@@ -221,6 +230,10 @@ export const VentureWorkspace: React.FC = () => {
     };
 
     const handleNext = () => {
+        if (activeView === 'aiPitchCoach') {
+            setIsCompletionModalOpen(true);
+            return;
+        }
         const nextStepIndex = currentStepIndex + 1;
         if (nextStepIndex < phases[currentPhaseIndex].tasks.length) {
             handleTaskClick(phases[currentPhaseIndex].tasks[nextStepIndex].id);
@@ -237,6 +250,11 @@ export const VentureWorkspace: React.FC = () => {
             const prevPhase = phases[currentPhaseIndex - 1];
             setActiveView(prevPhase.tasks[prevPhase.tasks.length - 1].id);
         }
+    };
+
+    const handleGoToSmithBuild = () => {
+        navigate('/smith-build');
+        setIsCompletionModalOpen(false);
     };
 
     const renderActiveView = () => {
@@ -317,6 +335,8 @@ export const VentureWorkspace: React.FC = () => {
                 return <DueDiligenceChecklist startup={startup} />;
             case 'aiPitchCoach':
                 return <AIPitchCoach startup={startup} />;
+            case 'smithBuild':
+                return <SmithBuildPlaceholder />;
             default:
                 const taskName = taskNames[activeView] || "Selected Task";
                 return <Placeholder taskName={taskName} />;
@@ -379,6 +399,22 @@ export const VentureWorkspace: React.FC = () => {
                     setOverviewModalOpen(false);
                 }}
             />
+
+            <CompletionModal
+                isOpen={isCompletionModalOpen}
+                onClose={() => setIsCompletionModalOpen(false)}
+                onConfirm={handleGoToSmithBuild}
+                title="Congratulations!"
+                confirmText="Go to SmithBuild"
+                cancelText="No, thanks"
+            >
+                <p>You've completed your venture blueprint! You can now use this comprehensive plan to start building your startup.</p>
+                <br />
+                <p>Ready for the next step? Try <strong>SmithBuild</strong>, our AI-powered tool that can help you create a functional prototype based on your blueprint.</p>
+                <br />
+                <p><em>(Please note: SmithBuild is an experimental feature and may not be perfect.)</em></p>
+            </CompletionModal>
+
             {startup && <VentureChatbot startup={startup} />} 
         </div>
     );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import type { FileSystem, Message, MessageRole } from '../../types';
@@ -17,6 +17,7 @@ export const SmithWorkspace: React.FC = () => {
   const [view, setView] = useState('preview'); // 'preview' or 'code'
   const [isFullscreen, setIsFullscreen] = useState(false);
   const { sessionId } = useParams<{ sessionId: string }>();
+  const location = useLocation();
 
   const workspace = useQuery(api.smithWorkspaces.getWorkspace, { id: sessionId as Id<"smithWorkspaces"> });
   const updateFilesMutation = useMutation(api.smithWorkspaces.updateWorkspaceFiles);
@@ -44,14 +45,14 @@ export const SmithWorkspace: React.FC = () => {
     }
   }, 1000);
 
-  const sendMessage = async (text: string) => {
+  const sendMessage = async (text: string, displayMessage?: string) => {
     const currentFiles = filesRef.current;
     if (!currentFiles) {
         console.error("sendMessage called with null files");
         return;
     };
 
-    const userMessage: Message = { id: Date.now().toString(), role: 'user', text };
+    const userMessage: Message = { id: Date.now().toString(), role: 'user', text: displayMessage || text };
     
     setMessages(prev => [...prev, userMessage]);
     setAiStatus('thinking');
@@ -90,9 +91,11 @@ export const SmithWorkspace: React.FC = () => {
   useEffect(() => {
     if (workspace && files && messages.length === 0 && workspace.prompt && !initialPromptSent.current) {
       initialPromptSent.current = true;
-      sendMessage(workspace.prompt);
+      const ventureName = location.state?.ventureName;
+      const displayMessage = ventureName ? `Using context from venture: "${ventureName}"` : workspace.prompt;
+      sendMessage(workspace.prompt, displayMessage);
     }
-  }, [workspace, files, messages, sendMessage]);
+  }, [workspace, files, messages, sendMessage, location.state]);
 
   useEffect(() => {
     if (files) {

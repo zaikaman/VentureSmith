@@ -192,7 +192,6 @@ const MapProcesses: React.FC<MapProcessesProps> = ({ startup }) => {
           buttonText="Generate Process Map"
           onAction={handleGenerate}
           disabled={!canGenerate}
-          disabledReason={!canGenerate ? "Complete 'Business Plan' and 'Dev Roadmap' first." : undefined}
         />
       )}
     </div>

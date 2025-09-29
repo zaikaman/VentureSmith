@@ -58,12 +58,11 @@ const VentureInputView = () => {
 
   const ventureContext = useMemo(() => {
     if (!venture) return '';
-    // Aggregate all the textual data from the venture into a single context string.
     const context = Object.entries(venture)
-      .filter(([key, value]) => typeof value === 'string' && key !== 'name' && key !== 'idea' && value)
+      .filter(([key, value]) => typeof value === 'string' && !['_id', '_creationTime', 'userId', 'name', 'idea'].includes(key) && value)
       .map(([key, value]) => `## ${key}\n${value}`)
       .join('\n\n');
-    return `Venture Name: ${venture.name}\nIdea: ${venture.idea}\n\n${context}`;
+    return `Venture Name: ${venture.name || 'Untitled'}\nIdea: ${venture.idea}\n\n${context}`;
   }, [venture]);
 
   const handleBuild = async () => {
@@ -72,7 +71,7 @@ const VentureInputView = () => {
     setIsBuilding(true);
     try {
       const workspaceId = await createWorkspace({ prompt: ventureContext });
-      navigate(`/smith-build/${workspaceId}`);
+      navigate(`/smith-build/${workspaceId}`, { state: { ventureName: venture.name } });
     } catch (error) {
       console.error("Failed to create workspace from venture:", error);
     } finally {

@@ -131,7 +131,8 @@ export type TaskID =
   // Phase 11
   | 'investorMatching'
   | 'dueDiligenceChecklist'
-  | 'aiPitchCoach';
+  | 'aiPitchCoach'
+  | 'smithBuild';
 
 // --- Types from Suvo-shov ---
 
