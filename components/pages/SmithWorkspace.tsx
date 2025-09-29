@@ -11,6 +11,7 @@ import { PreviewPanel } from './PreviewPanel';
 // Main Workspace Component
 export const SmithWorkspace: React.FC = () => {
   const [view, setView] = useState('preview'); // 'preview' or 'code'
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const location = useLocation();
   const { sessionId } = useParams<{ sessionId: string }>();
   const initialPrompt = location.state?.prompt;
@@ -39,7 +40,7 @@ export const SmithWorkspace: React.FC = () => {
   }, [files]);
 
   return (
-    <div className="smith-workspace-container">
+    <div className={`smith-workspace-container ${isFullscreen ? 'fullscreen-preview' : ''}`}>
       {/* Left Panel: Chat and Logs */}
       <div className="sw-left-panel">
         <ChatPanel 
@@ -57,7 +58,12 @@ export const SmithWorkspace: React.FC = () => {
         </div>
         <div className="sw-main-view">
           {view === 'preview' ? (
-            <PreviewPanel fileSystem={files} refreshKey={refreshKey} />
+            <PreviewPanel 
+              fileSystem={files} 
+              refreshKey={refreshKey} 
+              isFullscreen={isFullscreen}
+              setIsFullscreen={setIsFullscreen}
+            />
           ) : (
             <CodeIDEPanel files={files} setFiles={setFiles} />
           )}

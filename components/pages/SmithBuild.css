@@ -179,6 +179,9 @@
 }
 
 .ide-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 0.75rem 1.5rem;
     background-color: transparent;
     font-weight: 600;
@@ -187,6 +190,21 @@
     border-bottom: 1px solid var(--border-slate-800);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+}
+
+.download-btn {
+    background: none;
+    border: none;
+    color: var(--text-slate-400);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.download-btn:hover {
+    background-color: var(--bg-slate-700);
+    color: var(--text-slate-100);
 }
 
 .ide-panel-content {
@@ -288,6 +306,60 @@
     overflow: hidden;
     border-radius: 12px; /* Match other panels */
     border: 1px solid var(--border-slate-800); /* Match other panels */
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.5rem;
+    background-color: var(--bg-slate-800);
+    border-bottom: 1px solid var(--border-slate-700);
+}
+
+.preview-fullscreen-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--bg-slate-700);
+    color: var(--text-slate-200);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.preview-fullscreen-btn:hover {
+    background-color: var(--bg-slate-600);
+}
+
+.preview-content {
+    flex-grow: 1;
+    height: 100%;
+}
+
+/* Fullscreen Preview Styles */
+.fullscreen-preview .sw-left-panel {
+    display: none;
+}
+
+.fullscreen-preview .sw-right-panel {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-slate-950);
+    z-index: 100;
+    padding: 1rem;
+}
+
+.fullscreen-preview .sw-view-toggler {
+    display: none;
 }
 
 /* Chat Input Area - Modernized */
