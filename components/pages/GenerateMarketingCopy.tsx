@@ -171,36 +171,6 @@ const GenerateMarketingCopy: React.FC<GenerateMarketingCopyProps> = ({ startup }
             </div>
         </div>
 
-        {/* Ad Copy Section */}
-        <div className="copy-section">
-            <div className="copy-section-header"><i className="fas fa-ad"></i> Advertisement Copy</div>
-            <div className="copy-section-content ad-grid">
-                <div className="ad-card">
-                    <h4 className="card-title"><i className="fab fa-google"></i> Google Ads</h4>
-                    <div className="card-content">
-                        <div className="ad-headline">{copyData.adCopy.googleAds.headline1}</div>
-                        <div className="ad-headline">{copyData.adCopy.googleAds.headline2}</div>
-                        <p>{copyData.adCopy.googleAds.description}</p>
-                    </div>
-                    <CopyToClipboardButton text={`${copyData.adCopy.googleAds.headline1}\n${copyData.adCopy.googleAds.headline2}\n${copyData.adCopy.googleAds.description}`} />
-                </div>
-                <div className="ad-card">
-                    <h4 className="card-title"><i className="fab fa-facebook"></i> Facebook Ads</h4>
-                    {copyData.adCopy?.facebookAd ? (
-                        <>
-                            <div className="card-content">
-                                <div className="ad-headline">{copyData.adCopy.facebookAd.headline}</div>
-                                <p>{copyData.adCopy.facebookAd.primaryText}</p>
-                            </div>
-                            <CopyToClipboardButton text={`${copyData.adCopy.facebookAd.headline}\n${copyData.adCopy.facebookAd.primaryText}`} />
-                        </>
-                    ) : (
-                        <div className="card-content"><p className="text-slate-400">Facebook ad copy not available.</p></div>
-                    )}
-                </div>
-            </div>
-        </div>
-
         {/* Email Section */}
         <div className="copy-section">
             <div className="copy-section-header"><i className="fas fa-envelope"></i> Email Campaign</div>
