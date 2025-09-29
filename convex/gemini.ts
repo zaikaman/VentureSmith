@@ -42,7 +42,7 @@ ${page.markdown}`)
     try {
         console.log("--- Requesting Market Summary from Gemini ---");
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            model: "gemini-2.5-flash-lite",
             contents: prompt,
         });
         const summaryText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
@@ -90,7 +90,7 @@ export const validateProblemWithAI = internalAction(
     try {
       console.log("--- Requesting Customer Validation from Gemini ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
             responseMimeType: "application/json",
@@ -143,7 +143,7 @@ export const brainstormIdeaWithAI = internalAction(
     try {
       console.log("--- Requesting Idea Brainstorm from Gemini ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -208,7 +208,7 @@ export const generateScorecardWithAI = internalAction(
     try {
       console.log("--- Requesting Scorecard from Gemini ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -350,7 +350,7 @@ export const generateBusinessPlanWithAI = internalAction(
     try {
       console.log("--- Requesting Business Plan from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -432,7 +432,7 @@ export const generatePitchDeckWithAI = internalAction(
     try {
       console.log("--- Requesting Pitch Deck from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -485,7 +485,7 @@ export const getMarketPulseWithAI = internalAction(
     try {
       console.log("--- Requesting Market Pulse from Gemini ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -537,7 +537,7 @@ export const defineMissionVisionWithAI = internalAction(
     try {
       console.log("--- Requesting Mission & Vision from Gemini ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -590,7 +590,7 @@ export const generateBrandIdentityWithAI = internalAction(
     try {
       console.log("--- Requesting Brand Identity from Gemini ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -659,7 +659,7 @@ export const generateCompetitorMatrixWithAI = internalAction(
     try {
       console.log("--- Requesting Competitor Matrix from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -739,7 +739,7 @@ export const generateCustomerPersonasWithAI = internalAction(
     try {
       console.log("--- Requesting Customer Personas from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -814,7 +814,7 @@ export const generateInterviewScriptsWithAI = internalAction(
     try {
       console.log("--- Requesting Interview Scripts from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -902,7 +902,7 @@ export const runInterviewSimulationsWithAI = internalAction(
     try {
       console.log("--- Requesting Interview Simulations from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -992,7 +992,7 @@ export const getMentorFeedbackWithAI = internalAction(
     try {
       console.log("--- Requesting Mentor Feedback from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -1096,7 +1096,7 @@ export const generateUserFlowWithAI = internalAction(
     try {
       console.log("--- Requesting User Flow Diagram from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -1168,7 +1168,7 @@ export const generateAIWireframeWithAI = internalAction(
     try {
       console.log("--- Requesting AI Wireframe from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -1242,7 +1242,7 @@ export const generateWebsitePrototypeWithAI = internalAction(
     try {
       console.log("--- Requesting Website Prototype from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -1333,7 +1333,7 @@ export const generateTechStackWithAI = internalAction(
     try {
       console.log("--- Requesting Tech Stack from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -1437,7 +1437,7 @@ export const generateDatabaseSchema = internalAction(
     try {
       console.log("--- Requesting Database Schema (React Flow format) from Gemini ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -1508,7 +1508,7 @@ export const generateApiEndpointsWithAI = internalAction(
     try {
       console.log("--- Requesting API Endpoints from Gemini ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
       });
       const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
@@ -1595,7 +1595,7 @@ export const generateDevelopmentRoadmapWithAI = internalAction(
     try {
       console.log("--- Requesting Development Roadmap from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -1692,7 +1692,7 @@ export const estimateCloudCostsWithAI = internalAction(
     try {
       console.log("--- Requesting Cloud Cost Estimate from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -1766,7 +1766,7 @@ export const generateInitialFiles = internalAction(
     try {
       console.log("--- Requesting Initial Project Files from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: generationPrompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -1860,7 +1860,7 @@ export const generatePricingStrategyWithAI = internalAction(
     try {
       console.log("--- Requesting Pricing Strategy from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -1978,7 +1978,7 @@ export const generateMarketingCopyWithAI = internalAction(
     try {
       console.log("--- Requesting Marketing Copy from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -2055,7 +2055,7 @@ export const generateWaitlistPageWithAI = internalAction(
     try {
       console.log("--- Requesting Waitlist Page Code from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -2105,7 +2105,7 @@ export const smithBuildWithAI = internalAction(
     try {
       console.log("--- Requesting SmithBot response from Gemini ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: systemPrompt }] }],
         config: {
             responseMimeType: "text/plain",
@@ -2203,7 +2203,7 @@ export const generatePitchCoachAnalysisWithAI = internalAction(
     try {
       console.log("--- Requesting AI Pitch Coach Analysis from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -2237,7 +2237,7 @@ export const generateContent = internalAction(
       try {
           console.log("--- Requesting Generic Content from Gemini ---");
           const response = await ai.models.generateContent({
-              model: "gemini-2.5-flash",
+              model: "gemini-2.5-flash-lite",
               contents: [{ role: "user", parts: [{ text: prompt }] }],
               config: {
                 responseMimeType: responseMimeType,
@@ -2323,7 +2323,7 @@ export const generateABTestIdeasWithAI = internalAction(
     try {
       console.log("--- Requesting A/B Test Ideas from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -2414,7 +2414,7 @@ export const generateSeoStrategyWithAI = internalAction(
     try {
       console.log("--- Requesting SEO Strategy from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -2505,7 +2505,7 @@ export const generateProcessMapWithAI = internalAction(
     try {
       console.log("--- Requesting Process Automation Map from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -2577,7 +2577,7 @@ export const generateJobDescriptionsWithAI = internalAction(
     try {
       console.log("--- Requesting Job Descriptions from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -2705,7 +2705,7 @@ export const generateProductHuntKitWithAI = internalAction(
     try {
       console.log("--- Requesting Expanded Product Hunt Launch Kit from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -2782,7 +2782,7 @@ export const generatePressReleaseWithAI = internalAction(
     try {
       console.log("--- Requesting Press Release from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -2836,7 +2836,7 @@ tools", "seed funding for consumer hardware startups".
 
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -2913,7 +2913,7 @@ rationale for why they are a good match.
 
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
           responseMimeType: "application/json",
@@ -3002,7 +3002,7 @@ ${(data as any).content}
     try {
       console.log("--- Requesting Code Changes from Gemini with Schema ---");
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
         contents: [{ role: "user", parts: [{ text: generationPrompt }] }],
         config: {
           responseMimeType: "application/json",

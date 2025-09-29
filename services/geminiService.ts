@@ -158,7 +158,7 @@ export const generateStartupAssets = async (idea: string): Promise<StartupData> 
             
             if (i === 0) {
                 const response = await ai.models.generateContent({
-                    model: "gemini-2.5-flash",
+                    model: "gemini-2.5-flash-lite",
                     contents: initialPrompt,
                     config: {
                         responseMimeType: "application/json",
@@ -176,7 +176,7 @@ export const generateStartupAssets = async (idea: string): Promise<StartupData> 
                     ${jsonText}`;
                 
                 const response = await ai.models.generateContent({
-                    model: "gemini-2.5-flash",
+                    model: "gemini-2.5-flash-lite",
                     contents: fixerPrompt,
                 });
                 jsonText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
@@ -234,7 +234,7 @@ export const regenerateWebsitePrototype = async (idea: string): Promise<{ code: 
     for (let i = 0; i <= maxRetries; i++) {
         try {
             const response = await ai.models.generateContent({
-                model: "gemini-2.5-flash",
+                model: "gemini-2.5-flash-lite",
                 contents: prompt,
                 config: {
                     responseMimeType: "application/json",
@@ -310,7 +310,7 @@ export const getMentorFeedback = async (startupData: StartupData, marketResearch
     try {
         console.log("--- Requesting Mentor Feedback from Gemini ---");
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            model: "gemini-2.5-flash-lite",
             contents: prompt,
         });
         const feedbackText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();

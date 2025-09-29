@@ -127,9 +127,9 @@ ${data.content}`)
 
         // 3. Update the API call to use JSON Mode
         const result = await genAI.models.generateContentStream({
-          model: "gemini-2.5-flash", // As requested by user
+          model: "gemini-2.5-flash", 
           contents,
-          config: { // Renamed from generationConfig
+          config: { 
             responseMimeType: "application/json",
             responseSchema: responseSchema,
           },
