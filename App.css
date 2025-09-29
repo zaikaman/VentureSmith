@@ -98,8 +98,10 @@
 }
 
 body {
-    background-color: var(--background-color);
+    background-color: #0F0F0F; /* A dark fallback */
+    background-image: radial-gradient(at 50% 0%, rgba(56, 56, 56, 0.4) 0%, rgba(15, 15, 15, 0) 70%);
     color: var(--text-color);
+    background-attachment: fixed; /* Keep the gradient fixed during scroll */
 }
 
 .app-container {
