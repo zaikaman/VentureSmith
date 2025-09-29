@@ -15,6 +15,10 @@ export const createWorkspace = mutation({
       throw new Error("User is not authenticated.");
     }
 
+    if (typeof identity.subject !== "string") {
+        throw new Error(`User identity subject is not a string: ${JSON.stringify(identity)}`);
+    }
+
     const user = await ctx.db
         .query("users")
         .withIndex("by_subject", (q) => q.eq("subject", identity.subject))
@@ -42,6 +46,9 @@ export const getWorkspace = query({
         if (!identity) {
             throw new Error("User is not authenticated.");
         }
+        if (typeof identity.subject !== "string") {
+            throw new Error(`User identity subject is not a string: ${JSON.stringify(identity)}`);
+        }
 
         const workspace = await ctx.db.get(args.id);
 
@@ -65,6 +72,10 @@ export const updateWorkspaceFiles = mutation({
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) {
             throw new Error("User is not authenticated.");
+        }
+
+        if (typeof identity.subject !== "string") {
+            throw new Error(`User identity subject is not a string: ${JSON.stringify(identity)}`);
         }
 
         const workspace = await ctx.db.get(args.id);
@@ -91,6 +102,10 @@ export const updateWorkspaceMessages = mutation({
             throw new Error("User is not authenticated.");
         }
 
+        if (typeof identity.subject !== "string") {
+            throw new Error(`User identity subject is not a string: ${JSON.stringify(identity)}`);
+        }
+
         const workspace = await ctx.db.get(args.id);
 
         if (!workspace) {
@@ -113,6 +128,12 @@ export const getWorkspacesForUser = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       return [];
+    }
+
+    if (typeof identity.subject !== "string") {
+        // Or handle this case more gracefully depending on expected behavior
+        console.error("User identity subject is not a string:", identity);
+        return [];
     }
 
     const user = await ctx.db
@@ -138,6 +159,10 @@ export const deleteWorkspace = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Not authenticated");
+    }
+
+    if (typeof identity.subject !== "string") {
+        throw new Error(`User identity subject is not a string: ${JSON.stringify(identity)}`);
     }
 
     const workspace = await ctx.db.get(args.id);

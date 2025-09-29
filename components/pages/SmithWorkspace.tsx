@@ -19,8 +19,7 @@ export const SmithWorkspace: React.FC = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
   const location = useLocation();
 
-  const workspace = useQuery(api.smithWorkspaces.getWorkspace, { id: sessionId as Id<"smithWorkspaces"> });
-  const updateFilesMutation = useMutation(api.smithWorkspaces.updateWorkspaceFiles);
+      const workspace = useQuery(api.smithWorkspaces.getWorkspace, sessionId ? { id: sessionId as Id<"smithWorkspaces"> } : "skip");  const updateFilesMutation = useMutation(api.smithWorkspaces.updateWorkspaceFiles);
   const updateMessagesMutation = useMutation(api.smithWorkspaces.updateWorkspaceMessages);
   const generateCode = useAction(api.gemini.generateCodeChanges);
 
