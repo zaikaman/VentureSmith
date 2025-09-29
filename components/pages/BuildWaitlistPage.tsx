@@ -132,6 +132,9 @@ const BuildWaitlistPage: React.FC<BuildWaitlistPageProps> = ({ startup }) => {
 
   return (
     <div>
+      <div className="development-warning">
+        This feature is still being developed actively and is not perfect. If there is a problem, please click the Regenerate button.
+      </div>
       {hasContent && (
         <TaskResultHeader title="Waitlist Page Builder" onRegenerate={handleGenerate} />
       )}

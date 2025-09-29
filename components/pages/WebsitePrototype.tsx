@@ -173,6 +173,9 @@ export const WebsitePrototype: React.FC<WebsitePrototypeProps> = ({ startup }) =
 
   return (
     <div>
+      <div className="development-warning">
+        This feature is still being developed actively and is not perfect. If there is a problem, please click the Regenerate button.
+      </div>
       {hasContent && (
         <TaskResultHeader title="Interactive Website Prototype" onRegenerate={handleGenerate}>
             {code && !isGenerating && (

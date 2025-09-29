@@ -135,6 +135,9 @@ const AIWireframeGenerator: React.FC<AIWireframeGeneratorProps> = ({ startup }) 
 
   return (
     <div className="ai-wireframe-container">
+      <div className="development-warning">
+        This feature is still being developed actively and is not perfect. If there is a problem, please click the Regenerate button.
+      </div>
       {hasContent && (
         <TaskResultHeader title="AI-Powered Wireframing" onRegenerate={handleGenerate}>
             {code && !isGenerating && (
