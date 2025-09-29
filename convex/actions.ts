@@ -666,16 +666,19 @@ export const generateMarketingCopy = action({
       pricingStrategy: JSON.parse(startup.pricingStrategy),
     };
 
-    const result = await ctx.runAction(internal.gemini.generateMarketingCopyWithAI, {
+    const resultString = await ctx.runAction(internal.gemini.generateMarketingCopyWithAI, {
       fullContext,
     });
 
+    // Parse and re-stringify to ensure the data is valid JSON before saving.
+    const parsedResult = JSON.parse(resultString);
+
     await ctx.runMutation(api.startups.updateMarketingCopy, {
       startupId,
-      marketingCopy: result,
+      marketingCopy: JSON.stringify(parsedResult),
     });
 
-    return result;
+    return JSON.stringify(parsedResult);
   },
 });
 
