@@ -1,7 +1,7 @@
 .account-page-container {
     display: flex;
     justify-content: center;
-    padding: 2rem; 
+    padding: 10rem 2rem 2rem;  
     width: 100%;
 }
 
