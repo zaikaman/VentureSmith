@@ -26,6 +26,7 @@ export const Header: React.FC = () => {
     const navLinks = [
         { name: "Home", path: "/" },
         { name: "Blueprint", path: "/blueprint-builder" },
+        { name: "SmithBuild", path: "/smith-build" },
     ];
 
     const handleSignOut = async () => {

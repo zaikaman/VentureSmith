@@ -7,6 +7,7 @@ import { useTheme } from './contexts/ThemeContext';
 import { SignIn } from './components/pages/SignIn';
 import { SignUp } from './components/pages/SignUp';
 import { BlueprintBuilder } from './components/pages/BlueprintBuilder';
+import { SmithBuild } from './components/pages/SmithBuild';
 import { Home } from './components/pages/Home';
 import { LoginModal } from './components/pages/LoginModal';
 import AccountPage from './components/pages/AccountPage';
@@ -43,11 +44,12 @@ const App: React.FC = () => {
         <BrowserRouter>
             <div className={`min-h-screen app-container flex flex-col`}>
                 <Header />
-                <main className="flex-grow p-4">
+                <main className="flex-grow p-4 main-content-padding">
                     <div className="w-full max-w-7xl mx-auto">
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/blueprint-builder" element={<BlueprintBuilder />} />
+                            <Route path="/smith-build" element={<SmithBuild />} />
                             <Route path="/signin" element={<SignIn />} />
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/account" element={<AccountPage />} />

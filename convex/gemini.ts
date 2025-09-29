@@ -1714,6 +1714,80 @@ export const estimateCloudCostsWithAI = internalAction(
   }
 );
 
+export const generateInitialFiles = internalAction(
+  async (
+    _,
+    { prompt }: { prompt: string }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const fileGenSchema = {
+      type: "OBJECT",
+      properties: {
+        files: {
+          type: "OBJECT",
+          description: "An object where keys are filenames and values are objects with a 'content' string.",
+          properties: {
+            "index.html": { type: "OBJECT", properties: { content: { type: "STRING" } }, required: ["content"] },
+            "script.js": { type: "OBJECT", properties: { content: { type: "STRING" } }, required: ["content"] },
+            "style.css": { type: "OBJECT", properties: { content: { type: "STRING" } }, required: ["content"] },
+          },
+          required: ["index.html", "script.js", "style.css"],
+        },
+        chatResponse: { 
+          type: "STRING",
+          description: "A friendly, welcoming message from the AI assistant, confirming the files have been created."
+        },
+      },
+      required: ["files", "chatResponse"],
+    };
+
+    const generationPrompt = `
+      You are an AI assistant that builds simple web applications based on a user's prompt.
+      Your task is to generate the initial files for a standard web project.
+
+      User Prompt: "${prompt}"
+
+      Based on this prompt, generate three files:
+      1.  **index.html**: A standard HTML5 boilerplate. It should link to the style.css file (<link rel="stylesheet" href="style.css">) and the script.js file (<script src="script.js" defer></script>). The body should contain the necessary HTML structure for the user's request.
+      2.  **script.js**: The JavaScript code to make the application interactive, based on the user's request.
+      3.  **style.css**: The necessary CSS to style the component.
+
+      Also, provide a friendly chat response to the user confirming that you've created the initial version of their app.
+
+      Your output MUST conform to the provided JSON schema. Ensure the content of each file is a single, complete string.
+    `;
+
+    try {
+      console.log("--- Requesting Initial Project Files from Gemini with Schema ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: generationPrompt }] }],
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: fileGenSchema,
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No file generation data received from Gemini API");
+      }
+
+      console.log("Initial project files data received successfully.");
+      return JSON.parse(resultText);
+
+    } catch (error: any) {
+      console.error("Failed to generate initial files:", error.message);
+      throw new Error(`Failed to generate initial files from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
 export const generatePricingStrategyWithAI = internalAction(
   async (
     _,
@@ -2002,6 +2076,57 @@ export const generateWaitlistPageWithAI = internalAction(
     }
   }
 );
+
+export const smithBuildWithAI = internalAction(
+  async (
+    _,
+    { prompt, history }: { prompt: string, history: string }
+  ) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not set in your Convex project's environment variables.");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    const systemPrompt = `
+      You are SmithBot, a world-class AI product development expert, engineer, and project manager.
+      Your goal is to help users turn their ideas into real, tangible products.
+      You are conversational, practical, and extremely knowledgeable in software development, UI/UX, and go-to-market strategy.
+      You can write code, create plans, and provide actionable advice.
+      When asked for code, provide it in clear, well-formatted markdown blocks.
+
+      Here is the current conversation history:
+      ${history}
+
+      Based on this history, provide a helpful and expert response to the user's latest message: "${prompt}"
+    `;
+
+    try {
+      console.log("--- Requesting SmithBot response from Gemini ---");
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ role: "user", parts: [{ text: systemPrompt }] }],
+        config: {
+            responseMimeType: "text/plain",
+        },
+      });
+      const resultText = response.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+      if (!resultText) {
+        throw new Error("No response text received from Gemini API for SmithBot");
+      }
+
+      console.log("SmithBot response received successfully.");
+      return resultText;
+
+    } catch (error: any) {
+      console.error("Failed to get SmithBot response:", error.message);
+      throw new Error(`Failed to get SmithBot response from Gemini API. Error: ${error.message}`);
+    }
+  }
+);
+
+
 
 export const generatePitchCoachAnalysisWithAI = internalAction(
   async (

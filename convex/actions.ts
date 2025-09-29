@@ -1117,3 +1117,25 @@ export const generatePitchCoachAnalysis = action({
     return result;
   },
 });
+
+export const smithBuild = action({
+  args: {
+    prompt: v.string(),
+    history: v.string(),
+  },
+  handler: async (ctx, { prompt, history }) => {
+    const result = await ctx.runAction(internal.gemini.smithBuildWithAI, {
+      prompt,
+      history,
+    });
+    return result;
+  },
+});
+
+export const generateInitialFiles = action({
+  args: { prompt: v.string() },
+  handler: async (ctx, { prompt }) => {
+    const result = await ctx.runAction(internal.gemini.generateInitialFiles, { prompt });
+    return result;
+  },
+});
