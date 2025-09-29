@@ -23,7 +23,6 @@ import { useMatch } from 'react-router-dom';
 import { useQuery } from 'convex/react';
 import { api } from './convex/_generated/api';
 import { Id } from './convex/_generated/dataModel';
-import StarfieldBackground from './components/pages/StarfieldBackground';
 import './App.css';
 
 const App: React.FC = () => {
@@ -32,7 +31,6 @@ const App: React.FC = () => {
 
     return (
         <BrowserRouter>
-            <StarfieldBackground />
             <div className={`min-h-screen app-container flex flex-col`}>
                 <Header />
                 <main className="flex-grow p-4 main-content-padding">
