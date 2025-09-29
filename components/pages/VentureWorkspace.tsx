@@ -6,6 +6,7 @@ import { Id } from '../../convex/_generated/dataModel';
 import { authClient } from '../../lib/auth-client';
 import { toast } from 'sonner';
 
+import { VentureChatbot } from '../chatbot/VentureChatbot'; 
 import { LoadingIndicator } from './LoadingIndicator';
 import { HorizontalStepper } from './HorizontalStepper';
 import { PhasesOverviewModal } from './PhasesOverviewModal';
@@ -378,6 +379,7 @@ export const VentureWorkspace: React.FC = () => {
                     setOverviewModalOpen(false);
                 }}
             />
+            {startup && <VentureChatbot startup={startup} />} 
         </div>
     );
 };

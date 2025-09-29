@@ -20,22 +20,7 @@ import { api } from './convex/_generated/api';
 import { Id } from './convex/_generated/dataModel';
 import './App.css';
 
-const WorkspaceWithChatbot = () => {
-  const match = useMatch('/venture/:id');
-  const startupId = match?.params.id as Id<"startups"> | undefined;
 
-  const startup = useQuery(
-    api.startups.getStartupById,
-    startupId ? { id: startupId } : 'skip'
-  );
-
-  return (
-    <>
-      <VentureWorkspace />
-      {startup && <VentureChatbot startup={startup} />}
-    </>
-  );
-};
 
 const App: React.FC = () => {
     const { theme } = useTheme();
@@ -55,7 +40,7 @@ const App: React.FC = () => {
                             <Route path="/signin" element={<SignIn />} />
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/account" element={<AccountPage />} />
-                            <Route path="/venture/:id" element={<WorkspaceWithChatbot />} />
+                            <Route path="/venture/:id" element={<VentureWorkspace />} />
                         </Routes>
                     </div>
                 </main>

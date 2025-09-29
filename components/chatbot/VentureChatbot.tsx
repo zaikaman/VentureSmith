@@ -22,7 +22,6 @@ interface ChatMessage {
 }
 
 const VAPI_PUBLIC_KEY = import.meta.env.VITE_VAPI_PUBLIC_KEY;
-const VAPI_ASSISTANT_ID = import.meta.env.VITE_VAPI_VENTURE_HELPER_ID;
 
 // --- MAIN COMPONENT ---
 export const VentureChatbot: React.FC<VentureChatbotProps> = ({ startup }) => {
@@ -117,24 +116,24 @@ export const VentureChatbot: React.FC<VentureChatbotProps> = ({ startup }) => {
         startupIdea: startup.idea || 'Not yet defined.',
     };
 
-    const fieldsToInclude = [
-        'missionVision', 
-        'brandIdentity', 
-        'customerPersonas',
-        'competitorMatrix',
+    const fieldsToExclude = [
+        '_id',
+        '_creationTime',
+        '_updateTime',
+        'name', // Already handled as startupName
+        'idea', // Already handled as startupIdea
     ];
 
-    for (const field of fieldsToInclude) {
-        const value = startup[field as keyof typeof startup];
-        if (value && typeof value === 'string') {
-            // Pass the raw JSON string directly to Vapi.
-            context[field] = value;
-        } else if (value) {
-            // For any non-string but existing values, stringify them.
-            context[field] = JSON.stringify(value);
-        } else {
-            // If the field is null or undefined, send a clear message.
-            context[field] = 'not generated yet';
+    for (const field in startup) {
+        if (startup.hasOwnProperty(field) && !fieldsToExclude.includes(field)) {
+            const value = startup[field as keyof typeof startup];
+            if (value && typeof value === 'string') {
+                context[field] = value;
+            } else if (value) {
+                context[field] = JSON.stringify(value);
+            } else {
+                context[field] = 'not generated yet';
+            }
         }
     }
 
@@ -143,14 +142,12 @@ export const VentureChatbot: React.FC<VentureChatbotProps> = ({ startup }) => {
 
   const handleCall = () => {
     if (!vapi) return toast.error("Voice services are currently unavailable.");
-    if (!VAPI_ASSISTANT_ID) return toast.error("Venture Assistant is not configured.");
 
     if (isCallActive) {
       vapi.stop();
     } else {
       const contextForVapi = getVentureContextForVapi();
       
-      // Format the context into a string for the system prompt
       let contextString = '';
       for (const [key, value] of Object.entries(contextForVapi)) {
         contextString += `${key}: ${value}\n`;
@@ -158,20 +155,26 @@ export const VentureChatbot: React.FC<VentureChatbotProps> = ({ startup }) => {
 
       const systemPrompt = `You are a helpful assistant for a startup founder. You have been provided with the following context about their venture. Use this information to answer their questions.\n\n--- CONTEXT ---\n${contextString}--- END CONTEXT ---`;
 
-      const assistantOverrides = {
+      const assistant = {
+        name: "Venture Helper",
         model: {
           provider: 'google' as const,
           model: 'gemini-2.5-flash' as const,
           messages: [
             {
               role: 'system' as const,
-              content: systemPrompt
-            }
-          ]
-        }
+              content: systemPrompt,
+            },
+          ],
+        },
+        voice: {
+          provider: '11labs' as const,
+          voiceId: 'paula',
+        },
+        firstMessage: `Hello! I'm your AI assistant for ${startup.name}. How can I help you validate and build your venture today?`
       };
 
-      vapi.start(VAPI_ASSISTANT_ID, assistantOverrides);
+      vapi.start(assistant);
     }
   };
 
