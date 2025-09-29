@@ -13,8 +13,8 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: var(--primary-color, #6366f1);
-  color: white;
+  background-color: white;
+  color: black;
   display: flex;
   align-items: center;
   justify-content: center;
