@@ -78,7 +78,7 @@ body {
     align-items: center;
     gap: 0.5rem;
     color: var(--text-slate-400);
-    font-size: 0.875rem; /* 14px */
+    font-size: 0.875rem; 
 }
 
 [data-theme='light'] .hero-section .cta-button {
