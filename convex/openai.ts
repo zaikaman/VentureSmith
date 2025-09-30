@@ -16,10 +16,10 @@ const openai = new OpenAI({
 const openAIModel = "gpt-5-nano";
 
 // Helper function for OpenAI chat completions
-async function getOpenAIChatCompletion(prompt: string, isJson: boolean) {
+async function getOpenAIChatCompletion(prompt: string, isJson: boolean, model?: string) {
   try {
     const completion = await openai.chat.completions.create({
-      model: openAIModel,
+      model: model || openAIModel,
       messages: [{ role: "user", content: prompt }],
       response_format: isJson ? { type: "json_object" } : { type: "text" },
     });
@@ -65,7 +65,7 @@ ${page.markdown}`)
     `;
 
     console.log("--- Requesting Market Summary from OpenAI ---");
-    const summary = await getOpenAIChatCompletion(prompt, false);
+    const summary = await getOpenAIChatCompletion(prompt, false, "gpt-4.1-nano");
     console.log("Market summary received successfully.");
     return summary;
   }

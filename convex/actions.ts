@@ -119,7 +119,12 @@ export const generateMarketResearch = action({
       throw new Error("Brainstorm step must be completed first.");
     }
 
-    const refinedIdea = JSON.parse(startup.brainstormResult).refinedIdea;
+    const brainstormData = JSON.parse(startup.brainstormResult);
+    const refinedIdea = brainstormData.brainstorm?.refinedIdea;
+
+    if (!refinedIdea || typeof refinedIdea !== 'string') {
+      throw new Error("Could not find a 'refinedIdea' in the brainstorm result. Please complete the brainstorm step again.");
+    }
 
     const result = await ctx.runAction(api.firecrawl.performMarketAnalysis, {
       keyword: refinedIdea,
@@ -773,7 +778,13 @@ export const generateABTestIdeas = action({
       throw new Error("Brainstorming and Customer Personas must be completed first.");
     }
 
-    const brainstormData = JSON.parse(startup.brainstormResult);
+    const brainstormObject = JSON.parse(startup.brainstormResult);
+
+    if (!brainstormObject || !brainstormObject.brainstorm) {
+      throw new Error("Could not find the 'brainstorm' object in the brainstorm result. Please complete the brainstorm step again.");
+    }
+
+    const brainstormData = brainstormObject.brainstorm;
 
     const fullContext = {
       name: startup.name,
