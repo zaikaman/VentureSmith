@@ -1920,7 +1920,7 @@ and a "chatResponse" string. Ensure the content of each file is a single, comple
     `;
 
     console.log("--- Requesting Code Changes from Gemini ---");
-    const codeChangesData = await getGeminiCompletion(generationPrompt, true, "gemini-2.5-flash");
+    const codeChangesData = await getGeminiCompletion(generationPrompt, true, "gemini-2.5-flash-lite");
     console.log("Code changes data received successfully from Gemini.");
     return codeChangesData;
   }
