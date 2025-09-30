@@ -112,12 +112,25 @@ const PitchDeck: React.FC<PitchDeckProps> = ({ startup }) => {
   };
 
   const handleSimulation = async () => {
-    if (!vapi || !VAPI_INVESTOR_ASSISTANT_ID) { toast.error("Investor Simulation is not configured."); return; }
+    if (!vapi) { toast.error("Vapi is not configured."); return; }
     if (isCallActive) { vapi.stop(); }
     else {
       setTranscript([]);
       setIsSimulating(true);
-      vapi.start(VAPI_INVESTOR_ASSISTANT_ID);
+      vapi.start({
+        model: {
+          provider: "google",
+          model: "gemini-2.5-flash",
+          messages: [
+            {
+              role: "system",
+              content: "You are a skeptical but fair venture capital investor. Your goal is to challenge the user on their pitch. Ask clarifying questions, poke holes in their logic, and test their knowledge of the market and business fundamentals. Be critical, but ultimately constructive, providing valuable feedback through your questions."
+            }
+          ]
+        },
+        voice: { provider: "11labs", voiceId: "burt" },
+        firstMessage: "Thanks for coming in. I'm ready when you are."
+      });
     }
   };
 
