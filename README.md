@@ -77,7 +77,7 @@ VentureSmith is packed with AI-driven tools to cover every aspect of early-stage
 ### 🚀 Marketing & Launch (Powered by OpenAI)
 - **📢 Press Release Drafting:** Writes professional announcements for your launch.
 - **✍️ Marketing Copy Generation:** Creates compelling copy for ads, landing pages, and social media.
-- **SEO Strategy:** Generates a foundational SEO plan to improve online visibility.
+- **🔎 SEO Strategy:** Generates a foundational SEO plan to improve online visibility.
 - **🚀 Product Hunt Launch Kit:** Prepares materials for a successful Product Hunt debut.
 
 ### 💬 Interactive Tools (Powered by Vapi & Gemini)
