@@ -33,7 +33,30 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshK
             }
         }
         
-        let finalHtml = indexHtmlFile.content;
+        const localStorageMock = `
+<script>
+  try {
+    if (typeof window.localStorage === 'undefined') {
+      window.localStorage = {
+        _data: {},
+        setItem: function(id, val) { return this._data[id] = String(val); },
+        getItem: function(id) { return this._data.hasOwnProperty(id) ? this._data[id] : null; },
+        removeItem: function(id) { return delete this._data[id]; },
+        clear: function() { return this._data = {}; }
+      };
+    }
+  } catch (e) {
+    window.localStorage = {
+      setItem: function() {},
+      getItem: function() { return null; },
+      removeItem: function() {},
+      clear: function() {}
+    };
+  }
+</script>
+`;
+
+        let finalHtml = indexHtmlFile.content.replace('<head>', `<head>${localStorageMock}`);
         const scriptFile = fileSystem['script.js'];
 
         // Handle CSS files
@@ -90,7 +113,7 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshK
                         srcDoc={iframeSrcDoc}
                         title="Live Preview"
                         className="ide-preview"
-                        sandbox="allow-scripts"
+                        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
                     />
                 )}
             </div>
