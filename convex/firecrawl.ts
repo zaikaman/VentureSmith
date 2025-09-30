@@ -102,15 +102,37 @@ export const performMarketAnalysis = action({
             };
         }
 
-        // 3. Summarize content in chunks to avoid token limits
-        const chunkSize = 1;
-        const chunks = [];
-        for (let i = 0; i < scrapedContent.length; i += chunkSize) {
-            chunks.push(scrapedContent.slice(i, i + chunkSize));
+        // 3. Create smaller content chunks from scraped pages to avoid token limits
+        const MAX_CONTENT_LENGTH = 250000; // Safe character limit per chunk
+        const contentChunks: { url: string, markdown: string, title: string }[][] = [];
+        
+        for (const page of scrapedContent) {
+          if (page.markdown.length > MAX_CONTENT_LENGTH) {
+            // Split the large page into smaller chunks
+            for (let i = 0; i < page.markdown.length; i += MAX_CONTENT_LENGTH) {
+              const contentPart = page.markdown.substring(i, i + MAX_CONTENT_LENGTH);
+              contentChunks.push([{
+                url: page.url,
+                markdown: contentPart,
+                title: `${page.title} (Part ${Math.floor(i / MAX_CONTENT_LENGTH) + 1})`
+              }]);
+            }
+          } else {
+            // Page is small enough, add it as a single chunk
+            contentChunks.push([page]);
+          }
+        }
+
+        if (contentChunks.length === 0) {
+            console.warn("No content to summarize after chunking.");
+            return {
+                summary: "Could not generate a summary as no processable content was found.",
+                sources: [],
+            };
         }
 
         const chunkSummaries = await Promise.all(
-            chunks.map(chunk => ctx.runAction(internal.openai.summarizeMarketContent, { scrapedContent: chunk }))
+            contentChunks.map(chunk => ctx.runAction(internal.openai.summarizeMarketContent, { scrapedContent: chunk }))
         );
 
         const combinedSummary = chunkSummaries.join('\n\n---\n\n');
