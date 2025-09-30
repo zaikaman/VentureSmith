@@ -53,8 +53,16 @@ export const performMarketAnalysis = action({
 
         const fullQuery = `in-depth market analysis for a startup idea: ${keyword}`;
         
-        // 1. Search for URLs first, without scraping
-        const searchResults = await app.search(fullQuery);
+        let searchResults;
+        try {
+          searchResults = await app.search(fullQuery);
+        } catch (error: any) {
+          console.error(`Firecrawl search failed for query: "${fullQuery}". Error: ${error.message}`);
+          return {
+            summary: `We encountered an error while searching for information about your idea. The error was: ${error.message}. Please try again later or with a different keyword.`,
+            sources: [],
+          };
+        }
         const topUrls = (searchResults?.web || []).slice(0, 5).map((res: any) => res.url);
 
         if (topUrls.length === 0) {
