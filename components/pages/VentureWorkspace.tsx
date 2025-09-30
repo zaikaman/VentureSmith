@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from 'convex/react';
+import { useQuery, useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { authClient } from '../../lib/auth-client';
@@ -73,6 +73,10 @@ export const VentureWorkspace: React.FC = () => {
     const [isOverviewModalOpen, setOverviewModalOpen] = useState(false);
     const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false);
     const hasSetInitialView = React.useRef(false);
+    const hasStartedPreloading = React.useRef(false);
+    const hasStartedPostBrandPreloading = React.useRef(false);
+
+    const generateTaskResult = useAction(api.actions.generateTaskResult);
 
     const startup = useQuery(
         api.startups.getStartupById, 
@@ -216,6 +220,68 @@ export const VentureWorkspace: React.FC = () => {
             hasSetInitialView.current = true;
         }
     }, [startup, phases]);
+
+    React.useEffect(() => {
+        if (startup && !hasStartedPreloading.current && allTasks.length > 0) {
+            hasStartedPreloading.current = true;
+
+            const preloadTasks = async () => {
+                console.log("--- Starting Phase 1 preloading (pre-brand identity) ---");
+                for (const task of allTasks) {
+                    if (task.id === 'generateNameIdentity') {
+                        console.log("--- Pausing preloading. Waiting for Brand Identity completion. ---");
+                        break;
+                    }
+                    if (!task.isCompleted && task.id !== 'smithBuild') {
+                        try {
+                            console.log(`Preloading task: ${task.name}`);
+                            await generateTaskResult({ startupId: startup._id, taskId: task.id });
+                            console.log(`Successfully preloaded: ${task.name}`);
+                        } catch (error) {
+                            console.error(`Failed to preload task ${task.name}:`, error);
+                        }
+                    }
+                }
+                console.log("--- Phase 1 preloading finished ---");
+            };
+
+            preloadTasks();
+        }
+    }, [startup, allTasks, generateTaskResult]);
+
+    React.useEffect(() => {
+        // Phase 2: Preload tasks after brand identity is set
+        if (startup?.brandIdentity && !hasStartedPostBrandPreloading.current && allTasks.length > 0) {
+            hasStartedPostBrandPreloading.current = true;
+
+            const preloadRemainingTasks = async () => {
+                console.log("--- Brand Identity complete. Resuming preloading for remaining tasks. ---");
+                const brandIdentityTaskIndex = allTasks.findIndex(task => task.id === 'generateNameIdentity');
+                
+                if (brandIdentityTaskIndex === -1) {
+                    console.error("Could not find brand identity task index. Aborting phase 2 preload.");
+                    return;
+                }
+
+                const remainingTasks = allTasks.slice(brandIdentityTaskIndex + 1);
+
+                for (const task of remainingTasks) {
+                    if (!task.isCompleted && task.id !== 'smithBuild') {
+                        try {
+                            console.log(`Preloading task: ${task.name}`);
+                            await generateTaskResult({ startupId: startup._id, taskId: task.id });
+                            console.log(`Successfully preloaded: ${task.name}`);
+                        } catch (error) {
+                            console.error(`Failed to preload task ${task.name}:`, error);
+                        }
+                    }
+                }
+                console.log("--- Phase 2 preloading finished ---");
+            };
+
+            preloadRemainingTasks();
+        }
+    }, [startup, allTasks, generateTaskResult]);
     
     const handleTaskClick = (taskId: TaskID) => {
         const taskIndex = allTasks.findIndex(t => t.id === taskId);

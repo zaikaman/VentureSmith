@@ -1163,3 +1163,141 @@ export const generateInitialFiles = action({
     return result;
   },
 });
+
+export const generateTaskResult = action({
+  args: {
+    startupId: v.id("startups"),
+    taskId: v.string(),
+  },
+  handler: async (ctx, { startupId, taskId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup) {
+      throw new Error("Startup not found");
+    }
+
+    // Prevent re-running completed tasks
+    const taskToResultField: Record<string, keyof typeof startup> = {
+      brainstormIdea: "brainstormResult",
+      marketPulseCheck: "marketPulse",
+      defineMissionVision: "missionVision",
+      generateNameIdentity: "brandIdentity",
+      scorecard: "dashboard",
+      businessPlan: "businessPlan",
+      pitchDeck: "pitchDeck",
+      marketResearch: "marketResearch",
+      competitorMatrix: "competitorMatrix",
+      generateCustomerPersonas: "customerPersonas",
+      generateInterviewScripts: "interviewScripts",
+      validateProblem: "customerValidation",
+      aiMentor: "aiMentor",
+      userFlowDiagrams: "userFlowDiagram",
+      aiWireframing: "aiWireframe",
+      website: "website",
+      generateTechStack: "techStack",
+      generateDatabaseSchema: "databaseSchema",
+      generateAPIEndpoints: "apiEndpoints",
+      generateDevelopmentRoadmap: "developmentRoadmap",
+      estimateCosts: "costEstimate",
+      pricingStrategy: "pricingStrategy",
+      marketingCopy: "marketingCopy",
+      preLaunchWaitlist: "preLaunchWaitlist",
+      productHuntKit: "productHuntKit",
+      pressRelease: "pressRelease",
+      growthMetrics: "growthMetrics",
+      abTestIdeas: "abTestIdeas",
+      seoStrategy: "seoStrategy",
+      processAutomation: "processAutomation",
+      draftJobDescriptions: "draftJobDescriptions",
+      investorMatching: "investorMatching",
+      dueDiligenceChecklist: "dueDiligenceChecklist",
+      aiPitchCoach: "aiPitchCoach",
+    };
+
+    const resultField = taskToResultField[taskId];
+    if (resultField && startup[resultField]) {
+      console.log(`Skipping task ${taskId} as it is already completed.`);
+      return { success: true, message: "Task already completed." };
+    }
+
+    console.log(`Generating result for task: ${taskId}`);
+
+    try {
+      switch (taskId) {
+        case "brainstormIdea":
+          return await ctx.runAction(api.actions.generateBrainstormIdea, { startupId, idea: startup.idea! });
+        case "marketPulseCheck":
+          return await ctx.runAction(api.actions.getMarketPulse, { startupId, idea: startup.idea! });
+        case "defineMissionVision":
+          return await ctx.runAction(api.actions.defineMissionVision, { startupId });
+        case "generateNameIdentity":
+          return await ctx.runAction(api.actions.generateBrandIdentity, { startupId });
+        case "scorecard":
+          return await ctx.runAction(api.actions.generateScorecard, { startupId });
+        case "businessPlan":
+          return await ctx.runAction(api.actions.generateBusinessPlan, { startupId });
+        case "pitchDeck":
+          return await ctx.runAction(api.actions.generatePitchDeck, { startupId });
+        case "marketResearch":
+          return await ctx.runAction(api.actions.generateMarketResearch, { startupId });
+        case "competitorMatrix":
+          return await ctx.runAction(api.actions.generateCompetitorMatrix, { startupId });
+        case "generateCustomerPersonas":
+          return await ctx.runAction(api.actions.generateCustomerPersonas, { startupId });
+        case "generateInterviewScripts":
+          return await ctx.runAction(api.actions.generateInterviewScripts, { startupId });
+        case "validateProblem":
+          return await ctx.runAction(api.actions.runInterviewSimulations, { startupId });
+        case "aiMentor":
+          return await ctx.runAction(api.actions.getMentorFeedback, { startupId });
+        case "userFlowDiagrams":
+          return await ctx.runAction(api.actions.generateUserFlow, { startupId });
+        case "aiWireframing":
+          return await ctx.runAction(api.actions.generateAIWireframe, { startupId });
+        case "website":
+          return await ctx.runAction(api.actions.generateWebsitePrototype, { startupId });
+        case "generateTechStack":
+          return await ctx.runAction(api.actions.generateTechStack, { startupId });
+        case "generateDatabaseSchema":
+          return await ctx.runAction(api.actions.createDatabaseSchema, { startupId });
+        case "generateAPIEndpoints":
+          return await ctx.runAction(api.actions.generateApiEndpoints, { startupId });
+        case "generateDevelopmentRoadmap":
+          return await ctx.runAction(api.actions.generateDevelopmentRoadmap, { startupId });
+        case "estimateCosts":
+          return await ctx.runAction(api.actions.estimateCloudCosts, { startupId });
+        case "pricingStrategy":
+          return await ctx.runAction(api.actions.generatePricingStrategy, { startupId });
+        case "marketingCopy":
+          return await ctx.runAction(api.actions.generateMarketingCopy, { startupId });
+        case "preLaunchWaitlist":
+          return await ctx.runAction(api.actions.generateWaitlistPage, { startupId });
+        case "productHuntKit":
+          return await ctx.runAction(api.actions.generateProductHuntKit, { startupId });
+        case "pressRelease":
+          return await ctx.runAction(api.actions.generatePressRelease, { startupId });
+        case "abTestIdeas":
+          return await ctx.runAction(api.actions.generateABTestIdeas, { startupId });
+        case "seoStrategy":
+          return await ctx.runAction(api.actions.generateSeoStrategy, { startupId });
+        case "processAutomation":
+          return await ctx.runAction(api.actions.generateProcessMap, { startupId });
+        case "draftJobDescriptions":
+          return await ctx.runAction(api.actions.generateJobDescriptions, { startupId });
+        case "investorMatching":
+          return await ctx.runAction(api.actions.generateInvestorMatches, { startupId });
+        case "dueDiligenceChecklist":
+          return await ctx.runAction(api.actions.generateDueDiligenceChecklist, { startupId });
+        case "aiPitchCoach":
+          return await ctx.runAction(api.actions.generatePitchCoachAnalysis, { startupId });
+        // Omitting 'growthMetrics' as it seems to be handled differently.
+        default:
+          console.warn(`No generation logic defined for task: ${taskId}`);
+          return { success: false, message: "No generation logic defined for task." };
+      }
+    } catch (error: any) {
+      console.error(`Error generating result for task ${taskId}:`, error);
+      // Don't re-throw, just return a failure to allow the preload sequence to continue
+      return { success: false, message: `Failed to generate result for ${taskId}.`, error: error.message };
+    }
+  },
+});
