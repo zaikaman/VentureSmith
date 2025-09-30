@@ -1910,14 +1910,17 @@ and the current state of the files.
       You should return an array of file objects. Each object must have a "path" and a "content" property.
       You must return the complete content of all files, even if they were not changed.
 
-      Also, provide a friendly chat response to the user explaining what you did.
+      **Quality Check:**
+      After generating the code, please perform a quick check. If the generated 'index.html' file is empty or contains no visible HTML elements in the body, please discard it and generate a simple placeholder page instead. The placeholder page should contain a heading that says "Hello from SmithBot!" and a paragraph that says "I had some trouble generating your request. Please try rephrasing your prompt or ask for something simpler.".
+
+      Also, provide a friendly chat response to the user explaining what you did. If you had to generate a placeholder, please mention it in your response.
 
       Your output MUST be a valid JSON object with a "files" object (containing an array of file objects)
 and a "chatResponse" string. Ensure the content of each file is a single, complete string.
     `;
 
     console.log("--- Requesting Code Changes from Gemini ---");
-    const codeChangesData = await getGeminiCompletion(generationPrompt, true, "gemini-2.5-flash-lite");
+    const codeChangesData = await getGeminiCompletion(generationPrompt, true, "gemini-2.5-flash");
     console.log("Code changes data received successfully from Gemini.");
     return codeChangesData;
   }

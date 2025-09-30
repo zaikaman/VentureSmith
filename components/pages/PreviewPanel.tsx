@@ -9,12 +9,12 @@ interface PreviewPanelProps {
 }
 
 export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshKey, isFullscreen, setIsFullscreen }) => {
-    const [iframeSrc, setIframeSrc] = useState('');
+    const [iframeSrc, setIframeSrc] = useState<string | null>(null);
 
     useEffect(() => {
         const indexHtmlFile = fileSystem['index.html'];
         if (!indexHtmlFile || typeof indexHtmlFile.content !== 'string') {
-            setIframeSrc('');
+            setIframeSrc(null);
             return;
         }
 
@@ -25,7 +25,8 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshK
         for (const path in fileSystem) {
             if (path !== 'index.html') {
                 const file = fileSystem[path];
-                const mimeType = path.endsWith('.css') ? 'text/css' : 'application/javascript';
+                // Adjust MIME type for Babel/JSX
+                const mimeType = path.endsWith('.css') ? 'text/css' : (path.endsWith('.js') ? 'text/babel' : 'application/javascript');
                 const blob = new Blob([file.content], { type: mimeType });
                 const url = URL.createObjectURL(blob);
                 blobUrls.set(path, url);
@@ -33,15 +34,35 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshK
             }
         }
         
-        // Replace relative paths in index.html with blob URLs
+        // Replace relative paths in index.html with blob URLs and inline script
         let finalHtml = indexHtmlFile.content;
-        finalHtml = finalHtml.replace(/(src|href)=\"([./a-zA-Z0-9_-]+\.(?:js|css))\"/g, (match, attr, path) => {
-            const cleanedPath = path.startsWith('./') ? path.substring(2) : path;
+        const scriptFile = fileSystem['script.js'];
+
+        // Handle CSS files
+        finalHtml = finalHtml.replace(/(<link[^>]+href=)["']([./a-zA-Z0-9_-]+\.css)["']/g, (match, p1, p2) => {
+            const cleanedPath = p2.startsWith('./') ? p2.substring(2) : p2;
             if (blobUrls.has(cleanedPath)) {
-                return `${attr}="${blobUrls.get(cleanedPath)}"`;
+                const blobUrl = blobUrls.get(cleanedPath);
+                return `${p1}"${blobUrl}"`;
             }
             return match;
         });
+
+        // Handle script file - inline it
+        if (scriptFile && typeof scriptFile.content === 'string') {
+            finalHtml = finalHtml.replace(/<script[^>]+src=["'][./a-zA-Z0-9_-]+\.js["'][^>]*><\/script>/, 
+                `<script type="text/babel">${scriptFile.content}</script>`);
+        } else {
+             // Fallback for other JS files if needed, though current AI output doesn't require it
+            finalHtml = finalHtml.replace(/(<script[^>]+src=)["']([./a-zA-Z0-9_-]+\.js)["']/g, (match, p1, p2) => {
+                const cleanedPath = p2.startsWith('./') ? p2.substring(2) : p2;
+                if (blobUrls.has(cleanedPath)) {
+                    const blobUrl = blobUrls.get(cleanedPath);
+                    return `${p1}"${blobUrl}"`;
+                }
+                return match;
+            });
+        }
 
         const finalBlob = new Blob([finalHtml], { type: 'text/html' });
         const finalUrl = URL.createObjectURL(finalBlob);
@@ -70,13 +91,15 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshK
                 </button>
             </div>
             <div className="preview-content">
-                <iframe
-                    key={refreshKey}
-                    src={iframeSrc}
-                    title="Live Preview"
-                    className="ide-preview"
-                    sandbox="allow-scripts allow-same-origin"
-                />
+                {iframeSrc && (
+                    <iframe
+                        key={refreshKey}
+                        src={iframeSrc}
+                        title="Live Preview"
+                        className="ide-preview"
+                        sandbox="allow-scripts"
+                    />
+                )}
             </div>
         </div>
     );
