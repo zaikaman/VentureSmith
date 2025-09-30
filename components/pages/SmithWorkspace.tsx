@@ -12,6 +12,8 @@ import { CodeIDEPanel } from './CodeIDEPanel';
 import { PreviewPanel } from './PreviewPanel';
 import { SkeletonLoader } from './SkeletonLoader';
 
+import { Link } from 'react-router-dom';
+
 // Main Workspace Component
 export const SmithWorkspace: React.FC = () => {
   const [view, setView] = useState('preview'); // 'preview' or 'code'
@@ -124,32 +126,33 @@ export const SmithWorkspace: React.FC = () => {
 
   return (
     <div className={`smith-workspace-container ${isFullscreen ? 'fullscreen-preview' : ''}`}>
-      <div className="smith-workspace-frame">
-        <div className="sw-left-panel">
-          <ChatPanel 
-              messages={messages}
-              aiStatus={aiStatus as any}
-              onSendMessage={sendMessage}
-          />
+        <Link to="/" className="workspace-logo">
+            <img src="/logo.png" alt="VentureSmith Logo" />
+        </Link>
+      <div className="sw-left-panel">
+        <ChatPanel 
+            messages={messages}
+            aiStatus={aiStatus as any}
+            onSendMessage={sendMessage}
+        />
+      </div>
+
+      <div className="sw-right-panel">
+        <div className="sw-view-toggler">
+          <button onClick={() => setView('preview')} className={view === 'preview' ? 'active' : ''}>Preview</button>
+          <button onClick={() => setView('code')} className={view === 'code' ? 'active' : ''}>Code</button>
         </div>
-  
-        <div className="sw-right-panel">
-          <div className="sw-view-toggler">
-            <button onClick={() => setView('preview')} className={view === 'preview' ? 'active' : ''}>Preview</button>
-            <button onClick={() => setView('code')} className={view === 'code' ? 'active' : ''}>Code</button>
-          </div>
-          <div className="sw-main-view">
-            {view === 'preview' ? (
-              <PreviewPanel 
-                fileSystem={files} 
-                refreshKey={refreshKey} 
-                isFullscreen={isFullscreen}
-                setIsFullscreen={setIsFullscreen}
-              />
-            ) : (
-              <CodeIDEPanel files={files} setFiles={setFiles} />
-            )}
-          </div>
+        <div className="sw-main-view">
+          {view === 'preview' ? (
+            <PreviewPanel 
+              fileSystem={files} 
+              refreshKey={refreshKey} 
+              isFullscreen={isFullscreen}
+              setIsFullscreen={setIsFullscreen}
+            />
+          ) : (
+            <CodeIDEPanel files={files} setFiles={setFiles} />
+          )}
         </div>
       </div>
     </div>
