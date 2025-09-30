@@ -190,21 +190,35 @@ The codebase is organized into logical directories:
 
 ```
 /
-├── convex/             # All Convex backend functions (queries, mutations, actions)
-│   ├── openai.ts       # Logic for interacting with the OpenAI API
-│   ├── firecrawl.ts    # Logic for web scraping actions
-│   ├── schema.ts       # Database schema definition
-│   └── ...             # Other backend files for startups, users, etc.
-├── src/
-│   ├── components/     # Reusable React components
-│   │   ├── pages/      # Components for each AI tool/feature
-│   │   └── chatbot/    # The VentureChatbot implementation
-│   ├── services/       # Frontend services (e.g., Gemini service wrapper)
-│   ├── contexts/       # React contexts (Theme, etc.)
-│   ├── App.tsx         # Main application component and router
-│   └── index.tsx       # Application entry point
-├── public/             # Static assets
-└── package.json        # Project dependencies and scripts
+├── convex/                 # Convex backend: serverless functions, schema, and auth
+│   ├── actions.ts          # Core backend actions callable from the client
+│   ├── openai.ts           # Logic for all OpenAI and Gemini API interactions
+│   ├── firecrawl.ts        # Action for triggering Firecrawl web scraping
+│   ├── smithWorkspaces.ts  # Backend logic for the SmithBuild feature
+│   ├── startups.ts         # Backend logic for managing user ventures/startups
+│   ├── users.ts            # Backend logic for user data
+│   ├── schema.ts           # The database schema for the entire application
+│   └── http.ts             # HTTP actions for webhooks (e.g., email verification)
+│
+├── src/                    # React frontend source code
+│   ├── components/         # Reusable React components
+│   │   ├── pages/          # Main page components for each feature/view
+│   │   │   ├── SmithBuild.tsx      # The initial view for starting a build
+│   │   │   ├── SmithWorkspace.tsx  # The main IDE/chat/preview workspace
+│   │   │   └── ... (Other feature pages)
+│   │   ├── chatbot/        # Components for the VentureChatbot
+│   │   └── emails/         # React components for rendering transactional emails
+│   │
+│   ├── contexts/           # React Contexts for global state (e.g., Theme)
+│   ├── hooks/              # Custom React hooks (e.g., useSmithChat)
+│   ├── lib/                # Utility functions and client-side libraries
+│   ├── App.tsx             # Main application component with routing
+│   └── index.tsx           # Application entry point
+│
+├── public/                 # Static assets (images, logos, etc.)
+├── .env.example            # Example environment variables
+├── package.json            # Project dependencies and scripts
+└── vite.config.ts          # Vite configuration
 ```
 
 ## 👥 Authors
