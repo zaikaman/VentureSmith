@@ -83,10 +83,10 @@ const PitchDeck: React.FC<PitchDeckProps> = ({ startup }) => {
 
   // Scroll transcript effect
   useEffect(() => {
-    if (teleprompterRef.current) {
+    if (isSimulating && teleprompterRef.current) {
         teleprompterRef.current.scrollTop = teleprompterRef.current.scrollHeight;
     }
-  }, [transcript]);
+  }, [transcript, isSimulating]);
 
   const handleProduce = async () => {
     if (!canProduce) { toast.error("Business Plan must be generated first."); return; }
