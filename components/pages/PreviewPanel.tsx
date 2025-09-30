@@ -23,22 +23,27 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshK
 
         let finalHtml = indexHtmlFile.content;
 
-        // Inline CSS
+        // 1. Ensure React/ReactDOM/Babel are loaded for robust JSX/React support
+        if (!finalHtml.includes('react.development.js')) {
+            finalHtml = finalHtml.replace('</head>', '<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script></head>');
+        }
+        if (!finalHtml.includes('react-dom.development.js')) {
+            finalHtml = finalHtml.replace('</head>', '<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script></head>');
+        }
+        if (!finalHtml.includes('@babel/standalone')) {
+            finalHtml = finalHtml.replace('</head>', '<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script></head>');
+        }
+
+        // 2. Inline CSS
         if (styleCssFile && styleCssFile.content) {
-            finalHtml = finalHtml.replace(/<link[^>]+href=[\"\'](style\.css)[\"\'][^>]*>/,
+            finalHtml = finalHtml.replace(/<link[^>]+href=[\"\'](style\.css)[\"\'][^>]*>/, 
                 `<style>${styleCssFile.content}</style>`);
         }
 
-        // Inline JS
+        // 3. Inline JS, always as text/babel
         if (scriptJsFile && scriptJsFile.content) {
-            // Determine script type and inline accordingly
-            if (finalHtml.includes('type="text/babel"')) {
-                 finalHtml = finalHtml.replace(/<script[^>]+src=[\"\'](script\.js)[\"\'][^>]*><\/script>/, 
-                    `<script type="text/babel">${scriptJsFile.content}</script>`);
-            } else {
-                finalHtml = finalHtml.replace(/<script[^>]+src=[\"\'](script\.js)[\"\'][^>]*><\/script>/, 
-                    `<script>${scriptJsFile.content}</script>`);
-            }
+            finalHtml = finalHtml.replace(/<script[^>]+src=[\"\'](script\.js)[\"\'][^>]*><\/script>/, 
+                `<script type="text/babel">${scriptJsFile.content}</script>`);
         }
 
         setIframeSrcDoc(finalHtml);
