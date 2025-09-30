@@ -44,5 +44,6 @@
 }
 
 .placeholder-button:hover {
-  background-color: var(--primary-hover-color);
+  background-color: white;
+  color: black;
 }
