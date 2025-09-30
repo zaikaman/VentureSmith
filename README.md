@@ -177,13 +177,6 @@ To run VentureSmith on your local machine, follow these steps:
     VAPI_API_KEY="your_vapi_api_key"
     BETTER_AUTH_API_KEY="your-better_auth_api_key"
 
-    # Convex Admin Key (for backend functions)
-    CONVEX_AUTH_PRIVATE_KEY="-----BEGIN EC PRIVATE KEY-----
-...
------END EC PRIVATE KEY-----"
-    JWT_ISSUER_URL="https://your-convex-project.us.convex.cloud"
-    ```
-
 5.  **Run the development server:**
     - The `npx convex dev` command from step 3 also runs the backend. In a new terminal, start the frontend:
     ```bash
