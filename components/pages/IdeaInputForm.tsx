@@ -39,7 +39,7 @@ export const IdeaInputForm: React.FC<IdeaInputFormProps> = ({ onGenerate, initia
     };
 
     const placeholderExamples = [
-        "AI app to help students find part-time jobs...",
+        "AI app to help students find jobs...",
         "A platform for artists to sell their work...",
         "A subscription box for eco products...",
         "A mobile game that teaches coding..."
