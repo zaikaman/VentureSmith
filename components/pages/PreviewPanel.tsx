@@ -9,12 +9,12 @@ interface PreviewPanelProps {
 }
 
 export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshKey, isFullscreen, setIsFullscreen }) => {
-    const [iframeSrc, setIframeSrc] = useState<string | null>(null);
+    const [iframeSrcDoc, setIframeSrcDoc] = useState<string | null>(null);
 
     useEffect(() => {
         const indexHtmlFile = fileSystem['index.html'];
         if (!indexHtmlFile || typeof indexHtmlFile.content !== 'string') {
-            setIframeSrc(null);
+            setIframeSrcDoc(null);
             return;
         }
 
@@ -23,9 +23,8 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshK
 
         // Create blob URLs for all files except index.html
         for (const path in fileSystem) {
-            if (path !== 'index.html') {
+            if (path !== 'index.html' && fileSystem[path].content) {
                 const file = fileSystem[path];
-                // Adjust MIME type for Babel/JSX
                 const mimeType = path.endsWith('.css') ? 'text/css' : (path.endsWith('.js') ? 'text/babel' : 'application/javascript');
                 const blob = new Blob([file.content], { type: mimeType });
                 const url = URL.createObjectURL(blob);
@@ -34,7 +33,6 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshK
             }
         }
         
-        // Replace relative paths in index.html with blob URLs and inline script
         let finalHtml = indexHtmlFile.content;
         const scriptFile = fileSystem['script.js'];
 
@@ -53,7 +51,6 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshK
             finalHtml = finalHtml.replace(/<script[^>]+src=["'][./a-zA-Z0-9_-]+\.js["'][^>]*><\/script>/, 
                 `<script type="text/babel">${scriptFile.content}</script>`);
         } else {
-             // Fallback for other JS files if needed, though current AI output doesn't require it
             finalHtml = finalHtml.replace(/(<script[^>]+src=)["']([./a-zA-Z0-9_-]+\.js)["']/g, (match, p1, p2) => {
                 const cleanedPath = p2.startsWith('./') ? p2.substring(2) : p2;
                 if (blobUrls.has(cleanedPath)) {
@@ -64,11 +61,7 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshK
             });
         }
 
-        const finalBlob = new Blob([finalHtml], { type: 'text/html' });
-        const finalUrl = URL.createObjectURL(finalBlob);
-        createdUrls.push(finalUrl);
-
-        setIframeSrc(finalUrl);
+        setIframeSrcDoc(finalHtml);
 
         // Cleanup blob URLs on unmount
         return () => {
@@ -91,10 +84,10 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshK
                 </button>
             </div>
             <div className="preview-content">
-                {iframeSrc && (
+                {iframeSrcDoc && (
                     <iframe
                         key={refreshKey}
-                        src={iframeSrc}
+                        srcDoc={iframeSrcDoc}
                         title="Live Preview"
                         className="ide-preview"
                         sandbox="allow-scripts"
