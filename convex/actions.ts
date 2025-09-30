@@ -119,7 +119,7 @@ export const generateMarketResearch = action({
       throw new Error("Brainstorm step must be completed first.");
     }
 
-    const refinedIdea = JSON.parse(startup.brainstormResult).brainstorm.refinedIdea;
+    const refinedIdea = JSON.parse(startup.brainstormResult).refinedIdea;
 
     const result = await ctx.runAction(api.firecrawl.performMarketAnalysis, {
       keyword: refinedIdea,
@@ -773,7 +773,7 @@ export const generateABTestIdeas = action({
       throw new Error("Brainstorming and Customer Personas must be completed first.");
     }
 
-    const brainstormData = JSON.parse(startup.brainstormResult).brainstorm;
+    const brainstormData = JSON.parse(startup.brainstormResult);
 
     const fullContext = {
       name: startup.name,
