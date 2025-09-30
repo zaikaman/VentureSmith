@@ -53,16 +53,29 @@ export const performMarketAnalysis = action({
 
         const fullQuery = `in-depth market analysis for a startup idea: ${keyword}`;
         
+        const maxRetries = 3;
+        const retryDelay = 30000; // 30 seconds
         let searchResults;
-        try {
-          searchResults = await app.search(fullQuery);
-        } catch (error: any) {
-          console.error(`Firecrawl search failed for query: "${fullQuery}". Error: ${error.message}`);
-          return {
-            summary: `We encountered an error while searching for information about your idea. The error was: ${error.message}. Please try again later or with a different keyword.`,
-            sources: [],
-          };
+
+        for (let i = 0; i < maxRetries; i++) {
+          try {
+            searchResults = await app.search(fullQuery);
+            break; // Success, exit loop
+          } catch (error: any) {
+            console.warn(`Firecrawl search attempt ${i + 1}/${maxRetries} failed. Error: ${error.message}. Retrying in ${retryDelay / 1000}s...`);
+            if (i < maxRetries - 1) {
+              await wait(retryDelay); // Wait before retrying
+            } else {
+              // All retries failed
+              console.error(`All Firecrawl search retries failed for query: "${fullQuery}".`);
+              return {
+                summary: `We encountered a persistent error after ${maxRetries} attempts while searching for information. The error was: ${error.message}. Please try again later.`,
+                sources: [],
+              };
+            }
+          }
         }
+        
         const topUrls = (searchResults?.web || []).slice(0, 5).map((res: any) => res.url);
 
         if (topUrls.length === 0) {
