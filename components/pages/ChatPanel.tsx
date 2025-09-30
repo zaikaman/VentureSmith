@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { ChatInput } from './ChatInput';
+import { TypingIndicator } from './TypingIndicator';
 import type { Message } from '../../types';
 
 interface ChatPanelProps {
@@ -15,7 +16,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, aiStatus, onSend
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
-    }, [messages]);
+    }, [messages, aiStatus]);
 
     return (
         <div className="chat-panel">
@@ -26,6 +27,11 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, aiStatus, onSend
                         {m.text}
                     </div>
                 ))}
+                {aiStatus === 'thinking' && (
+                    <div className="message ai">
+                        <TypingIndicator />
+                    </div>
+                )}
                  {aiStatus === 'streaming' && (
                     <div className="message ai">
                         <div className="loading-dots"><span></span><span></span><span></span></div>
