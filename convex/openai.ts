@@ -2,6 +2,7 @@ import { internal } from "./_generated/api";
 import { action, internalAction } from "./_generated/server";
 import OpenAI from "openai";
 import { v } from "convex/values";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // OpenAI Client Initialization
 const openAiApiKey = process.env.OPENAI_API_KEY;
@@ -1762,6 +1763,40 @@ rationale for why they are a good match.
   }
 );
 
+// Helper function for Gemini chat completions
+async function getGeminiCompletion(prompt: string, isJson: boolean, modelName: string) {
+  const geminiApiKey = process.env.GEMINI_API_KEY;
+  if (!geminiApiKey) {
+    throw new Error("GEMINI_API_KEY is not set in environment variables.");
+  }
+  const genAI = new GoogleGenerativeAI(geminiApiKey);
+
+  try {
+    const model = genAI.getGenerativeModel({ model: modelName });
+    
+    const generationConfig = {
+      responseMimeType: isJson ? "application/json" : "text/plain",
+    };
+
+    const result = await model.generateContent({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig,
+    });
+
+    const response = result.response;
+    const text = response.text();
+    // The Gemini API in JSON mode might still wrap the response in markdown, so we need to clean it.
+    if (isJson) {
+        const cleanedText = text.replace(/^```json\n/, '').replace(/\n```$/, '');
+        return JSON.parse(cleanedText);
+    }
+    return text;
+  } catch (error: any) {
+    console.error(`Failed to get completion from Gemini. Error: ${error.message}`);
+    throw new Error(`Failed to get completion from Gemini. Error: ${error.message}`);
+  }
+}
+
 export const generateCodeChanges = action({
   args: { files: v.any(), prompt: v.string() },
   handler: async (
@@ -1803,9 +1838,9 @@ and the current state of the files.
 and a "chatResponse" string. Ensure the content of each file is a single, complete string.
     `;
 
-    console.log("--- Requesting Code Changes from OpenAI ---");
-    const codeChangesData = await getOpenAIChatCompletion(generationPrompt, true);
-    console.log("Code changes data received successfully.");
+    console.log("--- Requesting Code Changes from Gemini ---");
+    const codeChangesData = await getGeminiCompletion(generationPrompt, true, "gemini-2.5-flash-lite");
+    console.log("Code changes data received successfully from Gemini.");
     return codeChangesData;
   }
 });

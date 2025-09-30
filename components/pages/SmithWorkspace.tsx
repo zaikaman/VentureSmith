@@ -119,30 +119,32 @@ export const SmithWorkspace: React.FC = () => {
 
   return (
     <div className={`smith-workspace-container ${isFullscreen ? 'fullscreen-preview' : ''}`}>
-      <div className="sw-left-panel">
-        <ChatPanel 
-            messages={messages}
-            aiStatus={aiStatus as any}
-            onSendMessage={sendMessage}
-        />
-      </div>
-
-      <div className="sw-right-panel">
-        <div className="sw-view-toggler">
-          <button onClick={() => setView('preview')} className={view === 'preview' ? 'active' : ''}>Preview</button>
-          <button onClick={() => setView('code')} className={view === 'code' ? 'active' : ''}>Code</button>
+      <div className="smith-workspace-frame">
+        <div className="sw-left-panel">
+          <ChatPanel 
+              messages={messages}
+              aiStatus={aiStatus as any}
+              onSendMessage={sendMessage}
+          />
         </div>
-        <div className="sw-main-view">
-          {view === 'preview' ? (
-            <PreviewPanel 
-              fileSystem={files} 
-              refreshKey={refreshKey} 
-              isFullscreen={isFullscreen}
-              setIsFullscreen={setIsFullscreen}
-            />
-          ) : (
-            <CodeIDEPanel files={files} setFiles={setFiles} />
-          )}
+  
+        <div className="sw-right-panel">
+          <div className="sw-view-toggler">
+            <button onClick={() => setView('preview')} className={view === 'preview' ? 'active' : ''}>Preview</button>
+            <button onClick={() => setView('code')} className={view === 'code' ? 'active' : ''}>Code</button>
+          </div>
+          <div className="sw-main-view">
+            {view === 'preview' ? (
+              <PreviewPanel 
+                fileSystem={files} 
+                refreshKey={refreshKey} 
+                isFullscreen={isFullscreen}
+                setIsFullscreen={setIsFullscreen}
+              />
+            ) : (
+              <CodeIDEPanel files={files} setFiles={setFiles} />
+            )}
+          </div>
         </div>
       </div>
     </div>
