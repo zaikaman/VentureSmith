@@ -1910,16 +1910,12 @@ and the current state of the files.
       You must return an array of file objects. Each object must have a "path" and a "content" property.
       You must return the complete content of all files: 'index.html', 'style.css', and 'script.js'.
 
-      **CRITICAL INSTRUCTIONS FOR REACT PROJECTS:**
-      1.  If you generate a React application, you MUST bundle all JavaScript/JSX code into a single 'script.js' file.
-      2.  Do NOT use 'import' or 'export' statements. All components should be defined in the same file.
-      3.  The 'index.html' should include the React and ReactDOM CDN scripts, and a single <script type="text/babel" src="script.js"></script> tag.
-      4.  All CSS code MUST be in the 'style.css' file.
-
-      **Quality Check:**
-      After generating the code, please perform a quick check. If the generated 'index.html' file is empty or contains no visible HTML elements in the body, please discard it and generate a simple placeholder page instead. The placeholder page should contain a heading that says "Hello from SmithBot!" and a paragraph that says "I had some trouble generating your request. Please try rephrasing your prompt or ask for something simpler.".
-
-      Also, provide a friendly chat response to the user explaining what you did. If you had to generate a placeholder, please mention it in your response.
+      **CRITICAL INSTRUCTIONS:**
+      1.  You MUST generate code using only plain, vanilla HTML, CSS, and JavaScript.
+      2.  Do NOT use React, JSX, or any other libraries or frameworks.
+      3.  All CSS code MUST be in the 'style.css' file.
+      4.  All JavaScript code for DOM manipulation MUST be in the 'script.js' file.
+      5.  The 'index.html' file should ONLY contain HTML, and it must link to the other files correctly (e.g., <link rel="stylesheet" href="style.css"> and <script src="script.js" defer></script>).
 
       Your output MUST be a valid JSON object with a "files" object (containing an array of file objects for 'index.html', 'style.css', and 'script.js')
 and a "chatResponse" string. Ensure the content of each file is a single, complete string.
