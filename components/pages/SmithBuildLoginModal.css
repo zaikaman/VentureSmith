@@ -1,0 +1,79 @@
+
+.lm-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.lm-modal-content {
+    background: #1a1a1a;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid #333;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.lm-modal-title {
+    margin-top: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.lm-modal-description {
+    margin-bottom: 25px;
+    color: #aaa;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.lm-modal-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.lm-modal-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.lm-modal-button.confirm {
+    background-color: white;
+    color: black;
+}
+
+.lm-modal-button.confirm:hover {
+    background-color: white;
+    color: black;
+    transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

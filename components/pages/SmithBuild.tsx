@@ -1,22 +1,31 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
-import type { Doc } from '../../convex/_generated/dataModel';
+import type { Doc, Id } from '../../convex/_generated/dataModel';
 import './SmithBuild.css';
 import { SmallSpinner } from './SmallSpinner';
-
 import { SmithBuildHistory } from './SmithBuildHistory';
+import { SmithBuildLoginModal } from './SmithBuildLoginModal';
+
+interface BuildViewsProps {
+  user: Doc<'users'> | null;
+  setIsLoginModalOpen: (isOpen: boolean) => void;
+}
 
 // View for starting from a blank slate
-const IdeaInputView = () => {
+const IdeaInputView: React.FC<BuildViewsProps> = ({ user, setIsLoginModalOpen }) => {
   const [prompt, setPrompt] = useState('');
   const navigate = useNavigate();
   const createWorkspace = useMutation(api.smithWorkspaces.createWorkspace);
   const [isBuilding, setIsBuilding] = useState(false);
 
   const handleBuild = async () => {
+    if (!user) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     if (!prompt.trim() || isBuilding) return;
 
     setIsBuilding(true);
@@ -48,7 +57,7 @@ const IdeaInputView = () => {
 };
 
 // View for starting from an existing Venture
-const VentureInputView = () => {
+const VentureInputView: React.FC<BuildViewsProps> = ({ user, setIsLoginModalOpen }) => {
   const [selectedVentureId, setSelectedVentureId] = useState<string>('');
   const navigate = useNavigate();
   const ventures = useQuery(api.startups.getStartupsForUser);
@@ -66,6 +75,10 @@ const VentureInputView = () => {
   }, [venture]);
 
   const handleBuild = async () => {
+    if (!user) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     if (!ventureContext || isBuilding) return;
 
     setIsBuilding(true);
@@ -100,8 +113,17 @@ const VentureInputView = () => {
   );
 };
 
-
 export const SmithBuild: React.FC = () => {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const user = useQuery(api.users.getCurrentUser);
+  const isLoading = user === undefined;
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      setIsLoginModalOpen(true);
+    }
+  }, [isLoading, user]);
+
   return (
     <div className="smith-build-container">
       <div className="smith-build-header">
@@ -109,11 +131,13 @@ export const SmithBuild: React.FC = () => {
         <p>Choose how you'd like to start your next project.</p>
       </div>
       <div className="smith-build-options">
-        <IdeaInputView />
-        <VentureInputView />
+        <IdeaInputView user={user} setIsLoginModalOpen={setIsLoginModalOpen} />
+        <VentureInputView user={user} setIsLoginModalOpen={setIsLoginModalOpen} />
       </div>
       <div className="divider"></div>
       <SmithBuildHistory />
+      <SmithBuildLoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
     </div>
   );
 };
+
