@@ -770,6 +770,33 @@ export const generatePressRelease = action({
   },
 });
 
+export const generateGrowthMetrics = action({
+  args: { startupId: v.id("startups") },
+  handler: async (ctx, { startupId }) => {
+    const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
+    if (!startup || !startup.brainstormResult || !startup.marketPulse) {
+      throw new Error("Brainstorming and Market Pulse must be completed first.");
+    }
+
+    const fullContext = {
+      name: startup.name,
+      refinedIdea: JSON.parse(startup.brainstormResult).refinedIdea,
+      marketPulse: JSON.parse(startup.marketPulse),
+    };
+
+    const result = await ctx.runAction(internal.openai.generateGrowthMetricsWithAI, {
+      fullContext,
+    });
+
+    await ctx.runMutation(api.startups.updateGrowthMetrics, {
+      startupId,
+      growthMetrics: JSON.stringify(result),
+    });
+
+    return { success: true };
+  },
+});
+
 export const generateABTestIdeas = action({
   args: { startupId: v.id("startups") },
   handler: async (ctx, { startupId }) => {
@@ -1168,8 +1195,9 @@ export const generateTaskResult = action({
   args: {
     startupId: v.id("startups"),
     taskId: v.string(),
+    force: v.optional(v.boolean()),
   },
-  handler: async (ctx, { startupId, taskId }) => {
+  handler: async (ctx, { startupId, taskId, force }) => {
     const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
     if (!startup) {
       throw new Error("Startup not found");
@@ -1214,7 +1242,7 @@ export const generateTaskResult = action({
     };
 
     const resultField = taskToResultField[taskId];
-    if (resultField && startup[resultField]) {
+    if (!force && resultField && startup[resultField]) {
       console.log(`Skipping task ${taskId} as it is already completed.`);
       return { success: true, message: "Task already completed." };
     }
@@ -1275,6 +1303,8 @@ export const generateTaskResult = action({
           return await ctx.runAction(api.actions.generateProductHuntKit, { startupId });
         case "pressRelease":
           return await ctx.runAction(api.actions.generatePressRelease, { startupId });
+        case "growthMetrics":
+          return await ctx.runAction(api.actions.generateGrowthMetrics, { startupId });
         case "abTestIdeas":
           return await ctx.runAction(api.actions.generateABTestIdeas, { startupId });
         case "seoStrategy":

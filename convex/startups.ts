@@ -558,6 +558,7 @@ export const updateName = mutation({
 
     await ctx.db.patch(args.startupId, {
       name: args.name,
+      brandNameSelected: true,
     });
 
     return { success: true };

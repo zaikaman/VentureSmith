@@ -228,11 +228,7 @@ export const VentureWorkspace: React.FC = () => {
             const preloadTasks = async () => {
                 console.log("--- Starting Phase 1 preloading (pre-brand identity) ---");
                 for (const task of allTasks) {
-                    if (task.id === 'generateNameIdentity') {
-                        console.log("--- Pausing preloading. Waiting for Brand Identity completion. ---");
-                        break;
-                    }
-                    if (!task.isCompleted && task.id !== 'smithBuild') {
+                if (!task.isCompleted && task.id !== 'smithBuild') {
                         try {
                             console.log(`Preloading task: ${task.name}`);
                             await generateTaskResult({ startupId: startup._id, taskId: task.id });
@@ -240,6 +236,10 @@ export const VentureWorkspace: React.FC = () => {
                         } catch (error) {
                             console.error(`Failed to preload task ${task.name}:`, error);
                         }
+                    }
+                    if (task.id === 'generateNameIdentity') {
+                        console.log("--- Pausing preloading. Waiting for user to select a brand name. ---");
+                        break;
                     }
                 }
                 console.log("--- Phase 1 preloading finished ---");
@@ -251,7 +251,7 @@ export const VentureWorkspace: React.FC = () => {
 
     React.useEffect(() => {
         // Phase 2: Preload tasks after brand identity is set
-        if (startup?.brandIdentity && !hasStartedPostBrandPreloading.current && allTasks.length > 0) {
+        if (startup?.brandNameSelected && !hasStartedPostBrandPreloading.current && allTasks.length > 0) {
             hasStartedPostBrandPreloading.current = true;
 
             const preloadRemainingTasks = async () => {

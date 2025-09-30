@@ -1667,6 +1667,84 @@ export const generatePressReleaseWithAI = internalAction(
   }
 );
 
+export const generateGrowthMetricsWithAI = internalAction(
+  async (
+    _,
+    { fullContext }: { fullContext: any }
+  ) => {
+    const prompt = `
+      You are an expert growth hacker and startup advisor, similar to Sean Ellis.
+      You are tasked with identifying the most critical Key Performance Indicators (KPIs) for a new startup based on its core data. Your analysis should be structured around the "AARRR" (Pirate Metrics) framework.
+
+      **Startup Data Package:**
+      - **Official Startup Name:** ${fullContext.name}
+      - **Refined Idea:** ${fullContext.refinedIdea}
+      - **Market Pulse Analysis:** ${JSON.stringify(fullContext.marketPulse, null, 2)}
+
+      **Your Task:**
+      Generate a single, valid JSON object that outlines the key growth metrics for the startup.
+
+      **CRITICAL INSTRUCTIONS:**
+      1. Your output MUST be a single, valid JSON object.
+      2. The structure must match the JSON schema provided below exactly.
+      3. You MUST use the specified categories, icons, and colors.
+      4. For each category, provide 2-3 specific, actionable metric points relevant to the startup's idea.
+      5. Do not use any markdown formatting in the JSON string values. All text must be plain text.
+
+      **JSON Schema:**
+      Your output must conform to the following JSON schema:
+      {
+        "title": "Key Growth Metrics for ${fullContext.name}",
+        "introduction": "string (A brief, encouraging introduction to the importance of these metrics.)",
+        "metrics": [
+          {
+            "category": "Acquisition",
+            "icon": "fas fa-users",
+            "color": "#3498db",
+            "description": "How users find and first come to your product.",
+            "points": [ { "name": "string", "detail": "string" } ]
+          },
+          {
+            "category": "Activation",
+            "icon": "fas fa-rocket",
+            "color": "#2ecc71",
+            "description": "The point where users have their first 'aha!' moment and experience the product's value.",
+            "points": [ { "name": "string", "detail": "string" } ]
+          },
+          {
+            "category": "Retention",
+            "icon": "fas fa-sync-alt",
+            "color": "#f1c40f",
+            "description": "How many of your users you are keeping and for how long.",
+            "points": [ { "name": "string", "detail": "string" } ]
+          },
+          {
+            "category": "Revenue",
+            "icon": "fas fa-dollar-sign",
+            "color": "#e74c3c",
+            "description": "How you monetize your user base.",
+            "points": [ { "name": "string", "detail": "string" } ]
+          },
+          {
+            "category": "Referral",
+            "icon": "fas fa-bullhorn",
+            "color": "#9b59b6",
+            "description": "How your users become advocates and drive new user growth.",
+            "points": [ { "name": "string", "detail": "string" } ]
+          }
+        ]
+      }
+
+      Now, generate the JSON object.
+    `;
+
+    console.log("--- Requesting Growth Metrics from OpenAI ---");
+    const growthMetricsData = await getOpenAIChatCompletion(prompt, true);
+    console.log("Growth metrics data received successfully.");
+    return growthMetricsData;
+  }
+);
+
 export const generateInvestorSearchQueries = internalAction(
   async (
     _,

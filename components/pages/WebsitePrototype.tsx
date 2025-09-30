@@ -160,13 +160,15 @@ export const WebsitePrototype: React.FC<WebsitePrototypeProps> = ({ startup }) =
   );
 
   const renderInitial = () => (
-    <InitialTaskView
-        title="Build Interactive Website Prototype"
-        description="Transform your wireframe and business data into a fully-coded, interactive landing page prototype. The AI will build a complete React component based on all your progress."
-        buttonText="Generate Interactive Website"
+    <div className="initial-task-wrapper">
+      <InitialTaskView
+        title="Build Website Prototype"
+        description="Transform your wireframe and branding elements into a beautiful, interactive website prototype. Visualize the final product before writing a single line of production code."
+        buttonText="Build My Website"
         onAction={handleGenerate}
-        disabled={!canGenerate || isGenerating}
-    />
+        disabled={!canGenerate}
+      />
+    </div>
   );
 
   const hasContent = code || isGenerating;
