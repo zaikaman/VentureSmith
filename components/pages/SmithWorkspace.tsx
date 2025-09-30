@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { useQuery, useMutation, useAction } from 'convex/react';
+import { useConvexAuth, useQuery, useMutation, useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import type { FileSystem, Message, MessageRole } from '../../types';
 import { useDebouncedCallback } from 'use-debounce';
@@ -18,8 +18,13 @@ export const SmithWorkspace: React.FC = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const { sessionId } = useParams<{ sessionId: string }>();
   const location = useLocation();
+  const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth();
 
-      const workspace = useQuery(api.smithWorkspaces.getWorkspace, sessionId ? { id: sessionId as Id<"smithWorkspaces"> } : "skip");  const updateFilesMutation = useMutation(api.smithWorkspaces.updateWorkspaceFiles);
+  const workspace = useQuery(
+    api.smithWorkspaces.getWorkspace,
+    !isAuthLoading && isAuthenticated && sessionId ? { id: sessionId as Id<"smithWorkspaces"> } : "skip"
+  );
+  const updateFilesMutation = useMutation(api.smithWorkspaces.updateWorkspaceFiles);
   const updateMessagesMutation = useMutation(api.smithWorkspaces.updateWorkspaceMessages);
   const generateCode = useAction(api.openai.generateCodeChanges);
 
@@ -109,7 +114,7 @@ export const SmithWorkspace: React.FC = () => {
     }
   }, [messages, workspace?.messages.length, debouncedUpdateMessages]);
 
-  if (workspace === undefined) {
+  if (isAuthLoading || workspace === undefined) {
     return <SkeletonLoader />;
   }
 
