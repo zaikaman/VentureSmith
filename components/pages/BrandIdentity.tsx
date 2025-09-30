@@ -63,23 +63,67 @@ const ProceduralLogo: React.FC<{ name: string }> = ({ name }) => {
 
 // --- Main Component ---
 export const BrandIdentity: React.FC<BrandIdentityProps> = ({ startup }) => {
-  const [isIgniting, setIsIgniting] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<BrandIdentityResult | null>(null);
-  const [hasJustIgnited, setHasJustIgnited] = useState(false);
-  const [animatingNames, setAnimatingNames] = useState<string[]>([]);
   const generateBrandIdentity = useAction(api.actions.generateBrandIdentity);
   const updateName = useMutation(api.startups.updateName);
 
-  const canIgnite = startup.brainstormResult && startup.marketPulse && startup.missionVision;
+  const loadingTexts = [
+    "Distilling brand essence...",
+    "Exploring naming conventions...",
+    "Crafting powerful slogans...",
+    "Generating visual concepts...",
+    "Forging a new identity...",
+  ];
+  const [currentLoadingText, setCurrentLoadingText] = useState(loadingTexts[0]);
+
+  const canGenerate = startup.brainstormResult && startup.marketPulse && startup.missionVision;
 
   useEffect(() => {
     if (startup.brandIdentity) {
-      setResult(JSON.parse(startup.brandIdentity));
+      try {
+        setResult(JSON.parse(startup.brandIdentity));
+      } catch (e) {
+        console.error("Failed to parse brand identity:", e);
+        toast.error("Failed to load existing brand identity.");
+      }
+    }
+  }, [startup.brandIdentity]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (isGenerating) {
+      interval = setInterval(() => {
+        setCurrentLoadingText(prev => loadingTexts[(loadingTexts.indexOf(prev) + 1) % loadingTexts.length]);
+      }, 2500);
     }
     return () => {
-      setHasJustIgnited(false);
+      if (interval) clearInterval(interval);
     };
-  }, [startup.brandIdentity]);
+  }, [isGenerating, loadingTexts]);
+
+  const handleGenerate = async () => {
+    if (!canGenerate) {
+      toast.error("Previous steps must be completed first.");
+      return;
+    }
+    setIsGenerating(true);
+    setResult(null);
+    try {
+      const [generateResult, _] = await Promise.all([
+        generateBrandIdentity({ startupId: startup._id }),
+        new Promise(resolve => setTimeout(resolve, 4000)) // Min 4s animation
+      ]);
+      
+      setResult(generateResult);
+      toast.success("Brand Identity generated!");
+
+    } catch (err: any) {
+      toast.error("Failed to generate Brand Identity.", { description: err.message });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const handleNameSelect = (name: string) => {
     toast.promise(updateName({ startupId: startup._id, name }), {
@@ -89,71 +133,27 @@ export const BrandIdentity: React.FC<BrandIdentityProps> = ({ startup }) => {
     });
   };
 
-  const handleIgnite = async () => {
-    if (!canIgnite) {
-      toast.error("Previous steps must be completed first.");
-      return;
-    }
-    setIsIgniting(true);
-    setHasJustIgnited(true);
-    setResult(null);
-
-    // Immediately start dummy animation
-    const dummyNames = Array(30).fill(0).map(() => Math.random().toString(36).substring(2, 10));
-    const intervalId = setInterval(() => {
-      setAnimatingNames(dummyNames.sort(() => 0.5 - Math.random()).slice(0, 5));
-    }, 100);
-
-    try {
-      // Run API call and a minimum animation timer in parallel
-      const [forgeResult, _] = await Promise.all([
-        generateBrandIdentity({ startupId: startup._id }),
-        new Promise(resolve => setTimeout(resolve, 5000)) // Min 5s animation
-      ]);
-
-      // Both are done, now show final result
-      clearInterval(intervalId);
-      setResult(forgeResult);
-      setIsIgniting(false);
-
-    } catch (err: any) {
-      // Handle error
-      clearInterval(intervalId);
-      toast.error("Failed to ignite constellation. Please try again.");
-      console.error("Error igniting data:", err);
-      setIsIgniting(false);
-    }
-  };
-
-  const renderAnimation = () => (
-    <div className="constellation-container">
-        <div className="stars-bg"></div>
-        <div className="nebula idea-nebula">Refined Idea</div>
-        <div className="nebula keywords-nebula">Keywords</div>
-        <div className="nebula mission-nebula">Mission</div>
-        <div className="nebula vision-nebula">Vision</div>
-
-        <div className="constellation-lines">
-            <div className="line line-1"></div>
-            <div className="line line-2"></div>
-            <div className="line line-3"></div>
+  const renderLoading = () => (
+    <div className="loading-container">
+      <div className="brand-animation-container">
+        <div className="orbit-path"></div>
+        <div className="brand-core">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L14.5 9.5H22L16 14.5L18.5 22L12 17L5.5 22L8 14.5L2 9.5H9.5L12 2Z" />
+            </svg>
         </div>
-
-        <div className="star-field">
-            {[...Array(5)].map((_, i) => (
-                <div key={i} className={`star-container star-container-${i + 1}`}>
-                    <div className="star"></div>
-                </div>
-            ))}
-        </div>
-        <div className="ignite-status-text">Igniting Constellation...</div>
+        <div className="orbiting-element el-1">Name</div>
+        <div className="orbiting-element el-2">Slogan</div>
+        <div className="orbiting-element el-3">Logo</div>
+      </div>
+      <div className="loading-status-text">{currentLoadingText}</div>
     </div>
   );
 
   const renderResults = () => (
     <>
-        <TaskResultHeader title="Brand Identity" onRegenerate={handleIgnite} />
-        <div className={`results-view ${hasJustIgnited ? 'with-delay' : ''}`}>
+        <TaskResultHeader title="Brand Identity" onRegenerate={handleGenerate} />
+        <div className='results-view'>
             <p className="select-prompt">Select a name to become your official brand identity.</p>
             <ul className="name-list">
                 {result!.names.map((name, i) => (
@@ -177,13 +177,14 @@ export const BrandIdentity: React.FC<BrandIdentityProps> = ({ startup }) => {
 
   return (
     <div className="brand-identity-container">
-        {isIgniting ? renderAnimation() : result ? renderResults() : (
+        {isGenerating ? renderLoading() : result ? renderResults() : (
             <InitialTaskView
                 title="Generate Business Name & Identity"
                 description="Let's forge a powerful brand identity. Our AI will use your refined idea, keywords, and mission to generate memorable names, a powerful slogan, and unique visual marks."
-                buttonText="Ignite Constellation"
-                onAction={handleIgnite}
-                disabled={!canIgnite}
+                buttonText="Generate Identity"
+                onAction={handleGenerate}
+                disabled={!canGenerate}
+                disabledReason={!canGenerate ? "Complete 'Brainstorm', 'Market Pulse', and 'Mission & Vision' first." : undefined}
             />
         )}
     </div>

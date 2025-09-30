@@ -83,14 +83,13 @@ const GenerateSeoStrategy: React.FC<GenerateSeoStrategyProps> = ({ startup }) =>
     setIsGenerating(true);
     setStrategy(null);
     try {
-      const [generatedStrategyString, _] = await Promise.all([
+      const [generatedStrategy, _] = await Promise.all([
         generateStrategyAction({ startupId: startup._id }),
         new Promise(resolve => setTimeout(resolve, 4000))
       ]);
       
-      if (generatedStrategyString) {
-        const parsedStrategy = JSON.parse(generatedStrategyString);
-        setStrategy(parsedStrategy);
+      if (generatedStrategy) {
+        setStrategy(generatedStrategy);
         toast.success("SEO Keyword Strategy generated successfully!");
       } else {
         throw new Error("Received an empty response from the server.");

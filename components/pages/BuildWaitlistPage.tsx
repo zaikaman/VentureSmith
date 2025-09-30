@@ -77,8 +77,7 @@ const BuildWaitlistPage: React.FC<BuildWaitlistPageProps> = ({ startup }) => {
     setWaitlistData(null);
     setCode('');
     try {
-      const resultString = await generatePageAction({ startupId: startup._id });
-      const resultData = JSON.parse(resultString);
+      const resultData = await generatePageAction({ startupId: startup._id });
       setWaitlistData(resultData);
       setCode(resultData.code || '');
       toast.success("Waitlist Page generated successfully!");

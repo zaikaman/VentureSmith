@@ -83,8 +83,7 @@ const EstimateCloudCosts: React.FC<EstimateCloudCostsProps> = ({ startup }) => {
     setIsGenerating(true);
     setCostData(null);
     try {
-      const resultString = await estimateCostsAction({ startupId: startup._id });
-      const resultData = JSON.parse(resultString);
+      const resultData = await estimateCostsAction({ startupId: startup._id });
       setCostData(resultData);
       toast.success("Cloud Cost Estimate generated successfully!");
     } catch (err: any) {
@@ -152,7 +151,7 @@ const EstimateCloudCosts: React.FC<EstimateCloudCostsProps> = ({ startup }) => {
                 <td className="row-header">{stage}</td>
                 {costData.costs.map((item, itemIndex) => (
                   <td key={itemIndex} className="cost-cell">
-                    {item.estimates[stageIndex]?.cost || 'N/A'}
+                    {item.estimates[stageIndex]?.cost ? `${item.estimates[stageIndex]?.cost} /month` : 'N/A'}
                   </td>
                 ))}
               </tr>

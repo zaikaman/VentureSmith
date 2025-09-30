@@ -37,7 +37,9 @@ const BrainstormIdea: React.FC<BrainstormIdeaProps> = ({ startup }) => {
 
   useEffect(() => {
     if (startup.brainstormResult) {
-      setResult(JSON.parse(startup.brainstormResult));
+      const parsedResult = JSON.parse(startup.brainstormResult);
+      // Handle new format {brainstorm: ...} and old format for backward compatibility
+      setResult(parsedResult.brainstorm || parsedResult);
     }
     return () => {
       setHasJustSynthesized(false);
@@ -59,7 +61,12 @@ const BrainstormIdea: React.FC<BrainstormIdeaProps> = ({ startup }) => {
         new Promise(resolve => setTimeout(resolve, 5000)) // Min 5s animation
       ]);
 
-      setResult(synthesisResult);
+      if (synthesisResult && synthesisResult.brainstorm) {
+        setResult(synthesisResult.brainstorm);
+      } else {
+        console.error("Invalid format received from AI:", synthesisResult);
+        toast.error("Received an invalid response format from the AI.");
+      }
       setIsSynthesizing(false);
 
     } catch (err: any) {

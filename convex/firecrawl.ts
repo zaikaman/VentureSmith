@@ -21,11 +21,7 @@ export const search = action({
 
     for (let i = 0; i < maxRetries; i++) {
       try {
-        const searchResult = await app.search(keyword, {
-          pageOptions: {
-            fetchPageContent: true, // This is crucial
-          }
-        });
+        const searchResult = await app.search(keyword, {});
         console.log(`Firecrawl API Result for keyword '${keyword}':`, searchResult);
         return searchResult?.web || []; // Success
       } catch (error: any) {
@@ -58,7 +54,7 @@ export const performMarketAnalysis = action({
         const fullQuery = `in-depth market analysis for a startup idea: ${keyword}`;
         
         // 1. Search for URLs first, without scraping
-        const searchResults = await app.search(fullQuery, { pageOptions: { fetchPageContent: false } });
+        const searchResults = await app.search(fullQuery);
         const topUrls = (searchResults?.web || []).slice(0, 5).map((res: any) => res.url);
 
         if (topUrls.length === 0) {
@@ -85,8 +81,35 @@ export const performMarketAnalysis = action({
             };
         }
 
-        // 3. Call Gemini to summarize the content
-        const summary = await ctx.runAction(internal.gemini.summarizeMarketContent, { scrapedContent });
+        // 3. Summarize content in chunks to avoid token limits
+        const chunkSize = 1;
+        const chunks = [];
+        for (let i = 0; i < scrapedContent.length; i += chunkSize) {
+            chunks.push(scrapedContent.slice(i, i + chunkSize));
+        }
+
+        const chunkSummaries = await Promise.all(
+            chunks.map(chunk => ctx.runAction(internal.openai.summarizeMarketContent, { scrapedContent: chunk }))
+        );
+
+        const combinedSummary = chunkSummaries.join('\n\n---\n\n');
+
+        const finalSummaryPrompt = `You are a world-class market analyst. You have been provided with several market analysis summaries from different sources. Your task is to synthesize all of this information into a single, final, concise, and insightful market analysis summary.
+
+Here are the summaries:
+---
+${combinedSummary}
+---
+
+Based on all the provided summaries, please provide a final market analysis summary. Structure your response in markdown format. The summary should cover:
+1.  **Market Overview:** Briefly describe the overall market, its size, and key characteristics.
+2.  **Key Players & Competitors:** Identify the main companies or products in this space and what they do.
+3.  **Emerging Trends:** Highlight any significant trends, technologies, or shifts in consumer behavior.
+4.  **Opportunities & Gaps:** Point out potential opportunities or underserved needs that a new startup could address.
+
+Your tone should be objective, professional, and data-driven.`;
+        
+        const summary = await ctx.runAction(internal.openai.generateContent, { prompt: finalSummaryPrompt, responseMimeType: "text/plain" });
 
         // 4. Format sources
         const sources = scrapedContent.map((result: any) => ({

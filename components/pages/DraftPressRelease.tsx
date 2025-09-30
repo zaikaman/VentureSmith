@@ -36,16 +36,11 @@ const DraftPressRelease: React.FC<DraftPressReleaseProps> = ({ startup }) => {
   const pressReleaseData: PressReleaseData | null = useMemo(() => {
     if (!startup.pressRelease) return null;
     try {
-      const parsedString = JSON.parse(startup.pressRelease);
-      return JSON.parse(parsedString);
+      return JSON.parse(startup.pressRelease);
     } catch (e) {
-      try {
-        return JSON.parse(startup.pressRelease);
-      } catch (e2) {
-        console.error("Failed to parse Press Release data:", e2);
-        toast.error("Failed to load existing press release.");
-        return null;
-      }
+      console.error("Failed to parse Press Release data:", e);
+      toast.error("Failed to load existing press release.");
+      return null;
     }
   }, [startup.pressRelease]);
 

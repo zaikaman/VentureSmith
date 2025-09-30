@@ -82,14 +82,13 @@ const MapProcesses: React.FC<MapProcessesProps> = ({ startup }) => {
     setIsGenerating(true);
     setAutomationMap(null);
     try {
-      const [generatedMapString, _] = await Promise.all([
+      const [generatedMap, _] = await Promise.all([
         generateMapAction({ startupId: startup._id }),
         new Promise(resolve => setTimeout(resolve, 4000))
       ]);
       
-      if (generatedMapString) {
-        const parsedMap = JSON.parse(generatedMapString);
-        setAutomationMap(parsedMap);
+      if (generatedMap) {
+        setAutomationMap(generatedMap);
         toast.success("Process Automation Map generated successfully!");
       } else {
         throw new Error("Received an empty response from the server.");

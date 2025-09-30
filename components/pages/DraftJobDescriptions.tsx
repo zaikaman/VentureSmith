@@ -36,11 +36,11 @@ const AccordionItem: React.FC<{ job: JobDescription, isOpen: boolean, onClick: (
                 <p>{job.summary}</p>
                 <h4>Responsibilities</h4>
                 <ul>
-                    {job.responsibilities.map((item, index) => <li key={index}>{item}</li>)}
+                    {job.responsibilities && job.responsibilities.map((item, index) => <li key={index}>{item}</li>)}
                 </ul>
                 <h4>Qualifications</h4>
                 <ul>
-                    {job.qualifications.map((item, index) => <li key={index}>{item}</li>)}
+                    {job.qualifications && job.qualifications.map((item, index) => <li key={index}>{item}</li>)}
                 </ul>
             </div>
         )}
@@ -67,10 +67,24 @@ const DraftJobDescriptions: React.FC<DraftJobDescriptionsProps> = ({ startup }) 
   useEffect(() => {
     if (startup.draftJobDescriptions) {
       try {
-        const parsedJobs = JSON.parse(startup.draftJobDescriptions);
-        setJobs(parsedJobs);
-        if (parsedJobs.length > 0) {
-            setOpenAccordion(parsedJobs[0].title);
+        const parsedData = JSON.parse(startup.draftJobDescriptions);
+        let jobsList: JobDescription[] = [];
+
+        if (parsedData.jobs && Array.isArray(parsedData.jobs)) {
+          jobsList = parsedData.jobs; // Handles new format { jobs: [...] }
+        } else if (parsedData.roles && Array.isArray(parsedData.roles)) {
+          jobsList = parsedData.roles; // Handles old format { roles: [...] }
+        } else if (parsedData.job_descriptions && Array.isArray(parsedData.job_descriptions)) {
+          jobsList = parsedData.job_descriptions; // Handles old format { job_descriptions: [...] }
+        } else if (Array.isArray(parsedData)) {
+          jobsList = parsedData; // Handles old format [...]
+        } else if (typeof parsedData === 'object' && parsedData !== null && parsedData.title) {
+          jobsList = [parsedData]; // Handles old format {...} as a single item array
+        }
+        
+        setJobs(jobsList);
+        if (jobsList.length > 0) {
+            setOpenAccordion(jobsList[0].title);
         }
       } catch (e) {
         console.error("Failed to parse job descriptions:", e);
@@ -99,20 +113,21 @@ const DraftJobDescriptions: React.FC<DraftJobDescriptionsProps> = ({ startup }) 
     setIsGenerating(true);
     setJobs([]);
     try {
-      const [generatedJobsString, _] = await Promise.all([
+      const [generatedResult, _] = await Promise.all([
         generateAction({ startupId: startup._id }),
         new Promise(resolve => setTimeout(resolve, 4000))
       ]);
       
-      if (generatedJobsString) {
-        const parsedJobs = JSON.parse(generatedJobsString);
-        setJobs(parsedJobs);
-        if (parsedJobs.length > 0) {
-            setOpenAccordion(parsedJobs[0].title);
+      if (generatedResult && generatedResult.jobs && Array.isArray(generatedResult.jobs)) {
+        const jobsData = generatedResult.jobs;
+        setJobs(jobsData);
+        if (jobsData.length > 0) {
+            setOpenAccordion(jobsData[0].title);
         }
         toast.success("Job Descriptions drafted successfully!");
       } else {
-        throw new Error("Received an empty response from the server.");
+        console.error("Invalid format received from AI:", generatedResult);
+        throw new Error("Received an invalid or empty response from the AI. Please try again.");
       }
     } catch (err: any) {
       console.error("Job description generation failed:", err);

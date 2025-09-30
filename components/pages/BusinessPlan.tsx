@@ -205,9 +205,9 @@ export const BusinessPlan: React.FC<BusinessPlanProps> = ({ startup }) => {
         head: [['Year', 'Revenue', 'COGS', 'Net Profit']],
         body: result.financialProjections?.forecast.map(item => [
             `Year ${item.year}`,
-            item.revenue,
-            item.cogs,
-            item.netProfit
+            `$${item.revenue}`,
+            `$${item.cogs}`,
+            `$${item.netProfit}`
         ]),
         theme: 'grid',
         headStyles: { fillColor: [22, 160, 133] },
@@ -321,9 +321,9 @@ export const BusinessPlan: React.FC<BusinessPlanProps> = ({ startup }) => {
                                 {(result.financialProjections?.forecast || []).map((item: any) => (
                                     <tr key={item.year}>
                                         <td>Year {item.year}</td>
-                                        <td>{item.revenue}</td>
-                                        <td>{item.cogs}</td>
-                                        <td>{item.netProfit}</td>
+                                        <td>${item.revenue}</td>
+                                        <td>${item.cogs}</td>
+                                        <td>${item.netProfit}</td>
                                     </tr>
                                 ))}
                             </tbody>

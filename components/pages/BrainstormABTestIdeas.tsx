@@ -49,8 +49,17 @@ const BrainstormABTestIdeas: React.FC<BrainstormABTestIdeasProps> = ({ startup }
   useEffect(() => {
     if (startup.abTestIdeas) {
       try {
-        const parsedIdeas = JSON.parse(startup.abTestIdeas);
-        setIdeas(parsedIdeas);
+        const parsedData = JSON.parse(startup.abTestIdeas);
+        // Handle new format {testIdeas: [...]}, old format {tests: [...]}, and raw array
+        let ideasArray: ABTestIdea[] = [];
+        if (parsedData.testIdeas) {
+          ideasArray = parsedData.testIdeas; // New format
+        } else if (parsedData.tests) {
+          ideasArray = parsedData.tests; // Old inconsistent format
+        } else if (Array.isArray(parsedData)) {
+          ideasArray = parsedData; // Old raw array format
+        }
+        setIdeas(ideasArray);
       } catch (e) {
         console.error("Failed to parse A/B test ideas:", e);
         toast.error("Failed to load existing A/B test ideas.");
@@ -79,17 +88,17 @@ const BrainstormABTestIdeas: React.FC<BrainstormABTestIdeasProps> = ({ startup }
     setIdeas([]);
     try {
       // Add a minimum delay for the user to see the animation
-      const [generatedIdeasString, _] = await Promise.all([
+      const [generatedResult, _] = await Promise.all([
         generateIdeasAction({ startupId: startup._id }),
         new Promise(resolve => setTimeout(resolve, 4000))
       ]);
       
-      if (generatedIdeasString) {
-        const parsedIdeas = JSON.parse(generatedIdeasString);
-        setIdeas(parsedIdeas);
+      if (generatedResult && generatedResult.testIdeas && Array.isArray(generatedResult.testIdeas)) {
+        setIdeas(generatedResult.testIdeas);
         toast.success("A/B Test Ideas generated successfully!");
       } else {
-        throw new Error("Received an empty response from the server.");
+        console.error("Invalid format received from AI:", generatedResult);
+        throw new Error("Received an invalid or empty response from the AI.");
       }
     } catch (err: any) {
       console.error("A/B test idea generation failed:", err);

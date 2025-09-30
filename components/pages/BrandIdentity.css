@@ -1,124 +1,128 @@
-/* BrandIdentity.css - Refactored for "Constellation" Animation */
+/* BrandIdentity.css - Refactored for modern animation */
 
 .brand-identity-container {
-    padding: 2rem;
-    text-align: center;
     background-color: #0f172a; /* bg-slate-900 */
+    padding: 2rem;
     border-radius: 0.5rem;
-}
-
-.header-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.initial-view .forge-button:disabled {
-    background-color: var(--bg-slate-700);
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-/* --- Constellation Animation --- */
-.constellation-container {
-    height: 500px;
-    width: 100%;
-    position: relative;
-    background-color: #020617;
-    border-radius: 16px;
-    overflow: hidden;
-}
-
-.stars-bg {
-    width: 100%;
-    height: 100%;
-    background-image: radial-gradient(white 1px, transparent 0);
-    background-size: 40px 40px;
-    background-position: -19px -19px;
-    opacity: 0.3;
-}
-
-.nebula {
-    position: absolute;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
     color: white;
-    font-weight: 600;
-    animation: glow 2s infinite ease-in-out;
 }
 
-.idea-nebula { top: 10%; left: 45%; background: rgba(165, 180, 252, 0.3); }
-.keywords-nebula { top: 70%; left: 15%; background: rgba(107, 114, 128, 0.3); }
-.mission-nebula { top: 40%; left: 80%; background: rgba(251, 191, 36, 0.3); }
-.vision-nebula { top: 80%; left: 60%; background: rgba(248, 113, 113, 0.3); }
-
-@keyframes glow {
-    50% { box-shadow: 0 0 20px currentColor; }
+.initial-view, .loading-container {
+    text-align: center;
+    padding: 3rem;
+    background-color: #1e293b; /* bg-slate-800 */
+    border-radius: 0.5rem;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.constellation-lines .line {
-    position: absolute;
-    height: 2px;
-    background: linear-gradient(to right, transparent, rgba(165, 180, 252, 0.7), transparent);
-    transform-origin: left center;
-    animation: draw-line 1.5s ease-out forwards;
+/* --- New Loading Animation --- */
+.brand-animation-container {
+    width: 250px;
+    height: 250px;
+    position: relative;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.line-1 { top: 30%; left: 30%; width: 40%; transform: rotate(25deg); animation-delay: 0.5s; }
-.line-2 { top: 60%; left: 25%; width: 50%; transform: rotate(-15deg); animation-delay: 0.8s; }
-.line-3 { top: 50%; left: 50%; width: 35%; transform: rotate(120deg); animation-delay: 1.1s; }
-
-@keyframes draw-line {
-    from { transform: scaleX(0) rotate(var(--angle, 0deg)); }
-    to { transform: scaleX(1) rotate(var(--angle, 0deg)); }
-}
-
-.star-field {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-}
-
-.star-container {
-    position: absolute;
-    animation: move-star 1.5s ease-in-out forwards 3.5s;
-}
-
-.star {
-    width: 10px;
-    height: 10px;
-    background: white;
+.brand-core {
+    width: 80px;
+    height: 80px;
+    background-color: #c084fc; /* purple-400 */
     border-radius: 50%;
-    box-shadow: 0 0 15px white;
-    animation: pulse-star 1s infinite ease-in-out 2s;
-}
-
-@keyframes pulse-star { 50% { transform: scale(1.5); } }
-
-/* Start positions */
-.star-container-1 { top: 25%; left: 40%; }
-.star-container-2 { top: 45%; left: 60%; }
-.star-container-3 { top: 65%; left: 35%; }
-.star-container-4 { top: 80%; left: 75%; }
-.star-container-5 { top: 50%; left: 20%; }
-
-/* End positions (will be hidden by results) */
-@keyframes move-star {
-    to { top: 50%; left: 50%; opacity: 0; }
-}
-
-.ignite-status-text {
     position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #94a3b8;
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    animation: pulseText 2s infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 35px #c084fc, inset 0 0 15px #e9d5ff;
+    animation: pulse-core 2.5s infinite ease-in-out;
 }
+
+.brand-core svg {
+    width: 40px;
+    height: 40px;
+    color: #581c87; /* purple-900 */
+}
+
+.orbit-path {
+    width: 220px;
+    height: 220px;
+    position: absolute;
+    border-radius: 50%;
+    border: 2px dashed #475569; /* slate-600 */
+    animation: spin-path 20s linear infinite;
+}
+
+.orbiting-element {
+    position: absolute;
+    width: 70px;
+    height: 30px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+    transform-origin: 110px 110px; /* Center of the path */
+}
+
+.el-1 {
+    background-color: #f472b6; /* pink-500 */
+    box-shadow: 0 0 15px #f472b6;
+    animation: travel-1 6s linear infinite;
+}
+
+.el-2 {
+    background-color: #fbbf24; /* amber-400 */
+    box-shadow: 0 0 15px #fbbf24;
+    animation: travel-2 6s linear infinite;
+}
+
+.el-3 {
+    background-color: #60a5fa; /* blue-400 */
+    box-shadow: 0 0 15px #60a5fa;
+    animation: travel-3 6s linear infinite;
+}
+
+.loading-status-text {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: #94a3b8; /* slate-400 */
+    letter-spacing: 1px;
+}
+
+@keyframes pulse-core {
+    0% { transform: scale(1); box-shadow: 0 0 35px #c084fc, inset 0 0 15px #e9d5ff; }
+    50% { transform: scale(1.1); box-shadow: 0 0 50px #e9d5ff, inset 0 0 20px #f3e8ff; }
+    100% { transform: scale(1); box-shadow: 0 0 35px #c084fc, inset 0 0 15px #e9d5ff; }
+}
+
+@keyframes spin-path {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+@keyframes travel-1 {
+    from { transform: rotate(0deg) translateX(110px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(110px) rotate(-360deg); }
+}
+
+@keyframes travel-2 {
+    from { transform: rotate(120deg) translateX(110px) rotate(-120deg); }
+    to   { transform: rotate(480deg) translateX(110px) rotate(-480deg); }
+}
+
+@keyframes travel-3 {
+    from { transform: rotate(240deg) translateX(110px) rotate(-240deg); }
+    to   { transform: rotate(600deg) translateX(110px) rotate(-600deg); }
+}
+
 
 /* --- Results View --- */
 .results-view {
@@ -128,14 +132,9 @@
 
 .select-prompt {
     font-size: 1.1rem;
-    color: var(--text-slate-300);
+    color: #cbd5e1; /* slate-300 */
     margin-bottom: 2rem;
     font-style: italic;
-}
-
-.results-view.with-delay {
-    opacity: 0;
-    animation: fadeInResults 1s forwards 5s; /* Delay matches animation time */
 }
 
 @keyframes fadeInResults {
@@ -143,10 +142,18 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-.name-list { list-style: none; padding: 0; margin: 2rem 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+.name-list { 
+    list-style: none; 
+    padding: 0; 
+    margin: 2rem 0; 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    gap: 1.5rem; 
+}
+
 .name-item {
-    background: var(--bg-slate-800);
-    border: 1px solid var(--border-slate-700);
+    background: #1e293b; /* bg-slate-800 */
+    border: 1px solid #334155; /* border-slate-700 */
     border-radius: 12px;
     padding: 1.5rem;
     display: flex;
@@ -172,12 +179,38 @@
     font-size: 1.5rem;
     font-weight: bold;
 }
-.name-item:hover { transform: translateY(-5px); border-color: #a5b4fc; }
-.name-item span { font-size: 1.25rem; font-weight: 600; }
-.procedural-logo { flex-shrink: 0; }
-.slogan-container { margin-top: 3rem; padding: 2rem; border-top: 1px solid var(--border-slate-700); }
-.slogan-text { font-size: 2rem; font-style: italic; font-weight: 500; color: #fbcfe8; margin: 0; }
-.slogan-label { margin-top: 0.5rem; display: block; color: var(--text-slate-400); font-weight: 600; }
-.regenerate-button { display: flex; align-items: center; gap: 0.5rem; background-color: var(--bg-slate-800); color: var(--text-slate-200); padding: 0.75rem 1.5rem; border-radius: 9999px; font-size: 0.95rem; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.2s; }
-.regenerate-button:hover { background-color: var(--bg-slate-700); color: white; }
-.regenerate-button svg { width: 1.25rem; height: 1.25rem; }
+
+.name-item:hover { 
+    transform: translateY(-5px); 
+    border-color: #a5b4fc; 
+}
+
+.name-item span { 
+    font-size: 1.25rem; 
+    font-weight: 600; 
+}
+
+.procedural-logo { 
+    flex-shrink: 0; 
+}
+
+.slogan-container { 
+    margin-top: 3rem; 
+    padding: 2rem; 
+    border-top: 1px solid #334155; /* border-slate-700 */
+}
+
+.slogan-text { 
+    font-size: 2rem; 
+    font-style: italic; 
+    font-weight: 500; 
+    color: #fbcfe8; 
+    margin: 0; 
+}
+
+.slogan-label { 
+    margin-top: 0.5rem; 
+    display: block; 
+    color: #94a3b8; /* slate-400 */
+    font-weight: 600; 
+}

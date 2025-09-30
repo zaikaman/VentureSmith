@@ -28,7 +28,7 @@ const HelpCenterPage: React.FC = () => {
 
           <h3 className="font-bold mt-4">How does the AI generation work?</h3>
           <p>
-            You provide a core idea, and our platform uses advanced AI models, including Google's Gemini, to analyze your concept and generate detailed documents. The AI acts as a co-founder, automating the foundational work so you can focus on strategy and execution.
+            You provide a core idea, and our platform uses advanced AI models, primarily from OpenAI, and also leverages Google's Gemini for specific tasks to analyze your concept and generate detailed documents. The AI acts as a co-founder, automating the foundational work so you can focus on strategy and execution.
           </p>
 
            <h3 className="font-bold mt-4">What is included in the Market Research?</h3>

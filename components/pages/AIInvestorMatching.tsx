@@ -46,8 +46,12 @@ const AIInvestorMatching: React.FC<AIInvestorMatchingProps> = ({ startup }) => {
   useEffect(() => {
     if (startup.investorMatching) {
       try {
-        const parsedInvestors = JSON.parse(startup.investorMatching);
-        setInvestors(parsedInvestors);
+        const parsedData = JSON.parse(startup.investorMatching);
+        // Handle new format {investors: ...} and old raw array format for backward compatibility
+        const investorsArray = parsedData.investors || parsedData;
+        if (Array.isArray(investorsArray)) {
+          setInvestors(investorsArray);
+        }
       } catch (e) {
         console.error("Failed to parse investor matches:", e);
         toast.error("Failed to load existing investor matches.");
@@ -75,17 +79,17 @@ const AIInvestorMatching: React.FC<AIInvestorMatchingProps> = ({ startup }) => {
     setIsGenerating(true);
     setInvestors([]);
     try {
-      const [generatedInvestorsString, _] = await Promise.all([
+      const [generatedResult, _] = await Promise.all([
         generateMatchesAction({ startupId: startup._id }),
         new Promise(resolve => setTimeout(resolve, 10000)) // Longer delay for this complex task
       ]);
       
-      if (generatedInvestorsString) {
-        const parsedInvestors = JSON.parse(generatedInvestorsString);
-        setInvestors(parsedInvestors);
+      if (generatedResult && generatedResult.investors && Array.isArray(generatedResult.investors)) {
+        setInvestors(generatedResult.investors);
         toast.success("Investor matches generated successfully!");
       } else {
-        throw new Error("Received an empty response from the server.");
+        console.error("Invalid format received from AI:", generatedResult);
+        throw new Error("Received an invalid or empty response from the AI.");
       }
     } catch (err: any) {
       console.error("Investor matching failed:", err);

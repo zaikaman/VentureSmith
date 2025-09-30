@@ -57,16 +57,11 @@ const ProductHuntLaunchKit: React.FC<ProductHuntLaunchKitProps> = ({ startup }) 
   const kitData: KitData | null = useMemo(() => {
     if (!startup.productHuntKit) return null;
     try {
-      const parsedString = JSON.parse(startup.productHuntKit);
-      return JSON.parse(parsedString);
+      return JSON.parse(startup.productHuntKit);
     } catch (e) {
-      try {
-        return JSON.parse(startup.productHuntKit);
-      } catch (e2) {
-        console.error("Failed to parse Product Hunt Kit data:", e2);
-        toast.error("Failed to load existing launch kit data.");
-        return null;
-      }
+      console.error("Failed to parse Product Hunt Kit data:", e);
+      toast.error("Failed to load existing launch kit data.");
+      return null;
     }
   }, [startup.productHuntKit]);
 

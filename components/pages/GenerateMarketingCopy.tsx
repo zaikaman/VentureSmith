@@ -81,7 +81,11 @@ const GenerateMarketingCopy: React.FC<GenerateMarketingCopyProps> = ({ startup }
   useEffect(() => {
     if (startup.marketingCopy) {
       try {
-        setCopyData(JSON.parse(startup.marketingCopy));
+        let marketingCopy = JSON.parse(startup.marketingCopy);
+        if (marketingCopy.emailCampaign && typeof marketingCopy.emailCampaign.body === 'string') {
+            marketingCopy.emailCampaign.body = marketingCopy.emailCampaign.body.replace(/\\n/g, '\n');
+        }
+        setCopyData(marketingCopy);
       } catch (e) {
         console.error("Failed to parse marketing copy:", e);
         setCopyData(null);
@@ -109,8 +113,8 @@ const GenerateMarketingCopy: React.FC<GenerateMarketingCopyProps> = ({ startup }
     setIsGenerating(true);
     setCopyData(null);
     try {
-      const resultString = await generateCopyAction({ startupId: startup._id });
-      setCopyData(JSON.parse(resultString));
+      const resultData = await generateCopyAction({ startupId: startup._id });
+      setCopyData(resultData);
       toast.success("Marketing Copy generated successfully!");
     } catch (err: any) {
       console.error("Copy generation failed:", err);
@@ -171,13 +175,38 @@ const GenerateMarketingCopy: React.FC<GenerateMarketingCopyProps> = ({ startup }
             </div>
         </div>
 
+        {/* Ad Copy Section */}
+        <div className="copy-section">
+            <div className="copy-section-header"><i className="fas fa-ad"></i> Advertisement Copy</div>
+            <div className="copy-section-content ad-grid">
+                <div className="ad-card">
+                    <h4 className="card-title"><i className="fab fa-google"></i> Google Ads</h4>
+                    <div className="card-content">
+                        <p><strong>Headline 1:</strong> {copyData.adCopy.googleAds.headline1}</p>
+                        <p><strong>Headline 2:</strong> {copyData.adCopy.googleAds.headline2}</p>
+                        <p><strong>Description:</strong> {copyData.adCopy.googleAds.description}</p>
+                    </div>
+                    <CopyToClipboardButton text={`Headline 1: ${copyData.adCopy.googleAds.headline1}\nHeadline 2: ${copyData.adCopy.googleAds.headline2}\nDescription: ${copyData.adCopy.googleAds.description}`} />
+                </div>
+                <div className="ad-card">
+                    <h4 className="card-title"><i className="fab fa-facebook-f"></i> Facebook Ad</h4>
+                    <div className="card-content">
+                        <p><strong>Headline:</strong> {copyData.adCopy.facebookAd.headline}</p>
+                        <p><strong>Primary Text:</strong> {copyData.adCopy.facebookAd.primaryText}</p>
+                        <p><strong>Call to Action:</strong> {copyData.adCopy.facebookAd.callToAction}</p>
+                    </div>
+                    <CopyToClipboardButton text={`Headline: ${copyData.adCopy.facebookAd.headline}\nPrimary Text: ${copyData.adCopy.facebookAd.primaryText}\nCall to Action: ${copyData.adCopy.facebookAd.callToAction}`} />
+                </div>
+            </div>
+        </div>
+
         {/* Email Section */}
         <div className="copy-section">
             <div className="copy-section-header"><i className="fas fa-envelope"></i> Email Campaign</div>
             <div className="copy-section-content">
                 <div className="email-card">
                     <h4 className="card-title">Subject: {copyData.emailCampaign.subject}</h4>
-                     <p className="card-content">{copyData.emailCampaign.body}</p>
+                     <p className="card-content email-body-content">{copyData.emailCampaign.body}</p>
                     </div>
                 <CopyToClipboardButton text={`Subject: ${copyData.emailCampaign.subject}\n\n${copyData.emailCampaign.body}`} />
             </div>

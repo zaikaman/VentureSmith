@@ -84,8 +84,7 @@ const GenerateDevelopmentRoadmap: React.FC<GenerateDevelopmentRoadmapProps> = ({
     setIsGenerating(true);
     setRoadmapData(null);
     try {
-      const resultString = await generateRoadmapAction({ startupId: startup._id });
-      const resultData = JSON.parse(resultString);
+      const resultData = await generateRoadmapAction({ startupId: startup._id });
       setRoadmapData(resultData);
       toast.success("Development Roadmap generated successfully!");
     } catch (err: any) {

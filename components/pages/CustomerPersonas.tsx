@@ -11,7 +11,7 @@ import './CustomerPersonas.css';
 interface Persona {
   name: string;
   avatar: string;
-  demographics: string;
+  demographics: Record<string, any>;
   goals: string[];
   painPoints: string[];
   motivations: string[];
@@ -108,7 +108,16 @@ export const CustomerPersonas: React.FC<CustomerPersonasProps> = ({ startup }) =
                   <div className="persona-avatar">{persona.avatar}</div>
                   <div>
                     <h3 className="persona-name">{persona.name}</h3>
-                    <p className="persona-demographics">{persona.demographics}</p>
+                    <div className="persona-demographics">
+                      {Object.entries(persona.demographics).map(([key, value]) => {
+                        const formattedKey = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
+                        return (
+                          <span key={key} className="demographic-item">
+                            <strong>{formattedKey}:</strong> {String(value)}
+                          </span>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
                 <div className="persona-section">

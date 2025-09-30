@@ -21,7 +21,7 @@ export const SmithWorkspace: React.FC = () => {
 
       const workspace = useQuery(api.smithWorkspaces.getWorkspace, sessionId ? { id: sessionId as Id<"smithWorkspaces"> } : "skip");  const updateFilesMutation = useMutation(api.smithWorkspaces.updateWorkspaceFiles);
   const updateMessagesMutation = useMutation(api.smithWorkspaces.updateWorkspaceMessages);
-  const generateCode = useAction(api.gemini.generateCodeChanges);
+  const generateCode = useAction(api.openai.generateCodeChanges);
 
   const [files, setFiles] = useState<FileSystem | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);

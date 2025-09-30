@@ -85,8 +85,8 @@ const AIPricingStrategy: React.FC<AIPricingStrategyProps> = ({ startup }) => {
     setIsGenerating(true);
     setPricingData(null);
     try {
-      const resultString = await generatePricingAction({ startupId: startup._id });
-      setPricingData(JSON.parse(resultString));
+      const resultData = await generatePricingAction({ startupId: startup._id });
+      setPricingData(resultData);
       toast.success("Pricing Strategy generated successfully!");
     } catch (err: any) {
       console.error("Pricing generation failed:", err);
@@ -117,6 +117,23 @@ const AIPricingStrategy: React.FC<AIPricingStrategyProps> = ({ startup }) => {
   const renderResults = () => {
     if (!pricingData) return null;
 
+    const formatPrice = (priceStr: string) => {
+      const parts = String(priceStr).trim().split('/');
+      let mainPrice = parts[0].trim();
+      const period = parts[1] ? parts[1].trim() : 'one-time';
+  
+      if (mainPrice.toLowerCase() !== 'free' && mainPrice !== '0') {
+        mainPrice = `$${mainPrice.replace(/\$/g, '')}`;
+      }
+      
+      return (
+        <>
+          {mainPrice}
+          <span>/ {period}</span>
+        </>
+      );
+    };
+
     return (
       <div className="pricing-results-container">
         {pricingData.models.map((model, modelIndex) => (
@@ -129,7 +146,7 @@ const AIPricingStrategy: React.FC<AIPricingStrategyProps> = ({ startup }) => {
                   <div className="pricing-card-header">
                     {tier.isRecommended && <div className="recommend-badge">RECOMMENDED</div>}
                     <h3 className="tier-name">{tier.tierName}</h3>
-                    <div className="tier-price">{tier.price.split('/')[0]}<span>/ {tier.price.split('/')[1] || 'one-time'}</span></div>
+                    <div className="tier-price">{formatPrice(tier.price)}</div>
                     <p className="tier-description">{tier.description}</p>
                   </div>
                   <ul className="features-list">

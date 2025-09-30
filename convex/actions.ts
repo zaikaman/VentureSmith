@@ -10,7 +10,7 @@ export const getCustomerValidation = action({
     startupDescription: v.string(),
   },
   handler: async (ctx, { startupId, startupName, startupDescription }) => {
-    const result = await ctx.runAction(internal.gemini.validateProblemWithAI, {
+    const result = await ctx.runAction(internal.openai.validateProblemWithAI, {
       startupName,
       startupDescription,
     });
@@ -40,7 +40,7 @@ export const generateScorecard = action({
       brandIdentity: JSON.parse(startup.brandIdentity),
     };
 
-    const result = await ctx.runAction(internal.gemini.generateScorecardWithAI, {
+    const result = await ctx.runAction(internal.openai.generateScorecardWithAI, {
       fullContext,
     });
 
@@ -69,7 +69,7 @@ export const generateBusinessPlan = action({
       brandIdentity: JSON.parse(startup.brandIdentity),
     };
 
-    const result = await ctx.runAction(internal.gemini.generateBusinessPlanWithAI, {
+    const result = await ctx.runAction(internal.openai.generateBusinessPlanWithAI, {
       fullContext,
     });
 
@@ -98,7 +98,7 @@ export const generatePitchDeck = action({
       brandIdentity: JSON.parse(startup.brandIdentity),
     };
 
-    const result = await ctx.runAction(internal.gemini.generatePitchDeckWithAI, {
+    const result = await ctx.runAction(internal.openai.generatePitchDeckWithAI, {
       fullContext,
     });
 
@@ -119,7 +119,7 @@ export const generateMarketResearch = action({
       throw new Error("Brainstorm step must be completed first.");
     }
 
-    const refinedIdea = JSON.parse(startup.brainstormResult).refinedIdea;
+    const refinedIdea = JSON.parse(startup.brainstormResult).brainstorm.refinedIdea;
 
     const result = await ctx.runAction(api.firecrawl.performMarketAnalysis, {
       keyword: refinedIdea,
@@ -139,7 +139,7 @@ export const generateBrainstormIdea = action({
     idea: v.string(),
   },
   handler: async (ctx, { startupId, idea }) => {
-    const result = await ctx.runAction(internal.gemini.brainstormIdeaWithAI, {
+    const result = await ctx.runAction(internal.openai.brainstormIdeaWithAI, {
       idea,
     });
 
@@ -158,7 +158,7 @@ export const getMarketPulse = action({
     idea: v.string(),
   },
   handler: async (ctx, { startupId, idea }) => {
-    const result = await ctx.runAction(internal.gemini.getMarketPulseWithAI, {
+    const result = await ctx.runAction(internal.openai.getMarketPulseWithAI, {
       idea,
     });
 
@@ -182,7 +182,7 @@ export const defineMissionVision = action({
     const refinedIdea = JSON.parse(startup.brainstormResult).refinedIdea;
     const marketPulse = JSON.parse(startup.marketPulse);
 
-    const result = await ctx.runAction(internal.gemini.defineMissionVisionWithAI, {
+    const result = await ctx.runAction(internal.openai.defineMissionVisionWithAI, {
       name: startup.name,
       refinedIdea,
       marketPulse,
@@ -209,7 +209,7 @@ export const generateBrandIdentity = action({
     const keywords = JSON.parse(startup.marketPulse).relatedKeywords;
     const { mission, vision } = JSON.parse(startup.missionVision);
 
-    const result = await ctx.runAction(internal.gemini.generateBrandIdentityWithAI, {
+    const result = await ctx.runAction(internal.openai.generateBrandIdentityWithAI, {
       refinedIdea,
       keywords,
       mission,
@@ -235,7 +235,7 @@ export const generateCompetitorMatrix = action({
 
     const marketResearchSummary = JSON.parse(startup.marketResearch).summary;
 
-    const result = await ctx.runAction(internal.gemini.generateCompetitorMatrixWithAI, {
+    const result = await ctx.runAction(internal.openai.generateCompetitorMatrixWithAI, {
       startupName: startup.name,
       marketResearchSummary,
     });
@@ -265,7 +265,7 @@ export const generateCustomerPersonas = action({
       brandIdentity: JSON.parse(startup.brandIdentity),
     };
 
-    const result = await ctx.runAction(internal.gemini.generateCustomerPersonasWithAI, {
+    const result = await ctx.runAction(internal.openai.generateCustomerPersonasWithAI, {
       fullContext,
     });
 
@@ -289,7 +289,7 @@ export const generateInterviewScripts = action({
     const refinedIdea = JSON.parse(startup.brainstormResult).refinedIdea;
     const personas = JSON.parse(startup.customerPersonas).personas;
 
-    const result = await ctx.runAction(internal.gemini.generateInterviewScriptsWithAI, {
+    const result = await ctx.runAction(internal.openai.generateInterviewScriptsWithAI, {
       startupName: startup.name,
       refinedIdea,
       personas,
@@ -322,7 +322,7 @@ export const runInterviewSimulations = action({
       interviewScripts: JSON.parse(startup.interviewScripts),
     };
 
-    const result = await ctx.runAction(internal.gemini.runInterviewSimulationsWithAI, {
+    const result = await ctx.runAction(internal.openai.runInterviewSimulationsWithAI, {
       fullContext,
     });
 
@@ -357,7 +357,7 @@ export const getMentorFeedback = action({
       customerPersonas: startup.customerPersonas ? JSON.parse(startup.customerPersonas) : undefined,
     };
 
-    const result = await ctx.runAction(internal.gemini.getMentorFeedbackWithAI, {
+    const result = await ctx.runAction(internal.openai.getMentorFeedbackWithAI, {
       fullContext,
     });
 
@@ -384,7 +384,7 @@ export const generateUserFlow = action({
       personas: JSON.parse(startup.customerPersonas).personas,
     };
 
-    const result = await ctx.runAction(internal.gemini.generateUserFlowWithAI, {
+    const result = await ctx.runAction(internal.openai.generateUserFlowWithAI, {
       fullContext,
     });
 
@@ -422,7 +422,7 @@ export const generateAIWireframe = action({
       userFlow: JSON.parse(startup.userFlowDiagram),
     };
 
-    const result = await ctx.runAction(internal.gemini.generateAIWireframeWithAI, {
+    const result = await ctx.runAction(internal.openai.generateAIWireframeWithAI, {
       fullContext,
     });
 
@@ -457,7 +457,7 @@ export const generateTechStack = action({
       throw new Error("Please complete the initial brainstorming step first.");
     }
 
-    const result = await ctx.runAction(internal.gemini.generateTechStackWithAI, {
+    const result = await ctx.runAction(internal.openai.generateTechStackWithAI, {
       fullContext,
     });
 
@@ -484,7 +484,7 @@ export const createDatabaseSchema = action({
       userFlowDiagram: JSON.parse(startup.userFlowDiagram),
     };
 
-    const result = await ctx.runAction(internal.gemini.generateDatabaseSchema, {
+    const result = await ctx.runAction(internal.openai.generateDatabaseSchema, {
       fullContext,
     });
 
@@ -524,7 +524,7 @@ export const generateWebsitePrototype = action({
       aiWireframe: JSON.parse(startup.aiWireframe).code,
     };
 
-    const result = await ctx.runAction(internal.gemini.generateWebsitePrototypeWithAI, {
+    const result = await ctx.runAction(internal.openai.generateWebsitePrototypeWithAI, {
       fullContext,
     });
 
@@ -552,7 +552,7 @@ export const generateApiEndpoints = action({
       databaseSchema: JSON.parse(startup.databaseSchema),
     };
 
-    const result = await ctx.runAction(internal.gemini.generateApiEndpointsWithAI, {
+    const result = await ctx.runAction(internal.openai.generateApiEndpointsWithAI, {
       fullContext,
     });
 
@@ -581,13 +581,13 @@ export const generateDevelopmentRoadmap = action({
       apiEndpoints: startup.apiEndpoints,
     };
 
-    const result = await ctx.runAction(internal.gemini.generateDevelopmentRoadmapWithAI, {
+    const result = await ctx.runAction(internal.openai.generateDevelopmentRoadmapWithAI, {
       fullContext,
     });
 
     await ctx.runMutation(api.startups.updateDevelopmentRoadmap, {
       startupId,
-      developmentRoadmap: result,
+      developmentRoadmap: JSON.stringify(result),
     });
 
     return result;
@@ -609,13 +609,13 @@ export const estimateCloudCosts = action({
       apiEndpoints: startup.apiEndpoints,
     };
 
-    const result = await ctx.runAction(internal.gemini.estimateCloudCostsWithAI, {
+    const result = await ctx.runAction(internal.openai.estimateCloudCostsWithAI, {
       fullContext,
     });
 
     await ctx.runMutation(api.startups.updateCostEstimate, {
       startupId,
-      costEstimate: result,
+      costEstimate: JSON.stringify(result),
     });
 
     return result;
@@ -637,13 +637,13 @@ export const generatePricingStrategy = action({
       competitorMatrix: JSON.parse(startup.competitorMatrix),
     };
 
-    const result = await ctx.runAction(internal.gemini.generatePricingStrategyWithAI, {
+    const result = await ctx.runAction(internal.openai.generatePricingStrategyWithAI, {
       fullContext,
     });
 
     await ctx.runMutation(api.startups.updatePricingStrategy, {
       startupId,
-      pricingStrategy: result,
+      pricingStrategy: JSON.stringify(result),
     });
 
     return result;
@@ -666,19 +666,16 @@ export const generateMarketingCopy = action({
       pricingStrategy: JSON.parse(startup.pricingStrategy),
     };
 
-    const resultString = await ctx.runAction(internal.gemini.generateMarketingCopyWithAI, {
+    const result = await ctx.runAction(internal.openai.generateMarketingCopyWithAI, {
       fullContext,
     });
 
-    // Parse and re-stringify to ensure the data is valid JSON before saving.
-    const parsedResult = JSON.parse(resultString);
-
     await ctx.runMutation(api.startups.updateMarketingCopy, {
       startupId,
-      marketingCopy: JSON.stringify(parsedResult),
+      marketingCopy: JSON.stringify(result),
     });
 
-    return JSON.stringify(parsedResult);
+    return result;
   },
 });
 
@@ -697,13 +694,13 @@ export const generateWaitlistPage = action({
       marketingCopy: JSON.parse(startup.marketingCopy),
     };
 
-    const result = await ctx.runAction(internal.gemini.generateWaitlistPageWithAI, {
+    const result = await ctx.runAction(internal.openai.generateWaitlistPageWithAI, {
       fullContext,
     });
 
     await ctx.runMutation(api.startups.updatePreLaunchWaitlist, {
       startupId,
-      preLaunchWaitlist: result,
+      preLaunchWaitlist: JSON.stringify(result),
     });
 
     return result;
@@ -727,13 +724,13 @@ export const generateProductHuntKit = action({
       missionVision: JSON.parse(startup.missionVision),
     };
 
-    const result = await ctx.runAction(internal.gemini.generateProductHuntKitWithAI, {
+    const result = await ctx.runAction(internal.openai.generateProductHuntKitWithAI, {
       fullContext,
     });
 
     await ctx.runMutation(api.startups.updateProductHuntKit, {
       startupId,
-      productHuntKit: result,
+      productHuntKit: JSON.stringify(result),
     });
 
     return result;
@@ -755,13 +752,13 @@ export const generatePressRelease = action({
       brandIdentity: JSON.parse(startup.brandIdentity),
     };
 
-    const result = await ctx.runAction(internal.gemini.generatePressReleaseWithAI, {
+    const result = await ctx.runAction(internal.openai.generatePressReleaseWithAI, {
       fullContext,
     });
 
     await ctx.runMutation(api.startups.updatePressRelease, {
       startupId,
-      pressRelease: result,
+      pressRelease: JSON.stringify(result),
     });
 
     return result;
@@ -776,7 +773,7 @@ export const generateABTestIdeas = action({
       throw new Error("Brainstorming and Customer Personas must be completed first.");
     }
 
-    const brainstormData = JSON.parse(startup.brainstormResult);
+    const brainstormData = JSON.parse(startup.brainstormResult).brainstorm;
 
     const fullContext = {
       name: startup.name,
@@ -785,13 +782,13 @@ export const generateABTestIdeas = action({
       customerPersonas: JSON.parse(startup.customerPersonas).personas,
     };
 
-    const result = await ctx.runAction(internal.gemini.generateABTestIdeasWithAI, {
+    const result = await ctx.runAction(internal.openai.generateABTestIdeasWithAI, {
       fullContext,
     });
 
     await ctx.runMutation(api.startups.updateABTestIdeas, {
       startupId,
-      abTestIdeas: result,
+      abTestIdeas: JSON.stringify(result),
     });
 
     return result;
@@ -815,13 +812,13 @@ export const generateSeoStrategy = action({
       customerPersonas: JSON.parse(startup.customerPersonas).personas,
     };
 
-    const result = await ctx.runAction(internal.gemini.generateSeoStrategyWithAI, {
+    const result = await ctx.runAction(internal.openai.generateSeoStrategyWithAI, {
       fullContext,
     });
 
     await ctx.runMutation(api.startups.updateSeoStrategy, {
       startupId,
-      seoStrategy: result,
+      seoStrategy: JSON.stringify(result),
     });
 
     return result;
@@ -842,13 +839,13 @@ export const generateProcessMap = action({
       developmentRoadmap: JSON.parse(startup.developmentRoadmap),
     };
 
-    const result = await ctx.runAction(internal.gemini.generateProcessMapWithAI, {
+    const result = await ctx.runAction(internal.openai.generateProcessMapWithAI, {
       fullContext,
     });
 
     await ctx.runMutation(api.startups.updateProcessAutomation, {
       startupId,
-      processAutomation: result,
+      processAutomation: JSON.stringify(result),
     });
 
     return result;
@@ -869,13 +866,13 @@ export const generateJobDescriptions = action({
       developmentRoadmap: JSON.parse(startup.developmentRoadmap),
     };
 
-    const result = await ctx.runAction(internal.gemini.generateJobDescriptionsWithAI, {
+    const result = await ctx.runAction(internal.openai.generateJobDescriptionsWithAI, {
       fullContext,
     });
 
     await ctx.runMutation(api.startups.updateDraftJobDescriptions, {
       startupId,
-      draftJobDescriptions: result,
+      draftJobDescriptions: JSON.stringify(result),
     });
 
     return result;
@@ -897,7 +894,7 @@ export const generateInvestorMatches = action({
     };
 
     // 1. Generate search queries
-    const { queries } = await ctx.runAction(internal.gemini.generateInvestorSearchQueries, {
+    const { queries } = await ctx.runAction(internal.openai.generateInvestorSearchQueries, {
       fullContext,
     });
 
@@ -933,7 +930,7 @@ export const generateInvestorMatches = action({
     }
 
     // 3. Analyze scraped data and find matches
-    const result = await ctx.runAction(internal.gemini.findInvestorsWithAI, {
+    const result = await ctx.runAction(internal.openai.findInvestorsWithAI, {
       fullContext,
       scrapedData: allScrapedData,
     });
@@ -941,7 +938,7 @@ export const generateInvestorMatches = action({
     // 4. Save the result
     await ctx.runMutation(api.startups.updateInvestorMatching, {
       startupId,
-      investorMatching: result,
+      investorMatching: JSON.stringify(result),
     });
 
     return result;
@@ -1009,23 +1006,26 @@ export const generateDueDiligenceChecklist = action({
         }
         `;
 
-        const resultJsonString = await ctx.runAction(api.gemini.generateContent, {
+        const resultJson = await ctx.runAction(api.openai.generateContent, {
             prompt: jsonPrompt,
             responseMimeType: "application/json"
         });
 
-        const rawString = resultJsonString as string;
-        // Use a regex to find the JSON block, which is more robust
-        const match = rawString.match(/\{[\s\S]*\}/);
-
-        if (!match) {
-            throw new Error("AI response did not contain a valid JSON object. Raw response: " + rawString);
-        }
-
-        const cleanJsonString = match[0];
+        let originalData: any;
 
         try {
-            const originalData = JSON.parse(cleanJsonString);
+            if (typeof resultJson === 'string') {
+                const match = resultJson.match(/\{[\s\S]*\}/);
+                if (!match) {
+                    throw new Error("AI response string did not contain a valid JSON object. Raw: " + resultJson);
+                }
+                originalData = JSON.parse(match[0]);
+            } else if (typeof resultJson === 'object' && resultJson !== null) {
+                originalData = resultJson;
+            } else {
+                throw new Error("Unexpected response type from AI: " + typeof resultJson);
+            }
+
             const transformedData = {
                 ...originalData,
                 checklist: originalData.checklist.map((category: any) => ({
@@ -1042,9 +1042,9 @@ export const generateDueDiligenceChecklist = action({
                 dueDiligenceChecklist: JSON.stringify(transformedData),
             });
         } catch (e: any) {
-            console.error("Failed to parse cleaned JSON. Error:", e.message);
-            console.error("Cleaned JSON string that failed parsing was:", cleanJsonString);
-            throw new Error("Failed to parse JSON from AI after robust cleaning.");
+            console.error("Failed to process JSON response from AI. Error:", e.message);
+            console.error("Original AI response was:", JSON.stringify(resultJson, null, 2));
+            throw new Error("Failed to process JSON response from AI.");
         }
 
         return { success: true };
@@ -1095,7 +1095,7 @@ export const chatWithVentureContext = action({
       Based on all of this, provide a helpful response to the latest user message.
     `;
 
-    const responseText = await ctx.runAction(internal.gemini.generateContent, {
+    const responseText = await ctx.runAction(internal.openai.generateContent, {
       prompt,
       responseMimeType: "text/plain",
     });
@@ -1118,7 +1118,7 @@ export const generatePitchCoachAnalysis = action({
       pitchDeck: JSON.parse(startup.pitchDeck),
     };
 
-    const result = await ctx.runAction(internal.gemini.generatePitchCoachAnalysisWithAI, {
+    const result = await ctx.runAction(internal.openai.generatePitchCoachAnalysisWithAI, {
       fullContext,
     });
 
@@ -1137,7 +1137,7 @@ export const smithBuild = action({
     history: v.string(),
   },
   handler: async (ctx, { prompt, history }) => {
-    const result = await ctx.runAction(internal.gemini.smithBuildWithAI, {
+    const result = await ctx.runAction(internal.openai.smithBuildWithAI, {
       prompt,
       history,
     });
@@ -1148,7 +1148,7 @@ export const smithBuild = action({
 export const generateInitialFiles = action({
   args: { prompt: v.string() },
   handler: async (ctx, { prompt }) => {
-    const result = await ctx.runAction(internal.gemini.generateInitialFiles, { prompt });
+    const result = await ctx.runAction(internal.openai.generateInitialFiles, { prompt });
     return result;
   },
 });
