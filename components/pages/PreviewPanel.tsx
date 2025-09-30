@@ -13,83 +13,36 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ fileSystem, refreshK
 
     useEffect(() => {
         const indexHtmlFile = fileSystem['index.html'];
+        const styleCssFile = fileSystem['style.css'];
+        const scriptJsFile = fileSystem['script.js'];
+
         if (!indexHtmlFile || typeof indexHtmlFile.content !== 'string') {
             setIframeSrcDoc(null);
             return;
         }
 
-        const blobUrls = new Map<string, string>();
-        const createdUrls: string[] = [];
+        let finalHtml = indexHtmlFile.content;
 
-        // Create blob URLs for all files except index.html
-        for (const path in fileSystem) {
-            if (path !== 'index.html' && fileSystem[path].content) {
-                const file = fileSystem[path];
-                const mimeType = path.endsWith('.css') ? 'text/css' : (path.endsWith('.js') ? 'text/babel' : 'application/javascript');
-                const blob = new Blob([file.content], { type: mimeType });
-                const url = URL.createObjectURL(blob);
-                blobUrls.set(path, url);
-                createdUrls.push(url);
-            }
+        // Inline CSS
+        if (styleCssFile && styleCssFile.content) {
+            finalHtml = finalHtml.replace(/<link[^>]+href=[\"\'](style\.css)[\"\'][^>]*>/,
+                `<style>${styleCssFile.content}</style>`);
         }
-        
-        const localStorageMock = `
-<script>
-  try {
-    if (typeof window.localStorage === 'undefined') {
-      window.localStorage = {
-        _data: {},
-        setItem: function(id, val) { return this._data[id] = String(val); },
-        getItem: function(id) { return this._data.hasOwnProperty(id) ? this._data[id] : null; },
-        removeItem: function(id) { return delete this._data[id]; },
-        clear: function() { return this._data = {}; }
-      };
-    }
-  } catch (e) {
-    window.localStorage = {
-      setItem: function() {},
-      getItem: function() { return null; },
-      removeItem: function() {},
-      clear: function() {}
-    };
-  }
-</script>
-`;
 
-        let finalHtml = indexHtmlFile.content.replace('<head>', `<head>${localStorageMock}`);
-        const scriptFile = fileSystem['script.js'];
-
-        // Handle CSS files
-        finalHtml = finalHtml.replace(/(<link[^>]+href=)["']([./a-zA-Z0-9_-]+\.css)["']/g, (match, p1, p2) => {
-            const cleanedPath = p2.startsWith('./') ? p2.substring(2) : p2;
-            if (blobUrls.has(cleanedPath)) {
-                const blobUrl = blobUrls.get(cleanedPath);
-                return `${p1}"${blobUrl}"`;
+        // Inline JS
+        if (scriptJsFile && scriptJsFile.content) {
+            // Determine script type and inline accordingly
+            if (finalHtml.includes('type="text/babel"')) {
+                 finalHtml = finalHtml.replace(/<script[^>]+src=[\"\'](script\.js)[\"\'][^>]*><\/script>/, 
+                    `<script type="text/babel">${scriptJsFile.content}</script>`);
+            } else {
+                finalHtml = finalHtml.replace(/<script[^>]+src=[\"\'](script\.js)[\"\'][^>]*><\/script>/, 
+                    `<script>${scriptJsFile.content}</script>`);
             }
-            return match;
-        });
-
-        // Handle script file - inline it
-        if (scriptFile && typeof scriptFile.content === 'string') {
-            finalHtml = finalHtml.replace(/<script[^>]+src=["'][./a-zA-Z0-9_-]+\.js["'][^>]*><\/script>/, 
-                `<script type="text/babel">${scriptFile.content}</script>`);
-        } else {
-            finalHtml = finalHtml.replace(/(<script[^>]+src=)["']([./a-zA-Z0-9_-]+\.js)["']/g, (match, p1, p2) => {
-                const cleanedPath = p2.startsWith('./') ? p2.substring(2) : p2;
-                if (blobUrls.has(cleanedPath)) {
-                    const blobUrl = blobUrls.get(cleanedPath);
-                    return `${p1}"${blobUrl}"`;
-                }
-                return match;
-            });
         }
 
         setIframeSrcDoc(finalHtml);
 
-        // Cleanup blob URLs on unmount
-        return () => {
-            createdUrls.forEach(url => URL.revokeObjectURL(url));
-        };
     }, [fileSystem, refreshKey]);
 
     return (
