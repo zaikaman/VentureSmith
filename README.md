@@ -69,7 +69,8 @@ VentureSmith is built on a modern, serverless, and AI-first stack.
 graph TD
     A[User Browser] -->|React/Vite Frontend| B(Vercel);
     B -->|HTTPS Requests & Realtime Subscription| C{Convex Backend};
-    C -->|User Auth & DB Queries| D[ConvexDB];
+    C -->|DB Queries| D[ConvexDB];
+    C -->|User Auth| I[better-auth];
     C -->|AI Generation Tasks| E[OpenAI & Gemini APIs];
     C -->|Web Scraping Jobs| F[Firecrawl API];
     C -->|Transactional Emails| G[Resend API];
@@ -89,6 +90,7 @@ graph TD
         F
         G
         H
+        I
     end
 ```
 
