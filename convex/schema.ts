@@ -50,6 +50,7 @@ export default defineSchema({
     databaseSchema: v.optional(v.string()),
     databaseSchemaEvaluationUrl: v.optional(v.string()),
     apiEndpoints: v.optional(v.string()),
+    apiEndpointsEvaluationUrl: v.optional(v.string()),
     developmentRoadmap: v.optional(v.string()),
     costEstimate: v.optional(v.string()),
     pricingStrategy: v.optional(v.string()),

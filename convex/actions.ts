@@ -726,6 +726,15 @@ export const generateApiEndpoints = action({
       apiEndpoints: result,
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateApiEndpoints, { apiEndpointsResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateApiEndpointsEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });

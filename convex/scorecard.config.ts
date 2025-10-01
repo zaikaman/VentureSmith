@@ -108,4 +108,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13898",
     metricIds: ["1802", "1804", "1803"],
   },
+
+  apiEndpoints: {
+    projectId: "623",
+    testsetId: "13899",
+    metricIds: ["1805","1806","1807"],
+  },
 };
