@@ -5,6 +5,7 @@
 [![Convex](https://img.shields.io/badge/Backend-Convex-blueviolet)](https://convex.dev)
 [![React](https://img.shields.io/badge/Frontend-React-blue)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Build-Vite-purple)](https://vitejs.dev)
+[![Scorecard](https://img.shields.io/badge/Evaluation-Scorecard-orange)](https://scorecard.ai)
 
 **VentureSmith is an AI-powered web application designed to be the ultimate co-founder for aspiring entrepreneurs. It transforms a simple business idea into a comprehensive, venture-ready blueprint, automating everything from business planning to market research and prototype generation.**
 
@@ -50,6 +51,10 @@ VentureSmith is proud to be built with cutting-edge technologies from our hackat
     -   **What it does:** Manages and sends all transactional emails, such as email verification and user notifications.
     -   **Why we chose it:** A reliable and developer-friendly email API that ensures our users stay informed.
 
+-   **[Scorecard](https://scorecard.ai/): AI Quality Assurance**
+    -   **What it does:** Provides automated evaluation and testing for all AI-generated content.
+    -   **Why we chose it:** To ensure the quality and consistency of our AI-generated content, providing a feedback loop for continuous improvement.
+
 ## 🌟 Key Features & The Tech Behind Them
 
 VentureSmith is packed with AI-driven tools to cover every aspect of early-stage startup development. Here’s a look at what you can build and the technologies that make it happen.
@@ -86,6 +91,9 @@ VentureSmith is packed with AI-driven tools to cover every aspect of early-stage
 - **📞 Venture Call Agent:** An automated **Vapi** agent to handle initial customer inquiries or investor outreach simulations.
 - **🃏 Pitch Deck Generation:** Creates a professional investor pitch deck.
 
+### 🤖 AI Quality Assurance (Powered by Scorecard)
+To ensure the highest quality output, nearly all AI-generated content is automatically evaluated using **Scorecard.ai**. This provides a continuous feedback loop, helping us monitor and improve the performance of our generative models across all features.
+
 ### 🧪 Experimental Features
 - **🤖 SmithBuild (Powered by Gemini):** Go beyond wireframes. SmithBuild is an experimental AI agent that can write, read, and edit the application's frontend code to build and prototype new web pages. You can build from scratch or use your existing venture context to generate pages that are consistent with your brand and business goals. It's a glimpse into the future of AI-driven development.
 
@@ -103,6 +111,7 @@ graph TD
     C -->|Web Scraping Jobs| F[Firecrawl API];
     C -->|Transactional Emails| G[Resend API];
     C -->|Voice AI Interaction| H[Vapi API];
+    C -->|AI Quality Evaluation| J[Scorecard API];
 
     subgraph "Frontend"
         B
@@ -119,6 +128,7 @@ graph TD
         G
         H
         I
+        J
     end
 ```
 
@@ -137,6 +147,7 @@ To run VentureSmith on your local machine, follow these steps:
   - Resend
   - Vapi
   - Better-Auth
+  - Scorecard
 
 ### Installation & Setup
 
@@ -176,6 +187,7 @@ To run VentureSmith on your local machine, follow these steps:
     RESEND_API_KEY="your_resend_api_key"
     VAPI_API_KEY="your_vapi_api_key"
     BETTER_AUTH_API_KEY="your-better_auth_api_key"
+    SCORECARD_API_KEY="your_scorecard_api_key"
 
 5.  **Run the development server:**
     - The `npx convex dev` command from step 3 also runs the backend. In a new terminal, start the frontend:

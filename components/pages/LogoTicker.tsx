@@ -8,6 +8,7 @@ const logos = [
     { src: '/vapi.png', alt: 'VAPI' },
     { src: '/resend.png', alt: 'Resend' },
     { src: '/firecrawl.png', alt: 'Firecrawl' },
+    { src: '/scorecard.png', alt: 'Scorecard' },
 ];
 
 export const LogoTicker: React.FC = () => {
