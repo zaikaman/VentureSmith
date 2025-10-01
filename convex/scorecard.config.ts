@@ -48,4 +48,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13887",
     metricIds: ["1770", "1771", "1772"],
   },
+
+  competitorMatrix: {
+    projectId: "613",
+    testsetId: "13889",
+    metricIds: ["1773", "1775", "1774"],
+  },
 };

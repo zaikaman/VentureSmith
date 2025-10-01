@@ -320,6 +320,15 @@ export const generateCompetitorMatrix = action({
       competitorMatrix: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateCompetitorMatrix, { competitorMatrixResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateCompetitorMatrixEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });

@@ -18,6 +18,7 @@ import type * as openai from "../openai.js";
 import type * as scorecard from "../scorecard.js";
 import type * as setupBrainstormEvaluation from "../setupBrainstormEvaluation.js";
 import type * as setupBrandIdentityEvaluation from "../setupBrandIdentityEvaluation.js";
+import type * as setupCompetitorMatrixEvaluation from "../setupCompetitorMatrixEvaluation.js";
 import type * as setupDeepDiveMarketAnalysisEvaluation from "../setupDeepDiveMarketAnalysisEvaluation.js";
 import type * as setupMarketPulseCheckEvaluation from "../setupMarketPulseCheckEvaluation.js";
 import type * as setupMissionVisionEvaluation from "../setupMissionVisionEvaluation.js";
@@ -53,6 +54,7 @@ declare const fullApi: ApiFromModules<{
   scorecard: typeof scorecard;
   setupBrainstormEvaluation: typeof setupBrainstormEvaluation;
   setupBrandIdentityEvaluation: typeof setupBrandIdentityEvaluation;
+  setupCompetitorMatrixEvaluation: typeof setupCompetitorMatrixEvaluation;
   setupDeepDiveMarketAnalysisEvaluation: typeof setupDeepDiveMarketAnalysisEvaluation;
   setupMarketPulseCheckEvaluation: typeof setupMarketPulseCheckEvaluation;
   setupMissionVisionEvaluation: typeof setupMissionVisionEvaluation;
