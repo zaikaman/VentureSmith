@@ -156,4 +156,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13908",
     metricIds: ["1830", "1833", "1832", "1831"],
   },
+
+  identifyGrowthMetrics: {
+    projectId: "632",
+    testsetId: "13909",
+    metricIds: ["1834", "1835", "1836"],
+  },
 };

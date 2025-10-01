@@ -1025,7 +1025,16 @@ export const generateGrowthMetrics = action({
       growthMetrics: JSON.stringify(result),
     });
 
-    return { success: true };
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateIdentifyGrowthMetrics, { growthMetricsResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateIdentifyGrowthMetricsEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
+    return result;
   },
 });
 

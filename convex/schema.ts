@@ -66,6 +66,7 @@ export default defineSchema({
     pressRelease: v.optional(v.string()),
     draftPressReleaseEvaluationUrl: v.optional(v.string()),
     growthMetrics: v.optional(v.string()),
+    identifyGrowthMetricsEvaluationUrl: v.optional(v.string()),
     abTestIdeas: v.optional(v.string()),
     seoStrategy: v.optional(v.string()),
     processAutomation: v.optional(v.string()),

@@ -29,6 +29,7 @@ import type * as setupDatabaseSchemaEvaluation from "../setupDatabaseSchemaEvalu
 import type * as setupDeepDiveMarketAnalysisEvaluation from "../setupDeepDiveMarketAnalysisEvaluation.js";
 import type * as setupDevelopmentRoadmapEvaluation from "../setupDevelopmentRoadmapEvaluation.js";
 import type * as setupDraftPressReleaseEvaluation from "../setupDraftPressReleaseEvaluation.js";
+import type * as setupIdentifyGrowthMetricsEvaluation from "../setupIdentifyGrowthMetricsEvaluation.js";
 import type * as setupInterviewScriptsEvaluation from "../setupInterviewScriptsEvaluation.js";
 import type * as setupMarketPulseCheckEvaluation from "../setupMarketPulseCheckEvaluation.js";
 import type * as setupMarketingCopyEvaluation from "../setupMarketingCopyEvaluation.js";
@@ -82,6 +83,7 @@ declare const fullApi: ApiFromModules<{
   setupDeepDiveMarketAnalysisEvaluation: typeof setupDeepDiveMarketAnalysisEvaluation;
   setupDevelopmentRoadmapEvaluation: typeof setupDevelopmentRoadmapEvaluation;
   setupDraftPressReleaseEvaluation: typeof setupDraftPressReleaseEvaluation;
+  setupIdentifyGrowthMetricsEvaluation: typeof setupIdentifyGrowthMetricsEvaluation;
   setupInterviewScriptsEvaluation: typeof setupInterviewScriptsEvaluation;
   setupMarketPulseCheckEvaluation: typeof setupMarketPulseCheckEvaluation;
   setupMarketingCopyEvaluation: typeof setupMarketingCopyEvaluation;

@@ -74,7 +74,7 @@ const IdentifyGrowthMetrics: React.FC<IdentifyGrowthMetricsProps> = ({ startup, 
     setIsGenerating(true);
     try {
       const result = await generateTaskResult({ startupId, taskId: 'growthMetrics', force });
-      if (result && !result.success) {
+      if (result && result.success === false) {
         if (result.message !== "Task already completed.") {
           toast.error(result.message || "An unknown error occurred during generation.");
         }
