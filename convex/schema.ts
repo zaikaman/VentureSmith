@@ -19,6 +19,7 @@ export default defineSchema({
     businessPlan: v.optional(v.string()),
     businessPlanEvaluationUrl: v.optional(v.string()),
     website: v.optional(v.string()),
+    pitchDeckEvaluationUrl: v.optional(v.string()),
     pitchDeck: v.optional(v.string()),
     marketResearch: v.optional(v.string()),
     marketPulseEvaluationUrl: v.optional(v.string()),

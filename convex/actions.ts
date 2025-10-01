@@ -103,7 +103,8 @@ export const generatePitchDeck = action({
   args: { startupId: v.id("startups") },
   handler: async (ctx, { startupId }) => {
     const startup = await ctx.runQuery(api.startups.getStartupById, { id: startupId });
-    if (!startup || !startup.brainstormResult || !startup.marketPulse || !startup.missionVision || !startup.brandIdentity) {
+    if (!startup || !startup.brainstormResult || !startup.marketPulse || !startup.missionVision ||
+!startup.brandIdentity) {
       throw new Error("Previous steps must be completed to generate a pitch deck.");
     }
 
@@ -123,6 +124,15 @@ export const generatePitchDeck = action({
       startupId,
       pitchDeck: JSON.stringify(result),
     });
+
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluatePitchDeck, { pitchDeckResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updatePitchDeckEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
 
     return result;
   },

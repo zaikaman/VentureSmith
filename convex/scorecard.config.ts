@@ -36,4 +36,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13885",
     metricIds: ["1764", "1765", "1766"],
   },
+
+  pitchDeck: {
+    projectId: "611",
+    testsetId: "13886",
+    metricIds: ["1767", "1768", "1769"],
+  },
 };
