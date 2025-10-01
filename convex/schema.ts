@@ -24,6 +24,7 @@ export default defineSchema({
     marketPulse: v.optional(v.string()),
     missionVisionEvaluationUrl: v.optional(v.string()),
     missionVision: v.optional(v.string()),
+    brandIdentityEvaluationUrl: v.optional(v.string()),
     brandIdentity: v.optional(v.string()),
     brandNameSelected: v.optional(v.boolean()),
     competitorMatrix: v.optional(v.string()),

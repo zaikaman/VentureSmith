@@ -24,4 +24,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13883",
     metricIds: ["1758", "1759", "1760"],
   },
+
+  brandIdentity: {
+    projectId: "609",
+    testsetId: "13884",
+    metricIds: ["1761", "1762", "1763"],
+  },
 };

@@ -259,6 +259,15 @@ export const generateBrandIdentity = action({
       brandIdentity: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateBrandIdentity, { brandIdentityResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateBrandIdentityEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });

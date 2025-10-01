@@ -17,6 +17,7 @@ import type * as http from "../http.js";
 import type * as openai from "../openai.js";
 import type * as scorecard from "../scorecard.js";
 import type * as setupBrainstormEvaluation from "../setupBrainstormEvaluation.js";
+import type * as setupBrandIdentityEvaluation from "../setupBrandIdentityEvaluation.js";
 import type * as setupMarketPulseCheckEvaluation from "../setupMarketPulseCheckEvaluation.js";
 import type * as setupMissionVisionEvaluation from "../setupMissionVisionEvaluation.js";
 import type * as setupScorecard from "../setupScorecard.js";
@@ -48,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   openai: typeof openai;
   scorecard: typeof scorecard;
   setupBrainstormEvaluation: typeof setupBrainstormEvaluation;
+  setupBrandIdentityEvaluation: typeof setupBrandIdentityEvaluation;
   setupMarketPulseCheckEvaluation: typeof setupMarketPulseCheckEvaluation;
   setupMissionVisionEvaluation: typeof setupMissionVisionEvaluation;
   setupScorecard: typeof setupScorecard;
