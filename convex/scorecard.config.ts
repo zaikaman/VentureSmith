@@ -66,4 +66,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13891",
     metricIds: ["1779","1781","1780"],
   },
+
+  customerValidation: {
+    projectId: "616",
+    testsetId: "13892",
+    metricIds: ["1782", "1783", "1784"],
+  },
 };

@@ -433,6 +433,15 @@ export const runInterviewSimulations = action({
       customerValidation: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateCustomerValidation, { customerValidationResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateCustomerValidationEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });

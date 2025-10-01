@@ -37,6 +37,7 @@ export default defineSchema({
     interviewScripts: v.optional(v.string()),
     interviewScriptsEvaluationUrl: v.optional(v.string()),
     customerValidation: v.optional(v.string()),
+    customerValidationEvaluationUrl: v.optional(v.string()),
     userFlowDiagram: v.optional(v.string()),
     aiWireframe: v.optional(v.string()),
     aiMentor: v.optional(v.string()),
