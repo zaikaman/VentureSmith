@@ -162,4 +162,16 @@ export const SCORECARD_CONFIG = {
     testsetId: "13909",
     metricIds: ["1834", "1835", "1836"],
   },
+
+  brainstormABTestIdeas: {
+    projectId: "633",
+    testsetId: "13910",
+    metricIds: ["1837", "1838", "1839"],
+  },
+
+  seoStrategy: {
+    projectId: "634",
+    testsetId: "13911",
+    metricIds: ["1840", "1841", "1842"],
+  },
 };

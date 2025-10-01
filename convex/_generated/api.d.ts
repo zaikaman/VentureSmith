@@ -19,6 +19,7 @@ import type * as scorecard from "../scorecard.js";
 import type * as setupAIMentorEvaluation from "../setupAIMentorEvaluation.js";
 import type * as setupAIWireframeEvaluation from "../setupAIWireframeEvaluation.js";
 import type * as setupApiEndpointsEvaluation from "../setupApiEndpointsEvaluation.js";
+import type * as setupBrainstormABTestIdeasEvaluation from "../setupBrainstormABTestIdeasEvaluation.js";
 import type * as setupBrainstormEvaluation from "../setupBrainstormEvaluation.js";
 import type * as setupBrandIdentityEvaluation from "../setupBrandIdentityEvaluation.js";
 import type * as setupCompetitorMatrixEvaluation from "../setupCompetitorMatrixEvaluation.js";
@@ -40,6 +41,7 @@ import type * as setupPricingStrategyEvaluation from "../setupPricingStrategyEva
 import type * as setupProductHuntKitEvaluation from "../setupProductHuntKitEvaluation.js";
 import type * as setupScorecard from "../setupScorecard.js";
 import type * as setupScorecardFeatureEvaluation from "../setupScorecardFeatureEvaluation.js";
+import type * as setupSeoStrategyEvaluation from "../setupSeoStrategyEvaluation.js";
 import type * as setupTechStackEvaluation from "../setupTechStackEvaluation.js";
 import type * as setupUserFlowDiagramEvaluation from "../setupUserFlowDiagramEvaluation.js";
 import type * as setupWebsitePrototypeEvaluation from "../setupWebsitePrototypeEvaluation.js";
@@ -73,6 +75,7 @@ declare const fullApi: ApiFromModules<{
   setupAIMentorEvaluation: typeof setupAIMentorEvaluation;
   setupAIWireframeEvaluation: typeof setupAIWireframeEvaluation;
   setupApiEndpointsEvaluation: typeof setupApiEndpointsEvaluation;
+  setupBrainstormABTestIdeasEvaluation: typeof setupBrainstormABTestIdeasEvaluation;
   setupBrainstormEvaluation: typeof setupBrainstormEvaluation;
   setupBrandIdentityEvaluation: typeof setupBrandIdentityEvaluation;
   setupCompetitorMatrixEvaluation: typeof setupCompetitorMatrixEvaluation;
@@ -94,6 +97,7 @@ declare const fullApi: ApiFromModules<{
   setupProductHuntKitEvaluation: typeof setupProductHuntKitEvaluation;
   setupScorecard: typeof setupScorecard;
   setupScorecardFeatureEvaluation: typeof setupScorecardFeatureEvaluation;
+  setupSeoStrategyEvaluation: typeof setupSeoStrategyEvaluation;
   setupTechStackEvaluation: typeof setupTechStackEvaluation;
   setupUserFlowDiagramEvaluation: typeof setupUserFlowDiagramEvaluation;
   setupWebsitePrototypeEvaluation: typeof setupWebsitePrototypeEvaluation;

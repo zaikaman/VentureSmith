@@ -1070,6 +1070,15 @@ export const generateABTestIdeas = action({
       abTestIdeas: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateBrainstormABTestIdeas, { abTestIdeasResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateBrainstormABTestIdeasEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });
@@ -1099,6 +1108,15 @@ export const generateSeoStrategy = action({
       startupId,
       seoStrategy: JSON.stringify(result),
     });
+
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateSeoStrategy, { seoStrategyResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateSeoStrategyEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
 
     return result;
   },
