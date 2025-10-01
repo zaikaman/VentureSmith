@@ -77,7 +77,6 @@
     animation: fadeInResults 0.8s ease-out forwards;
     position: relative;
     overflow: hidden;
-    padding: 1rem 0;
 }
 
 .dossier-container::before,
