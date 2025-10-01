@@ -1,43 +1,120 @@
 import { v } from "convex/values";
-import { action } from "./_generated/server";
+import { action, internalQuery, internalMutation, ActionCtx } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import FirecrawlApp from "@mendable/firecrawl-js";
 
-// Helper function for waiting
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+// --- API Key Rotation Logic ---
 
-// Action to perform a general search using Firecrawl with retry logic
+// IMPORTANT: Add your Firecrawl API keys to your Convex environment variables.
+// The names should be FIRECRAWL_API_KEY, FIRECRAWL_API_KEY_2, FIRECRAWL_API_KEY_3, etc.
+const firecrawlApiKeys = [
+  process.env.FIRECRAWL_API_KEY,
+  process.env.FIRECRAWL_API_KEY_2,
+  process.env.FIRECRAWL_API_KEY_3,
+  process.env.FIRECRAWL_API_KEY_4,
+  process.env.FIRECRAWL_API_KEY_5,
+  process.env.FIRECRAWL_API_KEY_6,
+].filter((key): key is string => key !== undefined && key !== "");
+
+// Query to get the current key index from the database.
+export const getKeyState = internalQuery({
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("apiKeyState")
+      .withIndex("by_service", (q) => q.eq("service", "firecrawl"))
+      .first();
+  },
+});
+
+// Mutation to rotate to the next key index.
+export const rotateKey = internalMutation({
+  args: { lastKnownIndex: v.number() },
+  handler: async (ctx, { lastKnownIndex }) => {
+    const currentState = await ctx.db
+      .query("apiKeyState")
+      .withIndex("by_service", (q) => q.eq("service", "firecrawl"))
+      .first();
+
+    // To prevent race conditions, only update if the index is what we expect.
+    if (currentState && currentState.keyIndex !== lastKnownIndex) {
+      return; // Key was already rotated by another process.
+    }
+
+    const newIndex = (lastKnownIndex + 1) % firecrawlApiKeys.length;
+
+    if (currentState) {
+      await ctx.db.patch(currentState._id, { keyIndex: newIndex });
+      console.log(`Rotated Firecrawl API key from index ${lastKnownIndex} to ${newIndex}.`);
+    } else {
+      await ctx.db.insert("apiKeyState", {
+        service: "firecrawl",
+        keyIndex: newIndex,
+      });
+      console.log(`Initialized and set Firecrawl API key to index ${newIndex}.`);
+    }
+  },
+});
+
+/**
+ * A wrapper to execute Firecrawl operations with auto-retry and API key rotation.
+ * @param ctx The action context.
+ * @param operation A function that takes a Firecrawl client and performs an operation.
+ * @returns The result of the Firecrawl operation.
+ */
+async function withApiKeyRotation<T>(
+  ctx: ActionCtx,
+  operation: (client: FirecrawlApp) => Promise<T>
+): Promise<T> {
+  if (firecrawlApiKeys.length === 0) {
+    throw new Error("No Firecrawl API keys configured. Please set FIRECRAWL_API_KEY, FIRECRAWL_API_KEY_2, etc. in your Convex environment variables.");
+  }
+
+  const state = await ctx.runQuery(internal.firecrawl.getKeyState);
+  const initialKeyIndex = state?.keyIndex ?? 0;
+
+  // Loop to retry with the next key upon rate limit failure.
+  for (let i = 0; i < firecrawlApiKeys.length; i++) {
+    const keyIndex = (initialKeyIndex + i) % firecrawlApiKeys.length;
+    
+    const apiKey = firecrawlApiKeys[keyIndex];
+
+    try {
+      const app = new FirecrawlApp({ apiKey });
+      // If the operation succeeds, return the result.
+      return await operation(app);
+    } catch (error: any) {
+      // Check for rate limit error (e.g., HTTP 429)
+      if (error.status === 429 || (error.message && error.message.includes("Rate limit exceeded"))) {
+        console.warn(`Firecrawl rate limit hit on API key index ${keyIndex}. Rotating and retrying with the next key.`);
+        
+        // Rotate the key in the database for the next independent request.
+        await ctx.runMutation(internal.firecrawl.rotateKey, { lastKnownIndex: keyIndex });
+
+        // If this was the last key in the loop, we will exit and throw an error below.
+        // Otherwise, the loop will continue to the next iteration to auto-retry.
+      } else {
+        // For any other error, fail immediately.
+        throw error;
+      }
+    }
+  }
+
+  // If the loop completes, it means all keys failed.
+  throw new Error(`All ${firecrawlApiKeys.length} Firecrawl API keys are rate-limited. Please wait or check your keys.`);
+}
+
+
+// --- Original Actions Refactored ---
+
+// Action to perform a general search using Firecrawl
 export const search = action({
   args: { keyword: v.string() },
   handler: async (ctx, { keyword }) => {
-    const apiKey = process.env.FIRECRAWL_API_KEY;
-    if (!apiKey) {
-      throw new Error("FIRECRAWL_API_KEY environment variable not set.");
-    }
-
-    const app = new FirecrawlApp({ apiKey });
-    const maxRetries = 3;
-    const retryDelay = 60000; // 60 seconds
-
-    for (let i = 0; i < maxRetries; i++) {
-      try {
-        const searchResult = await app.search(keyword, {});
-        console.log(`Firecrawl API Result for keyword '${keyword}':`, searchResult);
-        return searchResult?.web || []; // Success
-      } catch (error: any) {
-        if (error.message && (error.message.includes("Rate limit exceeded") || error.message.includes("AbortError"))) {
-          if (i < maxRetries - 1) {
-            console.warn(`Rate limit hit for keyword '${keyword}'. Retrying in ${retryDelay / 1000}s... (Attempt ${i + 1}/${maxRetries})`);
-            await wait(retryDelay);
-          } else {
-            throw new Error(`Failed to fetch data for '${keyword}' after ${maxRetries} attempts due to rate limiting.`);
-          }
-        } else {
-          throw error;
-        }
-      }
-    }
-    throw new Error("Search action failed unexpectedly.");
+    return withApiKeyRotation(ctx, async (app) => {
+      const searchResult = await app.search(keyword, {});
+      console.log(`Firecrawl API Result for keyword '${keyword}':`, searchResult);
+      return searchResult?.web || [];
+    });
   },
 });
 
@@ -45,36 +122,9 @@ export const search = action({
 export const performMarketAnalysis = action({
     args: { keyword: v.string() },
     handler: async (ctx, { keyword }) => {
-        const apiKey = process.env.FIRECRAWL_API_KEY;
-        if (!apiKey) {
-          throw new Error("FIRECRAWL_API_KEY environment variable not set.");
-        }
-        const app = new FirecrawlApp({ apiKey });
-
         const fullQuery = `in-depth market analysis for a startup idea: ${keyword}`;
         
-        const maxRetries = 3;
-        const retryDelay = 30000; // 30 seconds
-        let searchResults;
-
-        for (let i = 0; i < maxRetries; i++) {
-          try {
-            searchResults = await app.search(fullQuery);
-            break; // Success, exit loop
-          } catch (error: any) {
-            console.warn(`Firecrawl search attempt ${i + 1}/${maxRetries} failed. Error: ${error.message}. Retrying in ${retryDelay / 1000}s...`);
-            if (i < maxRetries - 1) {
-              await wait(retryDelay); // Wait before retrying
-            } else {
-              // All retries failed
-              console.error(`All Firecrawl search retries failed for query: "${fullQuery}".`);
-              return {
-                summary: `We encountered a persistent error after ${maxRetries} attempts while searching for information. The error was: ${error.message}. Please try again later.`,
-                sources: [],
-              };
-            }
-          }
-        }
+        const searchResults = await withApiKeyRotation(ctx, (app) => app.search(fullQuery));
         
         const topUrls = (searchResults?.web || []).slice(0, 5).map((res: any) => res.url);
 
@@ -86,8 +136,10 @@ export const performMarketAnalysis = action({
             };
         }
 
-        // 2. Scrape each URL individually
-        const scrapePromises = topUrls.map((url: string) => app.scrape(url));
+        // Scrape each URL individually with API key rotation for each scrape
+        const scrapePromises = topUrls.map((url: string) => 
+            withApiKeyRotation(ctx, (app) => app.scrape(url))
+        );
         const scrapeResults = await Promise.allSettled(scrapePromises);
 
         const scrapedContent = scrapeResults
@@ -102,7 +154,7 @@ export const performMarketAnalysis = action({
             };
         }
 
-        // 3. Create smaller content chunks from scraped pages to avoid token limits
+        // Create smaller content chunks from scraped pages to avoid token limits
         const MAX_CONTENT_LENGTH = 250000; // Safe character limit per chunk
         const contentChunks: { url: string, markdown: string, title: string }[][] = [];
         
@@ -154,7 +206,7 @@ Your tone should be objective, professional, and data-driven.`;
         
         const summary = await ctx.runAction(internal.openai.generateContent, { prompt: finalSummaryPrompt, responseMimeType: "text/plain" });
 
-        // 4. Format sources
+        // Format sources
         const sources = scrapedContent.map((result: any) => ({
             title: result.metadata.title,
             url: result.metadata.sourceURL,
@@ -166,21 +218,14 @@ Your tone should be objective, professional, and data-driven.`;
 
 export const scrape = action({
   args: { url: v.string() },
-  handler: async (_, { url }) => {
-    const apiKey = process.env.FIRECRAWL_API_KEY;
-    if (!apiKey) {
-      throw new Error("FIRECRAWL_API_KEY environment variable not set.");
-    }
-    const app = new FirecrawlApp({ apiKey });
-    
+  handler: async (ctx, { url }) => {
     console.log(`Scraping URL with Firecrawl: ${url}`);
-
-    // Using a try-catch to handle potential scraping failures for a single URL
+    // Using a try-catch here is optional as withApiKeyRotation handles it,
+    // but it can be useful for specific logging per scrape call.
     try {
-      const scrapedData = await app.scrape(url);
-      return scrapedData;
+      return await withApiKeyRotation(ctx, (app) => app.scrape(url));
     } catch (error: any) {
-      console.error(`Failed to scrape ${url}. Error: ${error.message}`);
+      console.error(`Failed to scrape ${url} after trying all API keys. Error: ${error.message}`);
       return null; // Return null to indicate failure for this URL
     }
   },

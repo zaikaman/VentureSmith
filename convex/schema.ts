@@ -90,4 +90,9 @@ export default defineSchema({
     files: v.any(),
     messages: v.any(),
   }).index("by_userId", ["userId"]),
+
+  apiKeyState: defineTable({
+    service: v.string(),
+    keyIndex: v.number(),
+  }).index("by_service", ["service"]),
 });
