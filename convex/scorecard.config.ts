@@ -174,4 +174,34 @@ export const SCORECARD_CONFIG = {
     testsetId: "13911",
     metricIds: ["1840", "1841", "1842"],
   },
+
+  processAutomation: {
+    projectId: "636",
+    testsetId: "13914",
+    metricIds: ["1847", "1848", "1849"],
+  },
+
+  draftJobDescriptions: {
+    projectId: "638",
+    testsetId: "13915",
+    metricIds: ["1850", "1852", "1851"],
+  },
+
+  investorMatching: {
+    projectId: "639",
+    testsetId: "13916",
+    metricIds: ["1853", "1854", "1855"],
+  },
+
+  dueDiligenceChecklist: {
+    projectId: "640",
+    testsetId: "13917",
+    metricIds: ["1856", "1858", "1857"],
+  },
+
+  aiPitchCoach: {
+    projectId: "641",
+    testsetId: "13918",
+    metricIds: ["1859", "1861", "1860"],
+  },
 };

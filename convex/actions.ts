@@ -1145,6 +1145,15 @@ export const generateProcessMap = action({
       processAutomation: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateProcessAutomation, { processAutomationResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateProcessAutomationEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });
@@ -1171,6 +1180,15 @@ export const generateJobDescriptions = action({
       startupId,
       draftJobDescriptions: JSON.stringify(result),
     });
+
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateDraftJobDescriptions, { draftJobDescriptionsResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateDraftJobDescriptionsEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
 
     return result;
   },
@@ -1238,6 +1256,15 @@ export const generateInvestorMatches = action({
       investorMatching: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateInvestorMatching, { investorMatchingResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateInvestorMatchingEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });
@@ -1303,12 +1330,13 @@ export const generateDueDiligenceChecklist = action({
         }
         `;
 
-        const resultJson = await ctx.runAction(api.openai.generateContent, {
+        const resultJson = await ctx.runAction(internal.openai.generateContent, {
             prompt: jsonPrompt,
             responseMimeType: "application/json"
         });
 
         let originalData: any;
+        let transformedData: any;
 
         try {
             if (typeof resultJson === 'string') {
@@ -1323,7 +1351,7 @@ export const generateDueDiligenceChecklist = action({
                 throw new Error("Unexpected response type from AI: " + typeof resultJson);
             }
 
-            const transformedData = {
+            transformedData = {
                 ...originalData,
                 checklist: originalData.checklist.map((category: any) => ({
                     ...category,
@@ -1338,13 +1366,23 @@ export const generateDueDiligenceChecklist = action({
                 startupId: args.startupId,
                 dueDiligenceChecklist: JSON.stringify(transformedData),
             });
+
+            // Add Scorecard evaluation
+            const url = await ctx.runAction(internal.scorecard.evaluateDueDiligenceChecklist, { dueDiligenceChecklistResult: transformedData });
+            if (url) {
+              await ctx.runMutation(api.startups.updateDueDiligenceChecklistEvaluationUrl, {
+                startupId: args.startupId,
+                url: url,
+              });
+            }
+
         } catch (e: any) {
             console.error("Failed to process JSON response from AI. Error:", e.message);
             console.error("Original AI response was:", JSON.stringify(resultJson, null, 2));
             throw new Error("Failed to process JSON response from AI.");
         }
 
-        return { success: true };
+        return transformedData;
     },
 });
 
@@ -1423,6 +1461,15 @@ export const generatePitchCoachAnalysis = action({
       startupId,
       aiPitchCoach: JSON.stringify(result),
     });
+
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateAIPitchCoach, { aiPitchCoachResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateAIPitchCoachEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
 
     return result;
   },

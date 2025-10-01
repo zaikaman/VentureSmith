@@ -1028,3 +1028,178 @@ export const evaluateSeoStrategy = internalAction({
     }
   },
 });
+
+export const evaluateProcessAutomation = internalAction({
+  args: { processAutomationResult: v.any() },
+  handler: async (_, { processAutomationResult }) => {
+    console.log("--- Kicking off Process Automation evaluation ---");
+    const scorecardApiKey = process.env.SCORECARD_API_KEY;
+    if (!scorecardApiKey) {
+      console.error("SCORECARD_API_KEY is not set. Skipping evaluation.");
+      return null;
+    }
+
+    const { processAutomation: config } = SCORECARD_CONFIG;
+    if (!config || !config.projectId || !config.testsetId || !config.metricIds?.length) {
+        console.error("Scorecard configuration for 'processAutomation' is missing.");
+        return null;
+    }
+
+    try {
+      const client = new Scorecard({ apiKey: scorecardApiKey });
+      const run = await runAndEvaluate(client, {
+        projectId: config.projectId,
+        testsetId: config.testsetId,
+        metricIds: config.metricIds,
+        system: () => runSystem(processAutomationResult),
+      });
+
+      console.log(`--- Scorecard.ai Run Started (URL: ${run.url}) ---`);
+      return run.url;
+
+    } catch (error: any) {
+      console.error("Failed to start Scorecard.ai evaluation.", error.message);
+      return null;
+    }
+  },
+});
+
+export const evaluateDraftJobDescriptions = internalAction({
+  args: { draftJobDescriptionsResult: v.any() },
+  handler: async (_, { draftJobDescriptionsResult }) => {
+    console.log("--- Kicking off Draft Job Descriptions evaluation ---");
+    const scorecardApiKey = process.env.SCORECARD_API_KEY;
+    if (!scorecardApiKey) {
+      console.error("SCORECARD_API_KEY is not set. Skipping evaluation.");
+      return null;
+    }
+
+    const { draftJobDescriptions: config } = SCORECARD_CONFIG;
+    if (!config || !config.projectId || !config.testsetId || !config.metricIds?.length) {
+        console.error("Scorecard configuration for 'draftJobDescriptions' is missing.");
+        return null;
+    }
+
+    try {
+      const client = new Scorecard({ apiKey: scorecardApiKey });
+      const run = await runAndEvaluate(client, {
+        projectId: config.projectId,
+        testsetId: config.testsetId,
+        metricIds: config.metricIds,
+        system: () => runSystem(draftJobDescriptionsResult),
+      });
+
+      console.log(`--- Scorecard.ai Run Started (URL: ${run.url}) ---`);
+      return run.url;
+
+    } catch (error: any) {
+      console.error("Failed to start Scorecard.ai evaluation.", error.message);
+      return null;
+    }
+  },
+});
+
+export const evaluateInvestorMatching = internalAction({
+  args: { investorMatchingResult: v.any() },
+  handler: async (_, { investorMatchingResult }) => {
+    console.log("--- Kicking off AI Investor Matching evaluation ---");
+    const scorecardApiKey = process.env.SCORECARD_API_KEY;
+    if (!scorecardApiKey) {
+      console.error("SCORECARD_API_KEY is not set. Skipping evaluation.");
+      return null;
+    }
+
+    const { investorMatching: config } = SCORECARD_CONFIG;
+    if (!config || !config.projectId || !config.testsetId || !config.metricIds?.length) {
+        console.error("Scorecard configuration for 'investorMatching' is missing.");
+        return null;
+    }
+
+    try {
+      const client = new Scorecard({ apiKey: scorecardApiKey });
+      const run = await runAndEvaluate(client, {
+        projectId: config.projectId,
+        testsetId: config.testsetId,
+        metricIds: config.metricIds,
+        system: () => runSystem(investorMatchingResult),
+      });
+
+      console.log(`--- Scorecard.ai Run Started (URL: ${run.url}) ---`);
+      return run.url;
+
+    } catch (error: any) {
+      console.error("Failed to start Scorecard.ai evaluation.", error.message);
+      return null;
+    }
+  },
+});
+
+export const evaluateDueDiligenceChecklist = internalAction({
+  args: { dueDiligenceChecklistResult: v.any() },
+  handler: async (_, { dueDiligenceChecklistResult }) => {
+    console.log("--- Kicking off Due Diligence Checklist evaluation ---");
+    const scorecardApiKey = process.env.SCORECARD_API_KEY;
+    if (!scorecardApiKey) {
+      console.error("SCORECARD_API_KEY is not set. Skipping evaluation.");
+      return null;
+    }
+
+    const { dueDiligenceChecklist: config } = SCORECARD_CONFIG;
+    if (!config || !config.projectId || !config.testsetId || !config.metricIds?.length) {
+        console.error("Scorecard configuration for 'dueDiligenceChecklist' is missing.");
+        return null;
+    }
+
+    try {
+      const client = new Scorecard({ apiKey: scorecardApiKey });
+      const run = await runAndEvaluate(client, {
+        projectId: config.projectId,
+        testsetId: config.testsetId,
+        metricIds: config.metricIds,
+        system: () => runSystem(dueDiligenceChecklistResult),
+      });
+
+      console.log(`--- Scorecard.ai Run Started (URL: ${run.url}) ---`);
+      return run.url;
+
+    } catch (error: any) {
+      console.error("Failed to start Scorecard.ai evaluation.", error.message);
+      return null;
+    }
+  },
+});
+
+export const evaluateAIPitchCoach = internalAction({
+  args: { aiPitchCoachResult: v.any() },
+  handler: async (_, { aiPitchCoachResult }) => {
+    console.log("--- Kicking off AI Pitch Coach evaluation ---");
+    const scorecardApiKey = process.env.SCORECARD_API_KEY;
+    if (!scorecardApiKey) {
+      console.error("SCORECARD_API_KEY is not set. Skipping evaluation.");
+      return null;
+    }
+
+    const { aiPitchCoach: config } = SCORECARD_CONFIG;
+    if (!config || !config.projectId || !config.testsetId || !config.metricIds?.length) {
+        console.error("Scorecard configuration for 'aiPitchCoach' is missing.");
+        return null;
+    }
+
+    try {
+      const client = new Scorecard({ apiKey: scorecardApiKey });
+      const run = await runAndEvaluate(client, {
+        projectId: config.projectId,
+        testsetId: config.testsetId,
+        metricIds: config.metricIds,
+        system: () => runSystem(aiPitchCoachResult),
+      });
+
+      console.log(`--- Scorecard.ai Run Started (URL: ${run.url}) ---`);
+      return run.url;
+
+    } catch (error: any) {
+      console.error("Failed to start Scorecard.ai evaluation.", error.message);
+      return null;
+    }
+  },
+});
