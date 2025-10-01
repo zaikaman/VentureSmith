@@ -15,6 +15,7 @@ export default defineSchema({
     brainstormResult: v.optional(v.string()),
     brainstormEvaluationUrl: v.optional(v.string()),
     dashboard: v.optional(v.string()),
+    scorecardEvaluationUrl: v.optional(v.string()),
     businessPlan: v.optional(v.string()),
     businessPlanEvaluationUrl: v.optional(v.string()),
     website: v.optional(v.string()),

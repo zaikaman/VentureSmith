@@ -49,6 +49,15 @@ export const generateScorecard = action({
       scorecard: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateScorecardFeature, { scorecardResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateScorecardEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });

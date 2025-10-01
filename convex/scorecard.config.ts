@@ -30,4 +30,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13884",
     metricIds: ["1761", "1762", "1763"],
   },
+
+  scorecard: {
+    projectId: "610",
+    testsetId: "13885",
+    metricIds: ["1764", "1765", "1766"],
+  },
 };

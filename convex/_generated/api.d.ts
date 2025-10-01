@@ -21,6 +21,7 @@ import type * as setupBrandIdentityEvaluation from "../setupBrandIdentityEvaluat
 import type * as setupMarketPulseCheckEvaluation from "../setupMarketPulseCheckEvaluation.js";
 import type * as setupMissionVisionEvaluation from "../setupMissionVisionEvaluation.js";
 import type * as setupScorecard from "../setupScorecard.js";
+import type * as setupScorecardFeatureEvaluation from "../setupScorecardFeatureEvaluation.js";
 import type * as smithWorkspaces from "../smithWorkspaces.js";
 import type * as startups from "../startups.js";
 import type * as users from "../users.js";
@@ -53,6 +54,7 @@ declare const fullApi: ApiFromModules<{
   setupMarketPulseCheckEvaluation: typeof setupMarketPulseCheckEvaluation;
   setupMissionVisionEvaluation: typeof setupMissionVisionEvaluation;
   setupScorecard: typeof setupScorecard;
+  setupScorecardFeatureEvaluation: typeof setupScorecardFeatureEvaluation;
   smithWorkspaces: typeof smithWorkspaces;
   startups: typeof startups;
   users: typeof users;
