@@ -58,6 +58,7 @@ export default defineSchema({
     pricingStrategy: v.optional(v.string()),
     pricingStrategyEvaluationUrl: v.optional(v.string()),
     marketingCopy: v.optional(v.string()),
+    marketingCopyEvaluationUrl: v.optional(v.string()),
     preLaunchWaitlist: v.optional(v.string()),
     productHuntKit: v.optional(v.string()),
     pressRelease: v.optional(v.string()),

@@ -132,4 +132,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13904",
     metricIds: ["1818","1820","1819"],
   },
+
+  marketingCopy: {
+    projectId: "628",
+    testsetId: "13905",
+    metricIds: ["1821", "1822", "1823"],
+  },
 };

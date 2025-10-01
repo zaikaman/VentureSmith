@@ -876,6 +876,15 @@ export const generateMarketingCopy = action({
       marketingCopy: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateMarketingCopy, { marketingCopyResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateMarketingCopyEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });
