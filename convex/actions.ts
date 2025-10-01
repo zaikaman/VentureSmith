@@ -801,6 +801,15 @@ export const estimateCloudCosts = action({
       costEstimate: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateCostEstimate, { costEstimateResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateCostEstimateEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });

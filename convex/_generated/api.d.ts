@@ -22,6 +22,7 @@ import type * as setupApiEndpointsEvaluation from "../setupApiEndpointsEvaluatio
 import type * as setupBrainstormEvaluation from "../setupBrainstormEvaluation.js";
 import type * as setupBrandIdentityEvaluation from "../setupBrandIdentityEvaluation.js";
 import type * as setupCompetitorMatrixEvaluation from "../setupCompetitorMatrixEvaluation.js";
+import type * as setupCostEstimateEvaluation from "../setupCostEstimateEvaluation.js";
 import type * as setupCustomerPersonasEvaluation from "../setupCustomerPersonasEvaluation.js";
 import type * as setupCustomerValidationEvaluation from "../setupCustomerValidationEvaluation.js";
 import type * as setupDatabaseSchemaEvaluation from "../setupDatabaseSchemaEvaluation.js";
@@ -69,6 +70,7 @@ declare const fullApi: ApiFromModules<{
   setupBrainstormEvaluation: typeof setupBrainstormEvaluation;
   setupBrandIdentityEvaluation: typeof setupBrandIdentityEvaluation;
   setupCompetitorMatrixEvaluation: typeof setupCompetitorMatrixEvaluation;
+  setupCostEstimateEvaluation: typeof setupCostEstimateEvaluation;
   setupCustomerPersonasEvaluation: typeof setupCustomerPersonasEvaluation;
   setupCustomerValidationEvaluation: typeof setupCustomerValidationEvaluation;
   setupDatabaseSchemaEvaluation: typeof setupDatabaseSchemaEvaluation;

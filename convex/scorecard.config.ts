@@ -120,4 +120,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13900",
     metricIds: ["1808", "1809", "1810"],
   },
+
+  costEstimate: {
+    projectId: "625",
+    testsetId: "13901",
+    metricIds: ["1811","1813","1812"],
+  },
 };

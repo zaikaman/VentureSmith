@@ -54,6 +54,7 @@ export default defineSchema({
     developmentRoadmap: v.optional(v.string()),
     developmentRoadmapEvaluationUrl: v.optional(v.string()),
     costEstimate: v.optional(v.string()),
+    costEstimateEvaluationUrl: v.optional(v.string()),
     pricingStrategy: v.optional(v.string()),
     marketingCopy: v.optional(v.string()),
     preLaunchWaitlist: v.optional(v.string()),
