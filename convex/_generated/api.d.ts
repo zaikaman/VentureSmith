@@ -18,6 +18,7 @@ import type * as openai from "../openai.js";
 import type * as scorecard from "../scorecard.js";
 import type * as setupBrainstormEvaluation from "../setupBrainstormEvaluation.js";
 import type * as setupMarketPulseCheckEvaluation from "../setupMarketPulseCheckEvaluation.js";
+import type * as setupMissionVisionEvaluation from "../setupMissionVisionEvaluation.js";
 import type * as setupScorecard from "../setupScorecard.js";
 import type * as smithWorkspaces from "../smithWorkspaces.js";
 import type * as startups from "../startups.js";
@@ -48,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   scorecard: typeof scorecard;
   setupBrainstormEvaluation: typeof setupBrainstormEvaluation;
   setupMarketPulseCheckEvaluation: typeof setupMarketPulseCheckEvaluation;
+  setupMissionVisionEvaluation: typeof setupMissionVisionEvaluation;
   setupScorecard: typeof setupScorecard;
   smithWorkspaces: typeof smithWorkspaces;
   startups: typeof startups;

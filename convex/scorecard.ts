@@ -1,3 +1,4 @@
+
 import { internalAction } from "./_generated/server";
 import Scorecard, { runAndEvaluate } from "scorecard-ai";
 import { v } from "convex/values";
@@ -39,7 +40,6 @@ export const evaluateBusinessPlan = internalAction({
       return run.url;
 
     } catch (error: any) {
-      // Fail silently in the background if there's a network issue.
       console.error("Failed to start Scorecard.ai evaluation.", error.message);
       return null;
     }
@@ -75,7 +75,6 @@ export const evaluateBrainstormIdea = internalAction({
       return run.url;
 
     } catch (error: any) {
-      // Fail silently in the background if there's a network issue.
       console.error("Failed to start Scorecard.ai brainstorm evaluation.", error.message);
       return null;
     }
@@ -111,7 +110,41 @@ export const evaluateMarketPulse = internalAction({
       return run.url;
 
     } catch (error: any) {
-      // Fail silently in the background if there's a network issue.
+      console.error("Failed to start Scorecard.ai evaluation.", error.message);
+      return null;
+    }
+  },
+});
+
+export const evaluateMissionVision = internalAction({
+  args: { missionVisionResult: v.any() },
+  handler: async (_, { missionVisionResult }) => {
+    console.log("--- Kicking off Mission & Vision evaluation ---");
+    const scorecardApiKey = process.env.SCORECARD_API_KEY;
+    if (!scorecardApiKey) {
+      console.error("SCORECARD_API_KEY is not set. Skipping evaluation.");
+      return null;
+    }
+
+    const { missionVision: config } = SCORECARD_CONFIG;
+    if (!config || !config.projectId || !config.testsetId || !config.metricIds?.length) {
+        console.error("Scorecard configuration for 'missionVision' is missing.");
+        return null;
+    }
+
+    try {
+      const client = new Scorecard({ apiKey: scorecardApiKey });
+      const run = await runAndEvaluate(client, {
+        projectId: config.projectId,
+        testsetId: config.testsetId,
+        metricIds: config.metricIds,
+        system: () => runSystem(missionVisionResult),
+      });
+
+      console.log(`--- Scorecard.ai Run Started (URL: ${run.url}) ---`);
+      return run.url;
+
+    } catch (error: any) {
       console.error("Failed to start Scorecard.ai evaluation.", error.message);
       return null;
     }

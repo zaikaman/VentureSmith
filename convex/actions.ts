@@ -222,6 +222,15 @@ export const defineMissionVision = action({
       missionVision: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateMissionVision, { missionVisionResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateMissionVisionEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });

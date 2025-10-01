@@ -18,4 +18,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13882",
     metricIds: ["1755", "1757", "1756"],
   },
+
+  missionVision: {
+    projectId: "608",
+    testsetId: "13883",
+    metricIds: ["1758", "1759", "1760"],
+  },
 };
