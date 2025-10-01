@@ -989,6 +989,15 @@ export const generatePressRelease = action({
       pressRelease: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateDraftPressRelease, { pressReleaseResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateDraftPressReleaseEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });

@@ -64,6 +64,7 @@ export default defineSchema({
     productHuntKit: v.optional(v.string()),
     productHuntKitEvaluationUrl: v.optional(v.string()),
     pressRelease: v.optional(v.string()),
+    draftPressReleaseEvaluationUrl: v.optional(v.string()),
     growthMetrics: v.optional(v.string()),
     abTestIdeas: v.optional(v.string()),
     seoStrategy: v.optional(v.string()),

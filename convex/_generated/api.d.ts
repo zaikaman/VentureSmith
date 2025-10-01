@@ -28,6 +28,7 @@ import type * as setupCustomerValidationEvaluation from "../setupCustomerValidat
 import type * as setupDatabaseSchemaEvaluation from "../setupDatabaseSchemaEvaluation.js";
 import type * as setupDeepDiveMarketAnalysisEvaluation from "../setupDeepDiveMarketAnalysisEvaluation.js";
 import type * as setupDevelopmentRoadmapEvaluation from "../setupDevelopmentRoadmapEvaluation.js";
+import type * as setupDraftPressReleaseEvaluation from "../setupDraftPressReleaseEvaluation.js";
 import type * as setupInterviewScriptsEvaluation from "../setupInterviewScriptsEvaluation.js";
 import type * as setupMarketPulseCheckEvaluation from "../setupMarketPulseCheckEvaluation.js";
 import type * as setupMarketingCopyEvaluation from "../setupMarketingCopyEvaluation.js";
@@ -80,6 +81,7 @@ declare const fullApi: ApiFromModules<{
   setupDatabaseSchemaEvaluation: typeof setupDatabaseSchemaEvaluation;
   setupDeepDiveMarketAnalysisEvaluation: typeof setupDeepDiveMarketAnalysisEvaluation;
   setupDevelopmentRoadmapEvaluation: typeof setupDevelopmentRoadmapEvaluation;
+  setupDraftPressReleaseEvaluation: typeof setupDraftPressReleaseEvaluation;
   setupInterviewScriptsEvaluation: typeof setupInterviewScriptsEvaluation;
   setupMarketPulseCheckEvaluation: typeof setupMarketPulseCheckEvaluation;
   setupMarketingCopyEvaluation: typeof setupMarketingCopyEvaluation;

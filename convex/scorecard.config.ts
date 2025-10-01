@@ -150,4 +150,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13907",
     metricIds: ["1827", "1829", "1828"],
   },
+
+  draftPressRelease: {
+    projectId: "631",
+    testsetId: "13908",
+    metricIds: ["1830", "1833", "1832", "1831"],
+  },
 };
