@@ -48,6 +48,7 @@ export default defineSchema({
     techStack: v.optional(v.string()),
     techStackEvaluationUrl: v.optional(v.string()),
     databaseSchema: v.optional(v.string()),
+    databaseSchemaEvaluationUrl: v.optional(v.string()),
     apiEndpoints: v.optional(v.string()),
     developmentRoadmap: v.optional(v.string()),
     costEstimate: v.optional(v.string()),

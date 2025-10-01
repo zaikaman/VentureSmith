@@ -102,4 +102,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13897",
     metricIds: ["1799", "1801", "1800"],
   },
+
+  databaseSchema: {
+    projectId: "622",
+    testsetId: "13898",
+    metricIds: ["1802", "1804", "1803"],
+  },
 };

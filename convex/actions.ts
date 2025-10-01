@@ -640,6 +640,15 @@ export const createDatabaseSchema = action({
       databaseSchema: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateDatabaseSchema, { databaseSchemaResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateDatabaseSchemaEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });
