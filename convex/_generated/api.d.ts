@@ -16,6 +16,7 @@ import type * as firecrawl from "../firecrawl.js";
 import type * as http from "../http.js";
 import type * as openai from "../openai.js";
 import type * as scorecard from "../scorecard.js";
+import type * as setupAIMentorEvaluation from "../setupAIMentorEvaluation.js";
 import type * as setupBrainstormEvaluation from "../setupBrainstormEvaluation.js";
 import type * as setupBrandIdentityEvaluation from "../setupBrandIdentityEvaluation.js";
 import type * as setupCompetitorMatrixEvaluation from "../setupCompetitorMatrixEvaluation.js";
@@ -55,6 +56,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   openai: typeof openai;
   scorecard: typeof scorecard;
+  setupAIMentorEvaluation: typeof setupAIMentorEvaluation;
   setupBrainstormEvaluation: typeof setupBrainstormEvaluation;
   setupBrandIdentityEvaluation: typeof setupBrandIdentityEvaluation;
   setupCompetitorMatrixEvaluation: typeof setupCompetitorMatrixEvaluation;

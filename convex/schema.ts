@@ -41,6 +41,7 @@ export default defineSchema({
     userFlowDiagram: v.optional(v.string()),
     aiWireframe: v.optional(v.string()),
     aiMentor: v.optional(v.string()),
+    aiMentorEvaluationUrl: v.optional(v.string()),
     techStack: v.optional(v.string()),
     databaseSchema: v.optional(v.string()),
     apiEndpoints: v.optional(v.string()),

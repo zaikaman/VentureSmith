@@ -72,4 +72,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13892",
     metricIds: ["1782", "1783", "1784"],
   },
+
+  aiMentor: {
+    projectId: "617",
+    testsetId: "13893",
+    metricIds: ["1786","1788","1787"],
+  },
 };
