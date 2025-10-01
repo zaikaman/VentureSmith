@@ -13,7 +13,7 @@ This project was built for a hackathon, showcasing the power of modern AI and se
 
 ---
 
-### ✨ [Live Demo](https://venturesmith.vercel.app/) | 🎬 [Video Walkthrough](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+### ✨ [Live Demo](https://venturesmith.vercel.app/) | 🎬 [Video Walkthrough](https://youtu.be/hyOI90M1LiE)
 
 ---
 
@@ -204,30 +204,30 @@ The codebase is organized into logical directories:
 /
 ├── convex/                 # Convex backend: serverless functions, schema, and auth
 │   ├── actions.ts          # Core backend actions callable from the client
-│   ├── openai.ts           # Logic for all OpenAI and Gemini API interactions
 │   ├── firecrawl.ts        # Action for triggering Firecrawl web scraping
-│   ├── smithWorkspaces.ts  # Backend logic for the SmithBuild feature
+│   ├── http.ts             # HTTP actions for webhooks (e.g., email verification)
+│   ├── openai.ts           # Logic for all OpenAI and Gemini API interactions
+│   ├── schema.ts           # The database schema for the entire application
 │   ├── startups.ts         # Backend logic for managing user ventures/startups
 │   ├── users.ts            # Backend logic for user data
-│   ├── schema.ts           # The database schema for the entire application
-│   └── http.ts             # HTTP actions for webhooks (e.g., email verification)
+│   ├── smithWorkspaces.ts  # Backend logic for the SmithBuild feature
+│   └── ...                 # ~30+ other files for AI evaluations and setup
 │
-├── src/                    # React frontend source code
-│   ├── components/         # Reusable React components
-│   │   ├── pages/          # Main page components for each feature/view
-│   │   │   ├── SmithBuild.tsx      # The initial view for starting a build
-│   │   │   ├── SmithWorkspace.tsx  # The main IDE/chat/preview workspace
-│   │   │   └── ... (Other feature pages)
-│   │   ├── chatbot/        # Components for the VentureChatbot
-│   │   └── emails/         # React components for rendering transactional emails
-│   │
-│   ├── contexts/           # React Contexts for global state (e.g., Theme)
-│   ├── hooks/              # Custom React hooks (e.g., useSmithChat)
-│   ├── lib/                # Utility functions and client-side libraries
-│   ├── App.tsx             # Main application component with routing
-│   └── index.tsx           # Application entry point
+├── components/             # React frontend source code
+│   ├── pages/              # Main page components for each feature/view (~70+ pages)
+│   │   ├── BusinessPlan.tsx
+│   │   ├── MarketPulseCheck.tsx
+│   │   └── ...
+│   ├── chatbot/            # Components for the VentureChatbot
+│   └── emails/             # React components for rendering transactional emails
 │
+├── contexts/               # React Contexts for global state (e.g., Theme)
+├── hooks/                  # Custom React hooks (e.g., useSmithChat)
+├── lib/                    # Utility functions and client-side libraries
 ├── public/                 # Static assets (images, logos, etc.)
+│
+├── App.tsx                 # Main application component with routing
+├── index.tsx               # Application entry point
 ├── .env.example            # Example environment variables
 ├── package.json            # Project dependencies and scripts
 └── vite.config.ts          # Vite configuration
