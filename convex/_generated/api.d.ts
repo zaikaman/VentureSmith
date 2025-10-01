@@ -10,10 +10,15 @@
 
 import type * as actions from "../actions.js";
 import type * as auth from "../auth.js";
+import type * as diagnostics from "../diagnostics.js";
 import type * as emails_VerifyEmail from "../emails/VerifyEmail.js";
 import type * as firecrawl from "../firecrawl.js";
 import type * as http from "../http.js";
 import type * as openai from "../openai.js";
+import type * as scorecard from "../scorecard.js";
+import type * as setupBrainstormEvaluation from "../setupBrainstormEvaluation.js";
+import type * as setupMarketPulseCheckEvaluation from "../setupMarketPulseCheckEvaluation.js";
+import type * as setupScorecard from "../setupScorecard.js";
 import type * as smithWorkspaces from "../smithWorkspaces.js";
 import type * as startups from "../startups.js";
 import type * as users from "../users.js";
@@ -35,10 +40,15 @@ import type {
 declare const fullApi: ApiFromModules<{
   actions: typeof actions;
   auth: typeof auth;
+  diagnostics: typeof diagnostics;
   "emails/VerifyEmail": typeof emails_VerifyEmail;
   firecrawl: typeof firecrawl;
   http: typeof http;
   openai: typeof openai;
+  scorecard: typeof scorecard;
+  setupBrainstormEvaluation: typeof setupBrainstormEvaluation;
+  setupMarketPulseCheckEvaluation: typeof setupMarketPulseCheckEvaluation;
+  setupScorecard: typeof setupScorecard;
   smithWorkspaces: typeof smithWorkspaces;
   startups: typeof startups;
   users: typeof users;

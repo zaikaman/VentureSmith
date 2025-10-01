@@ -69,16 +69,24 @@ export const generateBusinessPlan = action({
       brandIdentity: JSON.parse(startup.brandIdentity),
     };
 
-    const result = await ctx.runAction(internal.openai.generateBusinessPlanWithAI, {
+    const businessPlanResult = await ctx.runAction(internal.openai.generateBusinessPlanWithAI, {
       fullContext,
     });
 
     await ctx.runMutation(api.startups.updateBusinessPlan, {
       startupId,
-      businessPlan: JSON.stringify(result),
+      businessPlan: JSON.stringify(businessPlanResult),
     });
 
-    return result;
+    const url = await ctx.runAction(internal.scorecard.evaluateBusinessPlan, { businessPlan: businessPlanResult });
+    if (url) {
+      await ctx.runMutation(api.startups.updateBusinessPlanEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
+    return businessPlanResult;
   },
 });
 
@@ -153,6 +161,14 @@ export const generateBrainstormIdea = action({
       brainstormResult: JSON.stringify(result),
     });
 
+    const url = await ctx.runAction(internal.scorecard.evaluateBrainstormIdea, { brainstormResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateBrainstormEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });
@@ -171,6 +187,14 @@ export const getMarketPulse = action({
       startupId,
       marketPulse: JSON.stringify(result),
     });
+
+    const url = await ctx.runAction(internal.scorecard.evaluateMarketPulse, { marketPulseResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateMarketPulseEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
 
     return result;
   },
