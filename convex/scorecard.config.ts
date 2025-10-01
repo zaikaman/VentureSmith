@@ -138,4 +138,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13905",
     metricIds: ["1821", "1822", "1823"],
   },
+
+  preLaunchWaitlist: {
+    projectId: "629",
+    testsetId: "13906",
+    metricIds: ["1825", "1826", "1824"],
+  },
 };
