@@ -39,6 +39,7 @@ export default defineSchema({
     customerValidation: v.optional(v.string()),
     customerValidationEvaluationUrl: v.optional(v.string()),
     userFlowDiagram: v.optional(v.string()),
+    userFlowDiagramEvaluationUrl: v.optional(v.string()),
     aiWireframe: v.optional(v.string()),
     aiMentor: v.optional(v.string()),
     aiMentorEvaluationUrl: v.optional(v.string()),

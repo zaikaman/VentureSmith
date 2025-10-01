@@ -513,6 +513,15 @@ export const generateUserFlow = action({
       userFlowDiagram: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateUserFlowDiagram, { userFlowDiagramResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateUserFlowDiagramEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });

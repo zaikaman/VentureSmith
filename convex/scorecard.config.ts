@@ -78,4 +78,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13893",
     metricIds: ["1786","1788","1787"],
   },
+
+  userFlowDiagram: {
+    projectId: "618",
+    testsetId: "13894",
+    metricIds: ["1789", "1791", "1790"],
+  },
 };
