@@ -96,4 +96,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13896",
     metricIds: ["1796", "1798", "1797"],
   },
+
+  techStack: {
+    projectId: "621",
+    testsetId: "13897",
+    metricIds: ["1799", "1801", "1800"],
+  },
 };

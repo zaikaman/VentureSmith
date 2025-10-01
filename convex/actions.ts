@@ -604,6 +604,15 @@ export const generateTechStack = action({
       techStack: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateTechStack, { techStackResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateTechStackEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });

@@ -30,6 +30,7 @@ import type * as setupMissionVisionEvaluation from "../setupMissionVisionEvaluat
 import type * as setupPitchDeckEvaluation from "../setupPitchDeckEvaluation.js";
 import type * as setupScorecard from "../setupScorecard.js";
 import type * as setupScorecardFeatureEvaluation from "../setupScorecardFeatureEvaluation.js";
+import type * as setupTechStackEvaluation from "../setupTechStackEvaluation.js";
 import type * as setupUserFlowDiagramEvaluation from "../setupUserFlowDiagramEvaluation.js";
 import type * as setupWebsitePrototypeEvaluation from "../setupWebsitePrototypeEvaluation.js";
 import type * as smithWorkspaces from "../smithWorkspaces.js";
@@ -73,6 +74,7 @@ declare const fullApi: ApiFromModules<{
   setupPitchDeckEvaluation: typeof setupPitchDeckEvaluation;
   setupScorecard: typeof setupScorecard;
   setupScorecardFeatureEvaluation: typeof setupScorecardFeatureEvaluation;
+  setupTechStackEvaluation: typeof setupTechStackEvaluation;
   setupUserFlowDiagramEvaluation: typeof setupUserFlowDiagramEvaluation;
   setupWebsitePrototypeEvaluation: typeof setupWebsitePrototypeEvaluation;
   smithWorkspaces: typeof smithWorkspaces;

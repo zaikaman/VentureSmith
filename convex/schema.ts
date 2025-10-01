@@ -46,6 +46,7 @@ export default defineSchema({
     aiMentor: v.optional(v.string()),
     aiMentorEvaluationUrl: v.optional(v.string()),
     techStack: v.optional(v.string()),
+    techStackEvaluationUrl: v.optional(v.string()),
     databaseSchema: v.optional(v.string()),
     apiEndpoints: v.optional(v.string()),
     developmentRoadmap: v.optional(v.string()),
