@@ -78,10 +78,17 @@ export const VentureWorkspace: React.FC = () => {
 
     const generateTaskResult = useAction(api.actions.generateTaskResult);
 
-    const startup = useQuery(
+    const startupQuery = useQuery(
         api.startups.getStartupById, 
         session && id ? { id } : 'skip'
     );
+    const [startup, setStartup] = useState<typeof startupQuery>(undefined);
+
+    React.useEffect(() => {
+        if (startupQuery) {
+            setStartup(startupQuery);
+        }
+    }, [startupQuery]);
 
     const phases: Phase[] = useMemo(() => [
         {
@@ -409,7 +416,7 @@ export const VentureWorkspace: React.FC = () => {
         }
     };
 
-    if (isSessionPending || (session && startup === undefined)) {
+    if (isSessionPending || startup === undefined) {
         return (
             <div className="blueprint-builder-container">
                 <LoadingIndicator idea="Loading Venture..." />
