@@ -560,6 +560,15 @@ export const generateAIWireframe = action({
       aiWireframe: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateAIWireframe, { aiWireframeResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateAIWireframeEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });
@@ -661,6 +670,15 @@ export const generateWebsitePrototype = action({
       startupId,
       website: JSON.stringify(result),
     });
+
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateWebsitePrototype, { websitePrototypeResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateWebsitePrototypeEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
 
     return result;
   },

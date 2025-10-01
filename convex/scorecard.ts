@@ -503,3 +503,73 @@ export const evaluateUserFlowDiagram = internalAction({
     }
   },
 });
+
+export const evaluateAIWireframe = internalAction({
+  args: { aiWireframeResult: v.any() },
+  handler: async (_, { aiWireframeResult }) => {
+    console.log("--- Kicking off AI Wireframe evaluation ---");
+    const scorecardApiKey = process.env.SCORECARD_API_KEY;
+    if (!scorecardApiKey) {
+      console.error("SCORECARD_API_KEY is not set. Skipping evaluation.");
+      return null;
+    }
+
+    const { aiWireframe: config } = SCORECARD_CONFIG;
+    if (!config || !config.projectId || !config.testsetId || !config.metricIds?.length) {
+        console.error("Scorecard configuration for 'aiWireframe' is missing.");
+        return null;
+    }
+
+    try {
+      const client = new Scorecard({ apiKey: scorecardApiKey });
+      const run = await runAndEvaluate(client, {
+        projectId: config.projectId,
+        testsetId: config.testsetId,
+        metricIds: config.metricIds,
+        system: () => runSystem(aiWireframeResult),
+      });
+
+      console.log(`--- Scorecard.ai Run Started (URL: ${run.url}) ---`);
+      return run.url;
+
+    } catch (error: any) {
+      console.error("Failed to start Scorecard.ai evaluation.", error.message);
+      return null;
+    }
+  },
+});
+
+export const evaluateWebsitePrototype = internalAction({
+  args: { websitePrototypeResult: v.any() },
+  handler: async (_, { websitePrototypeResult }) => {
+    console.log("--- Kicking off Website Prototype evaluation ---");
+    const scorecardApiKey = process.env.SCORECARD_API_KEY;
+    if (!scorecardApiKey) {
+      console.error("SCORECARD_API_KEY is not set. Skipping evaluation.");
+      return null;
+    }
+
+    const { websitePrototype: config } = SCORECARD_CONFIG;
+    if (!config || !config.projectId || !config.testsetId || !config.metricIds?.length) {
+        console.error("Scorecard configuration for 'websitePrototype' is missing.");
+        return null;
+    }
+
+    try {
+      const client = new Scorecard({ apiKey: scorecardApiKey });
+      const run = await runAndEvaluate(client, {
+        projectId: config.projectId,
+        testsetId: config.testsetId,
+        metricIds: config.metricIds,
+        system: () => runSystem(websitePrototypeResult),
+      });
+
+      console.log(`--- Scorecard.ai Run Started (URL: ${run.url}) ---`);
+      return run.url;
+
+    } catch (error: any) {
+      console.error("Failed to start Scorecard.ai evaluation.", error.message);
+      return null;
+    }
+  },
+});

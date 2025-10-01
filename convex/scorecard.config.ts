@@ -84,4 +84,16 @@ export const SCORECARD_CONFIG = {
     testsetId: "13894",
     metricIds: ["1789", "1791", "1790"],
   },
+
+  aiWireframe: {
+    projectId: "619",
+    testsetId: "13895",
+    metricIds: ["1793", "1794", "1795"],
+  },
+
+  websitePrototype: {
+    projectId: "620",
+    testsetId: "13896",
+    metricIds: ["1796", "1798", "1797"],
+  },
 };
