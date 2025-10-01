@@ -952,6 +952,15 @@ export const generateProductHuntKit = action({
       productHuntKit: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateProductHuntKit, { productHuntKitResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateProductHuntKitEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });

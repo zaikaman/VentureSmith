@@ -144,4 +144,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13906",
     metricIds: ["1825", "1826", "1824"],
   },
+
+  productHuntKit: {
+    projectId: "630",
+    testsetId: "13907",
+    metricIds: ["1827", "1829", "1828"],
+  },
 };

@@ -35,6 +35,7 @@ import type * as setupMissionVisionEvaluation from "../setupMissionVisionEvaluat
 import type * as setupPitchDeckEvaluation from "../setupPitchDeckEvaluation.js";
 import type * as setupPreLaunchWaitlistEvaluation from "../setupPreLaunchWaitlistEvaluation.js";
 import type * as setupPricingStrategyEvaluation from "../setupPricingStrategyEvaluation.js";
+import type * as setupProductHuntKitEvaluation from "../setupProductHuntKitEvaluation.js";
 import type * as setupScorecard from "../setupScorecard.js";
 import type * as setupScorecardFeatureEvaluation from "../setupScorecardFeatureEvaluation.js";
 import type * as setupTechStackEvaluation from "../setupTechStackEvaluation.js";
@@ -86,6 +87,7 @@ declare const fullApi: ApiFromModules<{
   setupPitchDeckEvaluation: typeof setupPitchDeckEvaluation;
   setupPreLaunchWaitlistEvaluation: typeof setupPreLaunchWaitlistEvaluation;
   setupPricingStrategyEvaluation: typeof setupPricingStrategyEvaluation;
+  setupProductHuntKitEvaluation: typeof setupProductHuntKitEvaluation;
   setupScorecard: typeof setupScorecard;
   setupScorecardFeatureEvaluation: typeof setupScorecardFeatureEvaluation;
   setupTechStackEvaluation: typeof setupTechStackEvaluation;
