@@ -748,3 +748,38 @@ export const evaluateCostEstimate = internalAction({
     }
   },
 });
+
+export const evaluatePricingStrategy = internalAction({
+  args: { pricingStrategyResult: v.any() },
+  handler: async (_, { pricingStrategyResult }) => {
+    console.log("--- Kicking off Pricing Strategy evaluation ---");
+    const scorecardApiKey = process.env.SCORECARD_API_KEY;
+    if (!scorecardApiKey) {
+      console.error("SCORECARD_API_KEY is not set. Skipping evaluation.");
+      return null;
+    }
+
+    const { pricingStrategy: config } = SCORECARD_CONFIG;
+    if (!config || !config.projectId || !config.testsetId || !config.metricIds?.length) {
+        console.error("Scorecard configuration for 'pricingStrategy' is missing.");
+        return null;
+    }
+
+    try {
+      const client = new Scorecard({ apiKey: scorecardApiKey });
+      const run = await runAndEvaluate(client, {
+        projectId: config.projectId,
+        testsetId: config.testsetId,
+        metricIds: config.metricIds,
+        system: () => runSystem(pricingStrategyResult),
+      });
+
+      console.log(`--- Scorecard.ai Run Started (URL: ${run.url}) ---`);
+      return run.url;
+
+    } catch (error: any) {
+      console.error("Failed to start Scorecard.ai evaluation.", error.message);
+      return null;
+    }
+  },
+});

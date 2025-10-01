@@ -126,4 +126,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13901",
     metricIds: ["1811","1813","1812"],
   },
+
+  pricingStrategy: {
+    projectId: "627",
+    testsetId: "13904",
+    metricIds: ["1818","1820","1819"],
+  },
 };

@@ -56,6 +56,7 @@ export default defineSchema({
     costEstimate: v.optional(v.string()),
     costEstimateEvaluationUrl: v.optional(v.string()),
     pricingStrategy: v.optional(v.string()),
+    pricingStrategyEvaluationUrl: v.optional(v.string()),
     marketingCopy: v.optional(v.string()),
     preLaunchWaitlist: v.optional(v.string()),
     productHuntKit: v.optional(v.string()),
