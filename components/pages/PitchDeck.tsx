@@ -29,7 +29,13 @@ interface TranscriptMessage {
 const VAPI_PUBLIC_KEY = import.meta.env.VITE_VAPI_PUBLIC_KEY;
 const VAPI_INVESTOR_ASSISTANT_ID = import.meta.env.VITE_VAPI_INVESTOR_ASSISTANT_ID;
 
-const cleanText = (text: string | undefined) => text ? String(text).replace(/\*/g, '') : '';
+const cleanText = (text: string | undefined) => {
+    if (!text) return '';
+    // First, replace escaped newlines \n with a markdown hard break (two spaces + newline)
+    // Then, replace any remaining single \n with a hard break.
+    // Also, remove asterisks as requested.
+    return String(text).replace(/\\n/g, '  \n').replace(/\n/g, '  \n').replace(/\*/g, '');
+};
 
 // --- MAIN COMPONENT ---
 const PitchDeck: React.FC<PitchDeckProps> = ({ startup }) => {
