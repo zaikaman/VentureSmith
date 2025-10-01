@@ -393,6 +393,15 @@ export const generateInterviewScripts = action({
       interviewScripts: JSON.stringify(result),
     });
 
+    // Add Scorecard evaluation
+    const url = await ctx.runAction(internal.scorecard.evaluateInterviewScripts, { interviewScriptsResult: result });
+    if (url) {
+      await ctx.runMutation(api.startups.updateInterviewScriptsEvaluationUrl, {
+        startupId,
+        url: url,
+      });
+    }
+
     return result;
   },
 });

@@ -60,4 +60,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13890",
     metricIds: ["1776", "1777", "1778"],
   },
+
+  interviewScripts: {
+    projectId: "615",
+    testsetId: "13891",
+    metricIds: ["1779","1781","1780"],
+  },
 };
