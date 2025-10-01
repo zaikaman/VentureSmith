@@ -114,4 +114,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13899",
     metricIds: ["1805","1806","1807"],
   },
+
+  developmentRoadmap: {
+    projectId: "624",
+    testsetId: "13900",
+    metricIds: ["1808", "1809", "1810"],
+  },
 };
