@@ -42,4 +42,10 @@ export const SCORECARD_CONFIG = {
     testsetId: "13886",
     metricIds: ["1767", "1768", "1769"],
   },
+
+  deepDiveMarketAnalysis: {
+    projectId: "612",
+    testsetId: "13887",
+    metricIds: ["1770", "1771", "1772"],
+  },
 };

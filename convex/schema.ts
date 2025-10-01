@@ -23,6 +23,7 @@ export default defineSchema({
     pitchDeck: v.optional(v.string()),
     marketResearch: v.optional(v.string()),
     marketPulseEvaluationUrl: v.optional(v.string()),
+    deepDiveMarketAnalysisEvaluationUrl: v.optional(v.string()),
     marketPulse: v.optional(v.string()),
     missionVisionEvaluationUrl: v.optional(v.string()),
     missionVision: v.optional(v.string()),
