@@ -218,25 +218,4 @@ The codebase is organized into logical directories:
 │   │   ├── BusinessPlan.tsx
 │   │   ├── MarketPulseCheck.tsx
 │   │   └── ...
-│   ├── chatbot/            # Components for the VentureChatbot
-│   └── emails/             # React components for rendering transactional emails
-│
-├── contexts/               # React Contexts for global state (e.g., Theme)
-├── hooks/                  # Custom React hooks (e.g., useSmithChat)
-├── lib/                    # Utility functions and client-side libraries
-├── public/                 # Static assets (images, logos, etc.)
-│
-├── App.tsx                 # Main application component with routing
-├── index.tsx               # Application entry point
-├── .env.example            # Example environment variables
-├── package.json            # Project dependencies and scripts
-└── vite.config.ts          # Vite configuration
-```
-
-## 👥 Authors
-
-- **zaikaman** - [GitHub Profile](https://github.com/zaikaman)
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+│   
