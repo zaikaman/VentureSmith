@@ -7,9 +7,9 @@
 [![Vite](https://img.shields.io/badge/Build-Vite-purple)](https://vitejs.dev)
 [![Scorecard](https://img.shields.io/badge/Evaluation-Scorecard-orange)](https://scorecard.ai)
 
-**VentureSmith is an AI-powered web application designed to be the ultimate co-founder for aspiring entrepreneurs. It transforms a simple business idea into a comprehensive, venture-ready blueprint, automating everything from business planning to market research and prototype generation.**
+**VentureSmith adalah alat pembuat co-founder AI yang dirancang untuk menjadi rekan pendiri bagi para pengusaha pemula. Ia mengubah ide usaha sederhana menjadi cetak biru yang komprehensif, mengotomatiskan semuanya mulai dari perencanaan bisnis hingga riset pasar dan pembuatan prototipe.**
 
-This project was built for a hackathon, showcasing the power of modern AI and serverless technologies to accelerate innovation.
+Proyek ini dibangun untuk hackathon, menampilkan kekuatan AI modern dan teknologi serverless untuk mempercepat inovasi.
 
 ---
 
@@ -17,226 +17,48 @@ This project was built for a hackathon, showcasing the power of modern AI and se
 
 ---
 
-## 🏆 Core Technologies & Hackathon Partners
+## 🏆 Teknologi & Mitra Hackathon Utama
 
-VentureSmith is proud to be built with cutting-edge technologies from our hackathon partners. We've integrated their services to create a seamless and powerful experience.
+VentureSmith bangga dibangun dengan teknologi-teknologi mutakhir dari mitra hackathon kami. Kami telah mengintegrasikan layanan-layanan mereka untuk menciptakan pengalaman yang mulus dan kuat.
 
--   **[Convex](https://convex.dev/): The Backend Platform**
-    -   **What it does:** Convex serves as our entire backend, providing a realtime database, serverless functions, and file storage. All business logic, from user management to orchestrating AI tasks, runs on Convex.
-    -   **Why we chose it:** Its realtime capabilities ensure the UI is always in sync with the backend state, providing a fluid and responsive user experience without manual state management.
+-   **[Convex](https://convex.dev/): Platform Backend**
+    -   **Apa yang dilakukan:** Convex berfungsi sebagai backend kami sepenuhnya, menyediakan database real-time, fungsi serverless, dan penyimpanan berkas. Semua logika bisnis, dari manajemen pengguna hingga mengatur tugas AI, berjalan di Convex.
+    -   **Mengapa kami memilihnya:** Kemampuan real-time-nya memastikan UI selalu sinkron dengan state backend, memberikan pengalaman pengguna yang lancar dan responsif tanpa manajemen state manual.
 
--   **[better-auth](https://github.com/better-auth/better-auth): Secure Authentication**
-    -   **What it does:** Handles all user sign-ups and logins, integrating smoothly with Convex to provide a secure authentication flow.
-    -   **Why we chose it:** It provides a simple, secure, and robust authentication solution out of the box, saving us significant development time.
+-   **[better-auth](https://github.com/better-auth/better-auth): Autentikasi Aman**
+    -   **Apa yang dilakukan:** Mengelola semua pendaftaran dan login pengguna, terintegrasi mulus dengan Convex untuk menyediakan alur autentikasi yang aman.
+    -   **Mengapa kami memilihnya:** Menyediakan solusi autentikasi yang sederhana, aman, dan andal di luar kotak, menghemat banyak waktu pengembangan.
 
--   **[OpenAI](https://openai.com/product): The Primary AI Engine**
-    -   **What it does:** Powers the majority of the generative tasks in the SmithWorkspace, including business plan creation, marketing copy, and technical documentation.
-    -   **Why we chose it:** Provides state-of-the-art models (like GPT-4) for a wide range of creative and analytical text generation tasks.
+-   **[OpenAI](https://openai.com/product): Mesin AI Utama**
+    -   **Apa yang dilakukan:** Memungkinkan sebagian besar tugas generatif di SmithWorkspace, termasuk pembuatan rencana bisnis, salinan pemasaran, dan dokumentasi teknis.
+    -   **Mengapa kami memilihnya:** Menyediakan model-model mutakhir (seperti GPT-4) untuk berbagai tugas kreatif dan analitis.
 
--   **[Google Gemini](https://ai.google.dev/): Specialized AI Tasks**
-    -   **What it does:** The Gemini API is used for specific, high-value tasks that require its unique multimodal and reasoning capabilities, such as the VentureChatbot.
-    -   **Why we chose it:** It offers powerful, next-generation models that complement OpenAI, allowing us to choose the best tool for each job.
+-   **[Google Gemini](https://ai.google.dev/): Tugas AI Spesifik**
+    -   **Apa yang dilakukan:** API Gemini digunakan untuk tugas-tugas bernilai tinggi yang membutuhkan multimodalitas dan kemampuan penalaran uniknya, seperti VentureChatbot.
+    -   **Mengapa kami memilihnya:** Menawarkan model-model kuat generasi berikutnya yang melengkapi OpenAI, memungkinkan kami memilih alat terbaik untuk setiap pekerjaan.
 
--   **[Firecrawl](https://firecrawl.dev/): Web Scraping & Data Extraction**
-    -   **What it does:** Firecrawl is the engine behind our market research features. It scrapes websites and extracts clean, structured data for analysis.
-    -   **Features Powered:** Deep Market Analysis, Competitor Matrix, AI Investor Matching.
-    -   **Why we chose it:** It turns the messy web into a structured, queryable data source, enabling powerful, real-time market insights that would otherwise be impossible.
+-   **[Firecrawl](https://firecrawl.dev/): Pengambilan Data Web & Scraping**
+    -   **Apa yang dilakukan:** Firecrawl adalah mesin di balik fitur riset pasar kami. Ia melakukan scraping situs web dan mengekstraksi data terstruktur untuk analisis.
+    -   **Fitur Unggulan:** Deep Market Analysis, Competitor Matrix, AI Investor Matching.
+    -   **Mengapa kami memilihnya:** Mengubah web yang berantakan menjadi sumber data terstruktur yang dapat ditanyakan, memungkinkan wawasan pasar yang kuat secara real-time.
 
--   **[Vapi](https://vapi.ai/): Conversational Voice AI**
-    -   **What it does:** Vapi powers our interactive voice features, allowing users to practice their pitch and interact with an AI agent in a natural conversation.
-    -   **Features Powered:** AI Pitch Coach, Venture Call Agent.
-    -   **Why we chose it:** It provides a low-latency, highly realistic conversational AI experience that is critical for effective pitch practice and simulations.
+-   **[Vapi](https://vapi.ai/): AI Suara Percakapan**
+    -   **Apa yang dilakukan:** Vapi menggerakkan fitur-fitur suara interaktif kami, memungkinkan pengguna berlatih pitch mereka dan berinteraksi dengan agen AI secara alami.
+    -   **Fitur Unggulan:** AI Pitch Coach, Venture Call Agent.
+    -   **Mengapa kami memilihnya:** Menyediakan pengalaman AI percakapan yang sangat realistis dengan latensi rendah, sangat penting untuk latihan pitch yang efektif dan simulasi.
 
--   **[Resend](https://resend.com/): Transactional Emails**
-    -   **What it does:** Manages and sends all transactional emails, such as email verification and user notifications.
-    -   **Why we chose it:** A reliable and developer-friendly email API that ensures our users stay informed.
+-   **[Resend](https://resend.com/): Email Transaksional**
+    -   **Apa yang dilakukan:** Mengelola dan mengirim semua email transaksional, seperti verifikasi email dan notifikasi pengguna.
+    -   **Mengapa kami memilihnya:** API email yang andal dan ramah pengembang memastikan pengguna tetap terinformasi.
 
--   **[Scorecard](https://scorecard.ai/): AI Quality Assurance**
-    -   **What it does:** Provides automated evaluation and testing for all AI-generated content.
-    -   **Why we chose it:** To ensure the quality and consistency of our AI-generated content, providing a feedback loop for continuous improvement.
+-   **[Scorecard](https://scorecard.ai/): Jaminan Kualitas AI**
+    -   **Apa yang dilakukan:** Menyediakan evaluasi otomatis terhadap hampir semua konten yang dihasilkan AI. Ini memberikan umpan balik untuk perbaikan berkelanjutan.
 
-## 🌟 Key Features & The Tech Behind Them
+## 🌟 Fitur & Teknologi Utama
 
-VentureSmith is packed with AI-driven tools to cover every aspect of early-stage startup development. Here’s a look at what you can build and the technologies that make it happen.
+VentureSmith dipenuhi alat berbasis AI untuk mencakup setiap aspek pengembangan startup tahap awal. Berikut adalah gambaran apa yang bisa Anda bangun dan teknologi yang membuatnya bekerja.
 
-### 📈 Strategy & Planning (Powered by OpenAI)
-- **📝 Business Plan Generation:** Creates a full business plan from a single idea prompt.
-- **🎯 Mission & Vision Crafting:** Defines a strong foundation for your brand.
-- **🗺️ Development Roadmap:** Lays out a technical timeline and milestones.
-- **✅ Due Diligence Checklist:** Prepares you for investor scrutiny.
-- **💡 Idea Brainstorming & A/B Testing:** Generates creative ideas and testing strategies.
-
-### 📊 Market & Customer Analysis (Powered by Firecrawl & OpenAI)
-- **🌐 Deep Market Analysis:** Uses **Firecrawl** to scrape and analyze web data for market trends, then **OpenAI** to synthesize the findings.
-- **👥 Customer Persona Creation:** Defines your ideal customer profiles using **OpenAI**.
-- **🔍 Competitor Matrix:** Leverages **Firecrawl** to gather competitor data and presents it in a structured matrix.
-- **📈 Growth Metrics Identification:** Helps you define KPIs to track success with suggestions from **OpenAI**.
-
-### 🛠️ Product & Engineering (Powered by OpenAI)
-- **💻 AI Wireframe Generator:** Creates visual mockups for your web application.
-- **⚙️ Tech Stack Suggester:** Recommends the best technologies for your project.
-- **🗃️ Database Schema Generation:** Designs the data model for your application.
-- **🔌 API Endpoint Definition:** Drafts the API structure for your backend.
-- **☁️ Cloud Cost Estimation:** Provides a preliminary budget for cloud infrastructure.
-
-### 🚀 Marketing & Launch (Powered by OpenAI)
-- **📢 Press Release Drafting:** Writes professional announcements for your launch.
-- **✍️ Marketing Copy Generation:** Creates compelling copy for ads, landing pages, and social media.
-- **🔎 SEO Strategy:** Generates a foundational SEO plan to improve online visibility.
-- **🚀 Product Hunt Launch Kit:** Prepares materials for a successful Product Hunt debut.
-
-### 💬 Interactive Tools (Powered by Vapi & Gemini)
-- **🤖 VentureChatbot:** An AI assistant (**Gemini-powered**) trained on your business context to answer questions and provide guidance.
-- **🧑‍🏫 AI Pitch Coach:** Practice your pitch in a real-time conversation with a voice AI powered by **Vapi**.
-- **📞 Venture Call Agent:** An automated **Vapi** agent to handle initial customer inquiries or investor outreach simulations.
-- **🃏 Pitch Deck Generation:** Creates a professional investor pitch deck.
-
-### 🤖 AI Quality Assurance (Powered by Scorecard)
-To ensure the highest quality output, nearly all AI-generated content is automatically evaluated using **Scorecard.ai**. This provides a continuous feedback loop, helping us monitor and improve the performance of our generative models across all features.
-
-### 🧪 Experimental Features
-- **🤖 SmithBuild (Powered by Gemini):** Go beyond wireframes. SmithBuild is an experimental AI agent that can write, read, and edit the application's frontend code to build and prototype new web pages. You can build from scratch or use your existing venture context to generate pages that are consistent with your brand and business goals. It's a glimpse into the future of AI-driven development.
-
-## 🏗️ Architecture
-
-VentureSmith is built on a modern, serverless, and AI-first stack, orchestrated entirely by Convex.
-
-```mermaid
-graph TD
-    A[User Browser] -->|React/Vite Frontend| B(Vercel);
-    B -->|HTTPS Requests & Realtime Subscription| C{Convex Backend};
-    C -->|DB Queries| D[ConvexDB];
-    C -->|User Auth| I[better-auth];
-    C -->|AI Generation Tasks| E[OpenAI & Gemini APIs];
-    C -->|Web Scraping Jobs| F[Firecrawl API];
-    C -->|Transactional Emails| G[Resend API];
-    C -->|Voice AI Interaction| H[Vapi API];
-    C -->|AI Quality Evaluation| J[Scorecard API];
-
-    subgraph "Frontend"
-        B
-    end
-
-    subgraph "Backend & Database (Serverless)"
-        C
-        D
-    end
-
-    subgraph "Third-Party Services"
-        E
-        F
-        G
-        H
-        I
-        J
-    end
-```
-
-## 🚀 Getting Started
-
-To run VentureSmith on your local machine, follow these steps:
-
-### Prerequisites
-
-- Node.js (v18 or later)
-- An account with [Convex](https://convex.dev)
-- API keys for:
-  - OpenAI
-  - Google Gemini
-  - Firecrawl
-  - Resend
-  - Vapi
-  - Better-Auth
-  - Scorecard
-
-### Installation & Setup
-
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/zaikaman/venturesmith.git
-    cd venturesmith
-    ```
-
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
-
-3.  **Set up Convex:**
-    - Login to Convex:
-      ```bash
-      npx convex dev
-      ```
-    - Follow the CLI prompts to link this project to your Convex account.
-
-4.  **Configure Environment Variables:**
-    - Create a `.env.local` file in the root directory by copying the example file:
-      ```bash
-      cp .env.example .env.local
-      ```
-    - Open `.env.local` and add your credentials. The `VITE_CONVEX_URL` will be provided in the output of the `npx convex dev` command.
-
-    ```env
-    # Convex deployment URL from `npx convex dev`
-    VITE_CONVEX_URL="https://your-project.convex.cloud"
-
-    # API Keys
-    OPENAI_API_KEY="your_openai_api_key"
-    GEMINI_API_KEY="your_gemini_api_key"
-    FIRECRAWL_API_KEY="your_firecrawl_api_key"
-    RESEND_API_KEY="your_resend_api_key"
-    VAPI_API_KEY="your_vapi_api_key"
-    BETTER_AUTH_API_KEY="your-better_auth_api_key"
-    SCORECARD_API_KEY="your_scorecard_api_key"
-
-5.  **Run the development server:**
-    - The `npx convex dev` command from step 3 also runs the backend. In a new terminal, start the frontend:
-    ```bash
-    npm run dev
-    ```
-    - Open your browser and navigate to `http://localhost:3000`.
-
-## 📂 Project Structure
-
-The codebase is organized into logical directories:
-
-```
-/
-├── convex/                 # Convex backend: serverless functions, schema, and auth
-│   ├── actions.ts          # Core backend actions callable from the client
-│   ├── firecrawl.ts        # Action for triggering Firecrawl web scraping
-│   ├── http.ts             # HTTP actions for webhooks (e.g., email verification)
-│   ├── openai.ts           # Logic for all OpenAI and Gemini API interactions
-│   ├── schema.ts           # The database schema for the entire application
-│   ├── startups.ts         # Backend logic for managing user ventures/startups
-│   ├── users.ts            # Backend logic for user data
-│   ├── smithWorkspaces.ts  # Backend logic for the SmithBuild feature
-│   └── ...                 # ~30+ other files for AI evaluations and setup
-│
-├── components/             # React frontend source code
-│   ├── pages/              # Main page components for each feature/view (~70+ pages)
-│   │   ├── BusinessPlan.tsx
-│   │   ├── MarketPulseCheck.tsx
-│   │   └── ...
-│   ├── chatbot/            # Components for the VentureChatbot
-│   └── emails/             # React components for rendering transactional emails
-│
-├── contexts/               # React Contexts for global state (e.g., Theme)
-├── hooks/                  # Custom React hooks (e.g., useSmithChat)
-├── lib/                    # Utility functions and client-side libraries
-├── public/                 # Static assets (images, logos, etc.)
-│
-├── App.tsx                 # Main application component with routing
-├── index.tsx               # Application entry point
-├── .env.example            # Example environment variables
-├── package.json            # Project dependencies and scripts
-└── vite.config.ts          # Vite configuration
-```
-
-## 👥 Authors
-
-- **zaikaman** - [GitHub Profile](https://github.com/zaikaman)
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+### 📈 Strategi & Perencanaan (Didukung OpenAI)
+- **📝 Pembuatan Rencana Bisnis:** Membuat rencana bisnis lengkap dari satu ide prompt.
+- **🎯 Penetapan Misi & Visi:** Mendefinisikan fondasi merek Anda.
+- ...
